@@ -7,6 +7,7 @@ plugins {
 
 val revealKtVersion: String by project
 val kotlinVersion: String by project
+val kotlinCoroutinesVersion: String by project
 
 group = "dev.limebeck"
 version = revealKtVersion
@@ -17,10 +18,17 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVersion}") {
+        version {
+            strictly(kotlinCoroutinesVersion)
+        }
+    }
+
     implementation("org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven:$kotlinVersion")
+
     implementation(project(":reveal-kt:lib-dsl"))
 }
 

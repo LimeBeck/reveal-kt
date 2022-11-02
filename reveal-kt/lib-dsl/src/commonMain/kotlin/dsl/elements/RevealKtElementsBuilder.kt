@@ -1,6 +1,8 @@
 package dev.limebeck.revealkt.dsl
 
+import dev.limebeck.revealkt.core.elements.Code
 import dev.limebeck.revealkt.core.elements.Note
+import dev.limebeck.revealkt.core.elements.RegularText
 import dev.limebeck.revealkt.core.elements.Title
 import dev.limebeck.revealkt.dsl.slides.RegularSlideBuilder
 import dev.limebeck.revealkt.utils.ID
@@ -41,5 +43,33 @@ fun RegularSlideBuilder.note(
     note: String,
     id: ID = UuidGenerator.generateId()
 ) = Note(id, note).also {
+    elements.add(it)
+}
+
+fun RegularSlideBuilder.regularText(
+    text: String,
+    id: ID = UuidGenerator.generateId()
+) = RegularText(id, text).also {
+    elements.add(it)
+}
+
+fun RegularSlideBuilder.regularText(
+    id: ID = UuidGenerator.generateId(),
+    block: () -> String
+) = RegularText(id, block()).also {
+    elements.add(it)
+}
+
+fun RegularSlideBuilder.code(
+    code: String,
+    id: ID = UuidGenerator.generateId()
+) = Code(id, code).also {
+    elements.add(it)
+}
+
+fun RegularSlideBuilder.code(
+    id: ID = UuidGenerator.generateId(),
+    block: () -> String
+) = Code(id, block()).also {
     elements.add(it)
 }
