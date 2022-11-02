@@ -11,6 +11,7 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
+val kotlinVersion: String by project
 val ktorVersion: String by project
 val logbackVersion: String by project
 
@@ -47,10 +48,15 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
+                implementation(project(":reveal-kt:script-definition"))
                 implementation("io.ktor:ktor-server-cio:$ktorVersion")
                 implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+                implementation("org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion")
+                implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:$kotlinVersion")
+                implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host:$kotlinVersion")
             }
         }
         val jvmTest by getting
