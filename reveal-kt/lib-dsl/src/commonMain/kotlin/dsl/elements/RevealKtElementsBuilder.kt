@@ -1,8 +1,8 @@
 package dev.limebeck.revealkt.dsl
 
+import dev.limebeck.revealkt.core.elements.Note
+import dev.limebeck.revealkt.core.elements.Title
 import dev.limebeck.revealkt.dsl.slides.RegularSlideBuilder
-import core.elements.Note
-import core.elements.Title
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
 

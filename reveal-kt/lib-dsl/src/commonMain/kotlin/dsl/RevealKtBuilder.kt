@@ -36,9 +36,9 @@ class RevealKtBuilder(
             }
 
         var center: Boolean
-            get() = configuration.history
+            get() = configuration.center
             set(value) {
-                configuration = configuration.copy(history = value)
+                configuration = configuration.copy(center = value)
             }
 
         var touch: Boolean

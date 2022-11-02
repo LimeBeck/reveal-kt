@@ -1,4 +1,4 @@
-package core.elements
+package dev.limebeck.revealkt.core.elements
 
 import dev.limebeck.revealkt.elements.RevealKtElement
 import dev.limebeck.revealkt.utils.ID

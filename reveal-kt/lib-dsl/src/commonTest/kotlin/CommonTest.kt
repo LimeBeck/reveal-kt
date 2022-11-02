@@ -2,7 +2,7 @@ import dev.limebeck.revealkt.dsl.*
 import dev.limebeck.revealkt.dsl.slides.regularSlide
 import dev.limebeck.revealkt.dsl.slides.slide
 import dev.limebeck.revealkt.dsl.slides.verticalSlide
-import core.elements.Title
+import dev.limebeck.revealkt.core.elements.Title
 import kotlin.test.Test
 
 
@@ -10,7 +10,12 @@ class CommonTest {
     @Test
     fun buildDsl() {
         val presentation = revealKt(title = "Hello from my presentation") {
-//            config {
+            title = "Hello from my presentation"
+
+            configuration {
+                controls = false
+                progress = false
+
 //                styles {
 //                    cssFile(href = "")
 //                    rawCSS {
@@ -22,11 +27,11 @@ class CommonTest {
 //
 //                    }
 //                }
-//            }
+            }
+
             slides {
                 regularSlide {
                     autoanimate = true
-                    title = "Test"
                     title { "Test 2" }
                 }
                 verticalSlide {
@@ -39,22 +44,12 @@ class CommonTest {
                         }
                     }
                     slide {
+                        autoanimate = true
                         +title
-//                        pic(href = "") {
-//                            height = 400
-//                        }
+                        title { "Updated text" }
                         note {
                             "Some note"
                         }
-                    }
-                    markdownSlide {
-                        //language=Markdown
-                        """
-                            # Title here
-                            
-                            * list 1
-                            * list 2
-                        """.trimIndent()
                     }
                 }
             }
