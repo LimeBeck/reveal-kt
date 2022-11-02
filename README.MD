@@ -9,7 +9,7 @@ import dev.limebeck.revealkt.dsl.*
 import dev.limebeck.revealkt.dsl.slides.regularSlide
 import dev.limebeck.revealkt.dsl.slides.slide
 import dev.limebeck.revealkt.dsl.slides.verticalSlide
-import core.elements.Title
+import dev.limebeck.revealkt.core.elements.Title
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
