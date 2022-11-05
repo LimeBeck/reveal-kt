@@ -1,19 +1,8 @@
-@file:DependsOn("dev.limebeck:ko-te-jvm:0.2.4")
-
 import dev.limebeck.revealkt.core.elements.*
 import dev.limebeck.revealkt.dsl.*
 import dev.limebeck.revealkt.dsl.slides.*
-import dev.limebeck.templateEngine.KoTeRenderer
-import dev.limebeck.templateEngine.runtime.standartLibrary.kote
-import kotlinx.coroutines.runBlocking
 
 title = "Hello from my presentation"
-
-val renderer = KoTeRenderer {
-    mapOf(
-        kote
-    )
-}
 
 configuration {
     controls = false
@@ -42,11 +31,16 @@ slides {
                 "Some note"
             }
         }
-    }
-    slide {
-        code {
-            runBlocking {
-                renderer.render("{{ kote() }}", mapOf()).getValueOrNull()!!
+        slide {
+            autoanimate = true
+            +title
+            code {
+                //language=JSON
+                """
+                   {
+                    "string": "some string"
+                   } 
+                """.trimIndent()
             }
         }
     }

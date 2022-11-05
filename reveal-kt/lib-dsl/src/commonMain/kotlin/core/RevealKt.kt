@@ -12,7 +12,8 @@ data class RevealKt(
 
     companion object {
         val defaultPlugins = listOf(
-            Plugin("RevealNotes", "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/notes/notes.min.js")
+            Plugin("RevealNotes", "reveal.js/plugin/notes/notes.js"),
+            Plugin("RevealHighlight", "reveal.js/plugin/highlight/highlight.js")
         )
         val defaultConfiguration = Configuration()
     }
@@ -25,12 +26,44 @@ data class RevealKt(
         val center: Boolean = true,
         val touch: Boolean = true,
         val autoAnimateDuration: Double = 0.5,
-    )
+    ) {
+
+        sealed interface Theme {
+            enum class Predefined : Theme {
+                BEIGE,
+                BLACK,
+                BLOOD,
+                LEAGUE,
+                MOON,
+                NIGHT,
+                SERIF,
+                SIMPLE,
+                SKY,
+                SOLARIZED,
+                WHITE,
+                ;
+            }
+
+            data class Custom(
+                val cssLink: String
+            ) : Theme
+        }
+    }
 
     data class Plugin(
         val name: String,
         val cdnUrl: String,
     )
+
+    fun renderSlides(tag: FlowContent) = with(tag) {
+        div("reveal") {
+            div("slides") {
+                slides.forEach {
+                    it.render(this)
+                }
+            }
+        }
+    }
 
     fun render(tag: HTML) = with(tag) {
         head {
@@ -39,19 +72,6 @@ data class RevealKt(
             }
             title {
                 +this@RevealKt.title
-            }
-            link {
-                rel = "stylesheet"
-                href = "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reset.min.css"
-            }
-            link {
-                rel = "stylesheet"
-                href = "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.css"
-            }
-            link {
-                rel = "stylesheet"
-                href = "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/night.min.css"
-                id = "theme"
             }
         }
         body {
@@ -62,30 +82,41 @@ data class RevealKt(
                     }
                 }
             }
-            script(src = "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.js") {}
-            script(src = "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/highlight/highlight.min.js") {}
 
-            plugins.forEach {
-                script(src = it.cdnUrl) {}
-            }
-
-            script(type = ScriptType.textJavaScript) {
+            script {
                 unsafe {
                     raw(
                         """
-                            Reveal.initialize({
+                            const configuration = {
                                 controls: ${configuration.controls},
                                 progress: ${configuration.progress},
                                 history: ${configuration.history},
                                 center: ${configuration.center},
                                 touch: ${configuration.touch},
                                 autoAnimateDuration: ${configuration.autoAnimateDuration},
-                                plugins: [ RevealHighlight, ${plugins.joinToString(", "){ it.name }} ]
-                            });
+                            }
                         """.trimIndent()
                     )
                 }
             }
+
+            script {
+                unsafe {
+                    raw(
+                        """
+                            const plugins = [
+                                ${plugins.joinToString(",", prefix = "\"", postfix = "\""){ it.name }}
+                            ]
+                        """.trimIndent()
+                    )
+                }
+            }
+
+//            plugins.forEach {
+//                script(src = it.cdnUrl) {}
+//            }
+
+            script(src = "revealkt.js") { }
         }
     }
 }
