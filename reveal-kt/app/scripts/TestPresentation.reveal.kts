@@ -43,5 +43,8 @@ slides {
                 """.trimIndent()
             }
         }
+        slide {
+            img(src = "image.png")
+        }
     }
 }

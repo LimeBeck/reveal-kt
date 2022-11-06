@@ -1,4 +1,4 @@
-package dev.limebeck.revealkt.elements
+package dev.limebeck.revealkt.dsl
 
 import dev.limebeck.revealkt.elements.slides.Slide
 

@@ -1,4 +1,4 @@
-package dev.limebeck.revealkt.elements
+package dev.limebeck.revealkt.core
 
 import dev.limebeck.revealkt.utils.ID
 import kotlinx.html.HtmlBlockTag

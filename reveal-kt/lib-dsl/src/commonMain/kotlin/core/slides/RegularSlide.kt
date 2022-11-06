@@ -1,7 +1,7 @@
 package dev.limebeck.revealkt.elements.slides
 
+import dev.limebeck.revealkt.core.RevealKtElement
 import dev.limebeck.revealkt.utils.ID
-import dev.limebeck.revealkt.elements.RevealKtElement
 import dev.limebeck.revealkt.utils.UuidGenerator
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.section

@@ -1,9 +1,9 @@
 package dev.limebeck.revealkt.dsl.slides
 
-import dev.limebeck.revealkt.utils.UuidGenerator
-import dev.limebeck.revealkt.elements.RevealKtElement
-import dev.limebeck.revealkt.elements.SlidesHolder
+import dev.limebeck.revealkt.core.RevealKtElement
+import dev.limebeck.revealkt.dsl.SlidesHolder
 import dev.limebeck.revealkt.elements.slides.RegularSlide
+import dev.limebeck.revealkt.utils.UuidGenerator
 
 class RegularSlideBuilder {
     var autoanimate: Boolean = false

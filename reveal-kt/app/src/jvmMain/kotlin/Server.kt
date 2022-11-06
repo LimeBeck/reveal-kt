@@ -2,6 +2,8 @@ package dev.limebeck.application
 
 import dev.limebeck.revealkt.dsl.RevealKtBuilder
 import dev.limebeck.revealkt.dsl.revealKt
+import dev.limebeck.revealkt.core.RevealKt
+import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -23,7 +25,7 @@ suspend fun ApplicationCall.respondPresentation(title: String = "RevealKt", bloc
     val presentation = revealKt(title, block).build()
 
     respondHtml {
-        presentation.render(this)
+        render(presentation)
     }
 }
 
@@ -31,33 +33,92 @@ suspend fun ApplicationCall.respondPresentation(presentationBuilder: RevealKtBui
     val presentation = presentationBuilder.build()
 
     respondHtml {
-        presentation.render(this)
+        render(presentation)
+    }
+}
+
+fun FlowContent.renderSlides(slides: List<Slide>) {
+    div("reveal") {
+        div("slides") {
+            slides.forEach {
+                it.render(this)
+            }
+        }
+    }
+}
+
+fun HTML.render(presentation: RevealKt) {
+    val configuration = presentation.configuration
+    head {
+        meta {
+            charset = "utf-8"
+        }
+        title {
+            +presentation.title
+        }
+    }
+    body {
+        renderSlides(presentation.slides)
+
+        script {
+            unsafe {
+                raw(
+                    """
+                    const configuration = {
+                        controls: ${configuration.controls},
+                        progress: ${configuration.progress},
+                        history: ${configuration.history},
+                        center: ${configuration.center},
+                        touch: ${configuration.touch},
+                        autoAnimateDuration: ${configuration.autoAnimateDuration},
+                        theme: "${
+                            when (configuration.theme) {
+                                is RevealKt.Configuration.Theme.Predefined -> (configuration.theme as RevealKt.Configuration.Theme.Predefined).name.lowercase()
+                                is RevealKt.Configuration.Theme.Custom -> (configuration.theme as RevealKt.Configuration.Theme.Custom).cssLink
+                            }
+                        }"
+                    }
+                    """.trimIndent()
+                )
+            }
+        }
+
+        script(src = "revealkt.js") { }
     }
 }
 
 @OptIn(ExperimentalTime::class)
 fun main(args: Array<String>) {
     val logger = LoggerFactory.getLogger("ServerLogger")
+    val basePath = "./reveal-kt/app/scripts"
     val scriptLoader = RevealKtScriptLoader()
     embeddedServer(CIO, host = "0.0.0.0", port = 8080) {
         routing {
+            get("assets/{assetName}") {
+                val assetName = call.parameters["assetName"]!!
+                logger.info("<2e9bb124> Get asset $assetName")
+                call.respondFile(baseDir = File("$basePath/assets"), fileName = assetName)
+            }
+
             get("/{resourceName}") {
                 val resourceName = call.parameters["resourceName"]!!
                 logger.info("<955693ee> Get resource $resourceName")
-                call.respondText(
-                    contentType = ContentType.Text.JavaScript,
+
+                call.respondBytes(
+                    contentType = ContentType.defaultForFilePath(resourceName),
                     status = HttpStatusCode.OK
                 ) {
                     withContext(Dispatchers.IO) {
                         this::class.java.classLoader.getResourceAsStream(resourceName)?.readAllBytes()
                             ?: throw NotFoundException()
-                    }.decodeToString()
+                    }
                 }
             }
+
             get("/") {
                 val time = measureTime {
                     val loadResult = scriptLoader.loadScript(
-                        File("./reveal-kt/app/scripts/TestPresentation.reveal.kts")
+                        File("$basePath/TestPresentation.reveal.kts")
                     )
                     when (loadResult) {
                         is RevealKtScriptLoader.LoadResult.Success -> {

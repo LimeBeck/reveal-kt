@@ -1,5 +1,5 @@
 package dev.limebeck.revealkt.elements.slides
 
-import dev.limebeck.revealkt.elements.RevealKtElement
+import dev.limebeck.revealkt.core.RevealKtElement
 
 interface Slide : RevealKtElement

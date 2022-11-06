@@ -1,4 +1,4 @@
-package dev.limebeck.revealkt.elements
+package dev.limebeck.revealkt.core
 
 import dev.limebeck.revealkt.elements.slides.Slide
 import kotlinx.html.*
@@ -6,15 +6,10 @@ import kotlinx.html.*
 data class RevealKt(
     val title: String,
     val slides: List<Slide>,
-    val plugins: List<Plugin> = defaultPlugins,
     val configuration: Configuration = defaultConfiguration,
 ) {
 
     companion object {
-        val defaultPlugins = listOf(
-            Plugin("RevealNotes", "reveal.js/plugin/notes/notes.js"),
-            Plugin("RevealHighlight", "reveal.js/plugin/highlight/highlight.js")
-        )
         val defaultConfiguration = Configuration()
     }
 
@@ -26,6 +21,7 @@ data class RevealKt(
         val center: Boolean = true,
         val touch: Boolean = true,
         val autoAnimateDuration: Double = 0.5,
+        val theme: Theme = Theme.Predefined.BLACK
     ) {
 
         sealed interface Theme {
@@ -49,74 +45,9 @@ data class RevealKt(
             ) : Theme
         }
     }
-
-    data class Plugin(
-        val name: String,
-        val cdnUrl: String,
-    )
-
-    fun renderSlides(tag: FlowContent) = with(tag) {
-        div("reveal") {
-            div("slides") {
-                slides.forEach {
-                    it.render(this)
-                }
-            }
-        }
-    }
-
-    fun render(tag: HTML) = with(tag) {
-        head {
-            meta {
-                charset = "utf-8"
-            }
-            title {
-                +this@RevealKt.title
-            }
-        }
-        body {
-            div("reveal") {
-                div("slides") {
-                    slides.forEach {
-                        it.render(this)
-                    }
-                }
-            }
-
-            script {
-                unsafe {
-                    raw(
-                        """
-                            const configuration = {
-                                controls: ${configuration.controls},
-                                progress: ${configuration.progress},
-                                history: ${configuration.history},
-                                center: ${configuration.center},
-                                touch: ${configuration.touch},
-                                autoAnimateDuration: ${configuration.autoAnimateDuration},
-                            }
-                        """.trimIndent()
-                    )
-                }
-            }
-
-            script {
-                unsafe {
-                    raw(
-                        """
-                            const plugins = [
-                                ${plugins.joinToString(",", prefix = "\"", postfix = "\""){ it.name }}
-                            ]
-                        """.trimIndent()
-                    )
-                }
-            }
-
-//            plugins.forEach {
-//                script(src = it.cdnUrl) {}
-//            }
-
-            script(src = "revealkt.js") { }
-        }
-    }
+//
+//    data class Plugin(
+//        val name: String,
+//        val cdnUrl: String,
+//    )
 }

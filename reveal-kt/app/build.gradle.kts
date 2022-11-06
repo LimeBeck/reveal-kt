@@ -27,6 +27,7 @@ kotlin {
     }
     js(IR) {
         binaries.executable()
+        useCommonJs()
         browser {
             commonWebpackConfig {
                 outputFileName = "revealkt.js"

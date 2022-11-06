@@ -1,9 +1,6 @@
 package dev.limebeck.revealkt.dsl
 
-import dev.limebeck.revealkt.core.elements.Code
-import dev.limebeck.revealkt.core.elements.Note
-import dev.limebeck.revealkt.core.elements.RegularText
-import dev.limebeck.revealkt.core.elements.Title
+import dev.limebeck.revealkt.core.elements.*
 import dev.limebeck.revealkt.dsl.slides.RegularSlideBuilder
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
@@ -71,5 +68,24 @@ fun RegularSlideBuilder.code(
     id: ID = UuidGenerator.generateId(),
     block: () -> String
 ) = Code(id, block()).also {
+    elements.add(it)
+}
+
+class ImageConfigurationBuilder {
+    var height: Int? = null
+    var width: Int? = null
+
+    fun build(): Image.Configuration = Image.Configuration(height, width)
+}
+
+fun RegularSlideBuilder.img(
+    id: ID = UuidGenerator.generateId(),
+    src: String,
+    configurationBlock: (ImageConfigurationBuilder.() -> Unit)? = null
+) = Image(
+    id = id,
+    path = src,
+    configuration = ImageConfigurationBuilder().apply { if (configurationBlock != null) configurationBlock() }.build()
+).also {
     elements.add(it)
 }

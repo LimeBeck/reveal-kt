@@ -1,7 +1,6 @@
 package dev.limebeck.revealkt.dsl
 
-import dev.limebeck.revealkt.elements.RevealKt
-import dev.limebeck.revealkt.elements.SlidesHolder
+import dev.limebeck.revealkt.core.RevealKt
 import dev.limebeck.revealkt.elements.slides.MarkdownSlide
 import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.utils.ID

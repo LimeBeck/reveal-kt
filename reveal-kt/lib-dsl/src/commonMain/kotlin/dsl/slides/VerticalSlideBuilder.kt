@@ -1,9 +1,9 @@
 package dev.limebeck.revealkt.dsl.slides
 
-import dev.limebeck.revealkt.utils.UuidGenerator
-import dev.limebeck.revealkt.elements.SlidesHolder
+import dev.limebeck.revealkt.dsl.SlidesHolder
 import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.elements.slides.VerticalSlide
+import dev.limebeck.revealkt.utils.UuidGenerator
 
 class VerticalSlideBuilder : SlidesHolder {
     var autoanimate: Boolean = false
