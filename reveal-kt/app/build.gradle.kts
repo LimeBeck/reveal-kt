@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
     application
 }
 
@@ -12,6 +13,7 @@ repositories {
 }
 
 val kotlinVersion: String by project
+val serializationVersion: String by project
 val ktorVersion: String by project
 val logbackVersion: String by project
 
@@ -41,6 +43,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":reveal-kt:lib-dsl"))
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${serializationVersion}")
             }
         }
         val commonTest by getting {

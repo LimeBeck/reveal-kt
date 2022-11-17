@@ -1,4 +1,3 @@
-
 rootProject.name = "reveal-kt"
 
 rootDir.resolve("reveal-kt").list()?.forEach {
@@ -11,6 +10,7 @@ pluginManagement {
     val dokkaVersion: String by settings
     plugins {
         kotlin("multiplatform") version kotlinVersion
+        kotlin("plugin.serialization") version kotlinVersion
         id("io.kotest.multiplatform") version kotestVersion
         id("org.jetbrains.dokka") version dokkaVersion
     }

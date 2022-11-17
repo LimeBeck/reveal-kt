@@ -5,6 +5,8 @@ import dev.limebeck.revealkt.dsl.revealKt
 import dev.limebeck.revealkt.core.RevealKt
 import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
+import dev.limebeck.revealkt.server.ConfigurationDto
+import dev.limebeck.revealkt.server.configurationJsomMapper
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
+import kotlinx.serialization.encodeToString
 
 suspend fun ApplicationCall.respondPresentation(title: String = "RevealKt", block: RevealKtBuilder.() -> Unit) {
     val presentation = revealKt(title, block).build()
@@ -64,21 +67,8 @@ fun HTML.render(presentation: RevealKt) {
             unsafe {
                 raw(
                     """
-                    const configuration = {
-                        controls: ${configuration.controls},
-                        progress: ${configuration.progress},
-                        history: ${configuration.history},
-                        center: ${configuration.center},
-                        touch: ${configuration.touch},
-                        autoAnimateDuration: ${configuration.autoAnimateDuration},
-                        theme: "${
-                            when (configuration.theme) {
-                                is RevealKt.Configuration.Theme.Predefined -> (configuration.theme as RevealKt.Configuration.Theme.Predefined).name.lowercase()
-                                is RevealKt.Configuration.Theme.Custom -> (configuration.theme as RevealKt.Configuration.Theme.Custom).cssLink
-                            }
-                        }"
-                    }
-                    """.trimIndent()
+                    const configurationJson = ${configurationJsomMapper.encodeToString(ConfigurationDto(configuration))}
+                    """
                 )
             }
         }

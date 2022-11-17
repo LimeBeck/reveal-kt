@@ -1,7 +1,6 @@
 package dev.limebeck.revealkt.core
 
 import dev.limebeck.revealkt.elements.slides.Slide
-import kotlinx.html.*
 
 data class RevealKt(
     val title: String,
@@ -21,7 +20,8 @@ data class RevealKt(
         val center: Boolean = true,
         val touch: Boolean = true,
         val autoAnimateDuration: Double = 0.5,
-        val theme: Theme = Theme.Predefined.BLACK
+        val theme: Theme = Theme.Predefined.BLACK,
+        val additionalCssStyle: String? = null,
     ) {
 
         sealed interface Theme {
@@ -41,7 +41,7 @@ data class RevealKt(
             }
 
             data class Custom(
-                val cssLink: String
+                val cssLink: String,
             ) : Theme
         }
     }

@@ -7,25 +7,29 @@ import dev.limebeck.revealkt.utils.UuidGenerator
 
 fun RegularSlideBuilder.title(
     id: ID = UuidGenerator.generateId(),
+    fitText: Boolean = false,
     block: () -> String
-) = Title(id, block()).also {
+) = Title(id, fitText, block()).also {
     elements.add(it)
 }
 
 fun title(
     id: ID = UuidGenerator.generateId(),
+    fitText: Boolean = false,
     block: () -> String
-) = Title(id, block())
+) = Title(id, fitText, block())
 
 fun title(
     id: ID = UuidGenerator.generateId(),
+    fitText: Boolean = false,
     title: String,
-) = Title(id, title)
+) = Title(id, fitText, title)
 
 fun RegularSlideBuilder.title(
     title: String,
+    fitText: Boolean = false,
     id: ID = UuidGenerator.generateId()
-) = Title(id, title).also {
+) = Title(id, fitText, title).also {
     elements.add(it)
 }
 
