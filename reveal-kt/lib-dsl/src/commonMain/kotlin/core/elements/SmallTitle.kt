@@ -4,10 +4,10 @@ import dev.limebeck.revealkt.core.AttributedElement
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
 import kotlinx.html.HtmlBlockTag
-import kotlinx.html.h1
+import kotlinx.html.h3
 
 
-data class Title(
+data class SmallTitle(
     override val id: ID = UuidGenerator.generateId(),
     val fitText: Boolean = false,
     val title: String,
@@ -27,9 +27,9 @@ data class Title(
     }
 
     override fun HtmlBlockTag.tagBodyProvider(renderAttributes: HtmlBlockTag.() -> Unit) {
-        h1 {
+        h3 {
             renderAttributes()
-            +this@Title.title
+            +this@SmallTitle.title
         }
     }
 }

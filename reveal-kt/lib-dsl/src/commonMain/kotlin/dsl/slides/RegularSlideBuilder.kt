@@ -1,19 +1,20 @@
 package dev.limebeck.revealkt.dsl.slides
 
 import dev.limebeck.revealkt.core.RevealKtElement
+import dev.limebeck.revealkt.dsl.ElementsHolder
 import dev.limebeck.revealkt.dsl.SlidesHolder
 import dev.limebeck.revealkt.elements.slides.RegularSlide
 import dev.limebeck.revealkt.utils.UuidGenerator
 
-class RegularSlideBuilder {
-    var autoanimate: Boolean = false
+class RegularSlideBuilder : ElementsHolder {
+    var autoanimate: Boolean = true
     var id = UuidGenerator.generateId()
 
-    internal val elements = mutableListOf<RevealKtElement>()
-
-    operator fun RevealKtElement.unaryPlus() {
-        elements.add(this)
-    }
+    override val elements = mutableListOf<RevealKtElement>()
+//
+//    operator fun RevealKtElement.unaryPlus() {
+//        elements.add(this)
+//    }
 
     fun build(): RegularSlide {
         return RegularSlide(

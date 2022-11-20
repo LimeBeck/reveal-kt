@@ -108,7 +108,7 @@ fun main(args: Array<String>) {
             get("/") {
                 val time = measureTime {
                     val loadResult = scriptLoader.loadScript(
-                        File("$basePath/TestPresentation.reveal.kts")
+                        File("$basePath/GradlePresentation.reveal.kts")
                     )
                     when (loadResult) {
                         is RevealKtScriptLoader.LoadResult.Success -> {
