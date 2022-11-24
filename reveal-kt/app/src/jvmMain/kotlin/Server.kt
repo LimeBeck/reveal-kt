@@ -1,18 +1,22 @@
 package dev.limebeck.application
 
-import dev.limebeck.revealkt.dsl.RevealKtBuilder
-import dev.limebeck.revealkt.dsl.revealKt
-import dev.limebeck.revealkt.core.RevealKt
-import dev.limebeck.revealkt.elements.slides.Slide
+import com.github.ajalt.clikt.completion.completionOption
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.file
+import com.github.ajalt.clikt.parameters.types.int
+import com.github.ajalt.clikt.parameters.types.path
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
-import dev.limebeck.revealkt.server.ConfigurationDto
-import dev.limebeck.revealkt.server.configurationJsomMapper
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
+import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.html.*
 import io.ktor.server.plugins.*
+import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.Dispatchers
@@ -20,121 +24,113 @@ import kotlinx.coroutines.withContext
 import kotlinx.html.*
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.pathString
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
-import kotlinx.serialization.encodeToString
 
-suspend fun ApplicationCall.respondPresentation(title: String = "RevealKt", block: RevealKtBuilder.() -> Unit) {
-    val presentation = revealKt(title, block).build()
+class Server : CliktCommand() {
+    val port: Int by option(help = "Port").int().default(8080)
+    val host: String by option(help = "Host").default("0.0.0.0")
+    val basePath: Path? by option(help = "Script dir").path()
+    val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
 
-    respondHtml {
-        render(presentation)
+    override fun run() {
+        runServer(
+            Config(
+                server = ServerConfig(host, port),
+                basePath = basePath?.pathString ?: script.parent,
+                script = script
+            )
+        )
     }
 }
 
-suspend fun ApplicationCall.respondPresentation(presentationBuilder: RevealKtBuilder) {
-    val presentation = presentationBuilder.build()
+fun main(args: Array<String>) = Server().completionOption().main(args)
 
-    respondHtml {
-        render(presentation)
-    }
-}
+data class Config(
+    val server: ServerConfig,
+    val basePath: String,
+    val script: File,
+)
 
-fun FlowContent.renderSlides(slides: List<Slide>) {
-    div("reveal") {
-        div("slides") {
-            slides.forEach {
-                it.render(this)
-            }
-        }
-    }
-}
-
-fun HTML.render(presentation: RevealKt) {
-    val configuration = presentation.configuration
-    head {
-        meta {
-            charset = "utf-8"
-        }
-        title {
-            +presentation.title
-        }
-    }
-    body {
-        renderSlides(presentation.slides)
-
-        script {
-            unsafe {
-                raw(
-                    """
-                    const configurationJson = ${configurationJsomMapper.encodeToString(ConfigurationDto(configuration))}
-                    """
-                )
-            }
-        }
-
-        script(src = "revealkt.js") { }
-    }
-}
+data class ServerConfig(
+    val host: String = "0.0.0.0",
+    val port: Int = 8080,
+)
 
 @OptIn(ExperimentalTime::class)
-fun main(args: Array<String>) {
+fun runServer(config: Config) {
     val logger = LoggerFactory.getLogger("ServerLogger")
-    val basePath = "./reveal-kt/app/scripts"
+    val basePath = config.basePath
+
     val scriptLoader = RevealKtScriptLoader()
-    embeddedServer(CIO, host = "0.0.0.0", port = 8080) {
-        routing {
-            get("assets/{assetName}") {
-                val assetName = call.parameters["assetName"]!!
-                logger.info("<2e9bb124> Get asset $assetName")
-                call.respondFile(baseDir = File("$basePath/assets"), fileName = assetName)
-            }
 
-            get("/{resourceName}") {
-                val resourceName = call.parameters["resourceName"]!!
-                logger.info("<955693ee> Get resource $resourceName")
+    embeddedServer(CIO, environment = applicationEngineEnvironment {
+        connector {
+            host = config.server.host
+            port = config.server.port
+        }
 
-                call.respondBytes(
-                    contentType = ContentType.defaultForFilePath(resourceName),
-                    status = HttpStatusCode.OK
-                ) {
-                    withContext(Dispatchers.IO) {
-                        this::class.java.classLoader.getResourceAsStream(resourceName)?.readAllBytes()
-                            ?: throw NotFoundException()
-                    }
+        module {
+            install(StatusPages) {
+                exception<Throwable> { call, cause ->
+                    logger.error("<2c1b0315> Error", cause)
+                    call.respondText(cause.asHtml(), ContentType.Text.Html)
                 }
             }
 
-            get("/") {
-                val time = measureTime {
-                    val loadResult = scriptLoader.loadScript(
-                        File("$basePath/GradlePresentation.reveal.kts")
-                    )
-                    when (loadResult) {
-                        is RevealKtScriptLoader.LoadResult.Success -> {
-                            call.respondPresentation(loadResult.value)
-                        }
+            routing {
+                get("assets/{assetName}") {
+                    val assetName = call.parameters["assetName"]!!
+                    logger.info("<2e9bb124> Get asset $assetName")
+                    call.respondFile(baseDir = File("$basePath/assets"), fileName = assetName)
+                }
 
-                        is RevealKtScriptLoader.LoadResult.Error -> {
-                            call.respondHtml {
-                                head {
-                                    title { +"Render Error" }
-                                    link(
-                                        rel = "stylesheet",
-                                        href = "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
-                                    )
-                                }
-                                body {
-                                    loadResult.diagnostic.forEach {
-                                        div { p { +it.render() } }
+                get("/{resourceName}") {
+                    val resourceName = call.parameters["resourceName"]!!
+                    logger.info("<955693ee> Get resource $resourceName")
+
+                    call.respondBytes(
+                        contentType = ContentType.defaultForFilePath(resourceName),
+                        status = HttpStatusCode.OK
+                    ) {
+                        withContext(Dispatchers.IO) {
+                            this::class.java.classLoader.getResourceAsStream(resourceName)?.readAllBytes()
+                                ?: throw NotFoundException()
+                        }
+                    }
+                }
+
+                get("/") {
+                    val time = measureTime {
+                        val loadResult = scriptLoader.loadScript(config.script)
+                        when (loadResult) {
+                            is RevealKtScriptLoader.LoadResult.Success -> {
+                                call.respondPresentation(loadResult.value)
+                            }
+
+                            is RevealKtScriptLoader.LoadResult.Error -> {
+                                call.respondHtml {
+                                    head {
+                                        title { +"Render Error" }
+                                        link(
+                                            rel = "stylesheet",
+                                            href = "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
+                                        )
+                                    }
+                                    body {
+                                        loadResult.diagnostic.forEach {
+                                            div { p { +it.render() } }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                    logger.info("<82363b2a> Processed with $time")
                 }
-                logger.info("<82363b2a> Processed with $time")
             }
         }
-    }.start(wait = true)
+    }).start(wait = true)
 }

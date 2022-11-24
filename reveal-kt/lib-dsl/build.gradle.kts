@@ -98,7 +98,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-html:$kotlinxHtmlVersion")
-                implementation("com.benasher44:uuid:0.5.0")
+                implementation("com.benasher44:uuid:0.6.0")
             }
         }
         val commonTest by getting {

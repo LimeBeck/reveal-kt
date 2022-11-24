@@ -34,14 +34,12 @@ configuration {
 
 slides {
     regularSlide {
-
         +title(fitText = true) { "(Де)мистифицируем" }
         +img(src = "gradle-white-primary.png")
         +note("Спросить, кто вообще пользовался гредлом")
     }
 
     regularSlide {
-
         +mediumTitle { "Кто я такой?" }
         +note("Рассказать, что я вкатился сначала на гредл, а потом только попробовал мавен")
         +row {

@@ -34,7 +34,6 @@ data class Code(
                 style = "line-height: normal; padding: 0 3px;font-size: small; overflow-wrap:normal"
                 script("text/template") {
                     unsafe {
-                        println(this@Code.code)
                         +this@Code.code
                     }
                 }
