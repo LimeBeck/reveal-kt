@@ -71,17 +71,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle
 
-      - name: Test JVM with Gradle
-        if: always()
-        run: ./gradlew :jvmTest -i
-
-      - name: Test JS with Gradle
-        if: always()
-        run: ./gradlew :jsNodeTest -i
-
-      - name: Test Native with Gradle
-        if: always()
-        run: ./gradlew :nativeTest -i
+#      - name: Test JVM with Gradle
+#        if: always()
+#        run: ./gradlew :jvmTest -i
+#
+#      - name: Test JS with Gradle
+#        if: always()
+#        run: ./gradlew :jsNodeTest -i
+#
+#      - name: Test Native with Gradle
+#        if: always()
+#        run: ./gradlew :nativeTest -i
 
       - name: Upload Unit Test Results
         if: always()
