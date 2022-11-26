@@ -74,6 +74,11 @@ fun runServer(config: Config) {
 
         module {
             install(StatusPages) {
+                exception<NotFoundException> { call, cause ->
+                    logger.error("<2c1b0315> Error", cause)
+                    call.respondText(cause.asHtml(), ContentType.Text.Html, status = HttpStatusCode.NotFound)
+                }
+
                 exception<Throwable> { call, cause ->
                     logger.error("<2c1b0315> Error", cause)
                     call.respondText(cause.asHtml(), ContentType.Text.Html)

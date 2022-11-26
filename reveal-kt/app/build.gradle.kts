@@ -1,8 +1,13 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("io.ktor.plugin")
     application
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("maven-publish")
+    id("signing")
+    id("org.jetbrains.dokka")
 }
 
 group = "dev.limebeck"
@@ -84,13 +89,7 @@ application {
 //    mainModule.set("dev.limebeck.revealkt")
 }
 
-ktor {
-    fatJar {
-        archiveFileName.set("revealkt.jar")
-    }
-}
-
-tasks.named<Copy>("jvmProcessResources") {
+val copyJsTask = tasks.named<Copy>("jvmProcessResources") {
     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
     from(jsBrowserDistribution)
     excludes.add("*.zip")
@@ -100,4 +99,66 @@ tasks.named<Copy>("jvmProcessResources") {
 tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
     classpath(tasks.named<Jar>("jvmJar"))
+}
+
+// tasks to create an executable jar with all components of the app
+val shadow = tasks.getByName<ShadowJar>("shadowJar") {
+    dependsOn(copyJsTask) // make sure JS gets compiled first
+    archiveFileName.set("revealkt.jar")
+    mergeServiceFiles()
+    manifest {
+        attributes["Main-Class"] = "dev.limebeck.application.ServerKt"
+    }
+}
+
+val stubJavaDocJar by tasks.registering(Jar::class) {
+    archiveClassifier.value("javadoc")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("shadow") {
+            project.shadow.component(this)
+            artifactId = "revealkt-cli"
+            pom {
+                groupId = "dev.limebeck"
+                url.set("https://github.com/LimeBeck/reveal-kt")
+                developers {
+                    developer {
+                        id.set("LimeBeck")
+                        name.set("Anatoly Nechay-Gumen")
+                        email.set("mail@limebeck.dev")
+                    }
+                }
+                licenses {
+                    license {
+                        name.set("MIT license")
+                        url.set("https://github.com/LimeBeck/reveal-kt/blob/master/LICENCE")
+                        distribution.set("repo")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/LimeBeck/reveal-kt.git")
+                    developerConnection.set("scm:git:ssh://github.com/LimeBeck/reveal-kt.git")
+                    url.set("https://github.com/LimeBeck/reveal-kt")
+                }
+            }
+        }
+    }
+}
+
+tasks.withType<PublishToMavenRepository>().configureEach {
+    onlyIf {
+        it.name.contains("shadow")
+    }
+}
+
+tasks.withType<PublishToMavenLocal>().configureEach {
+    onlyIf {
+        it.name.contains("shadow", ignoreCase = true)
+    }
+}
+
+tasks.dokkaHtml.configure {
+    outputDirectory.set(buildDir.resolve("dokka"))
 }

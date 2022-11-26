@@ -23,13 +23,14 @@ repositories {
 kotlin {
     metadata {
         mavenPublication {
-            artifactId = "revealkt"
+            artifactId = "revealkt-dsl"
             pom {
                 name.set("RevealKt kotlin-wrapper for Reveal JS library metadata")
                 description.set("Kotlin metadata module for RevealKt kotlin-wrapper for Reveal JS library")
             }
         }
     }
+
     jvm {
         mavenPublication {
             artifactId = "revealkt-jvm"
@@ -176,7 +177,7 @@ publishing {
             val publicationName = this.name
             pom {
                 if (publicationName == "kotlinMultiplatform") {
-                    name.set("RevealKt")
+                    name.set("revealkt")
                     description.set("RevealJs kotlin wrapper and dsl")
                 }
                 groupId = "dev.limebeck"
