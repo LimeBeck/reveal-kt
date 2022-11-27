@@ -33,7 +33,7 @@ kotlin {
 
     jvm {
         mavenPublication {
-            artifactId = "revealkt-jvm"
+            artifactId = "revealkt-dsl-jvm"
             pom {
                 name.set("RevealKt kotlin-wrapper for Reveal JS library JVM")
                 description.set("Kotlin JVM module for RevealKt kotlin-wrapper for Reveal JS library")
@@ -49,7 +49,7 @@ kotlin {
 
     js(IR) {
         mavenPublication {
-            artifactId = "revealkt-js"
+            artifactId = "revealkt-dsl-js"
             pom {
                 name.set("RevealKt kotlin-wrapper for Reveal JS library JS")
                 description.set("Kotlin JS module for RevealKt kotlin-wrapper for Reveal JS library")
@@ -64,7 +64,7 @@ kotlin {
     val nativeTarget = when {
         hostOs == "Mac OS X" -> macosX64("native") {
             mavenPublication {
-                artifactId = "revealkt-native-macos"
+                artifactId = "revealkt-dsl-native-macos"
                 pom {
                     name.set("RevealKt kotlin-wrapper for Reveal JS library native-macos")
                     description.set("Kotlin native-macos module for RevealKt kotlin-wrapper for Reveal JS library")
@@ -74,7 +74,7 @@ kotlin {
 
         hostOs == "Linux" -> linuxX64("native") {
             mavenPublication {
-                artifactId = "revealkt-native-linux"
+                artifactId = "revealkt-dsl-native-linux"
                 pom {
                     name.set("RevealKt kotlin-wrapper for Reveal JS library native-linux")
                     description.set("Kotlin native-linux module for RevealKt kotlin-wrapper for Reveal JS library")
@@ -84,7 +84,7 @@ kotlin {
 
         isMingwX64 -> mingwX64("native") {
             mavenPublication {
-                artifactId = "revealkt-native-win"
+                artifactId = "revealkt-dsl-native-win"
                 pom {
                     name.set("RevealKt kotlin-wrapper for Reveal JS library native-win")
                     description.set("Kotlin native-win module for RevealKt kotlin-wrapper for Reveal JS library")
@@ -177,8 +177,9 @@ publishing {
             val publicationName = this.name
             pom {
                 if (publicationName == "kotlinMultiplatform") {
-                    name.set("revealkt")
+                    name.set("revealkt-dsl")
                     description.set("RevealJs kotlin wrapper and dsl")
+                    artifactId = "revealkt-dsl"
                 }
                 groupId = "dev.limebeck"
                 url.set("https://github.com/LimeBeck/reveal-kt")

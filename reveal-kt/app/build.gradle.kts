@@ -10,8 +10,9 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
+val revealKtVersion: String by project
 group = "dev.limebeck"
-version = "1.0-SNAPSHOT"
+version = revealKtVersion
 
 repositories {
     mavenCentral()
@@ -105,6 +106,7 @@ tasks.named<JavaExec>("run") {
 val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     dependsOn(copyJsTask) // make sure JS gets compiled first
     archiveFileName.set("revealkt.jar")
+    archiveClassifier.set("")
     mergeServiceFiles()
     manifest {
         attributes["Main-Class"] = "dev.limebeck.application.ServerKt"
@@ -113,6 +115,10 @@ val shadow = tasks.getByName<ShadowJar>("shadowJar") {
 
 val stubJavaDocJar by tasks.registering(Jar::class) {
     archiveClassifier.value("javadoc")
+}
+
+tasks.named("publish") {
+    dependsOn(shadow)
 }
 
 publishing {
