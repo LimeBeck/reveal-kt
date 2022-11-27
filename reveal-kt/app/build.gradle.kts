@@ -124,10 +124,25 @@ tasks.named("publish") {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "MainRepo"
+            url = uri(
+                System.getenv("REPO_URI")
+                    ?: project.findProperty("repo.uri") as String
+            )
+            credentials {
+                username = System.getenv("REPO_USERNAME")
+                    ?: project.findProperty("repo.username") as String?
+                password = System.getenv("REPO_PASSWORD")
+                    ?: project.findProperty("repo.password") as String?
+            }
+        }
+    }
+
     publications {
         create<MavenPublication>("shadow") {
-//            from(components["java"])
-            artifact(tasks["shadowJar"])
+            project.shadow.component(this)
             artifact(tasks["sourcesJar"])
             artifact(stubJavaDocJar)
             artifactId = "revealkt-cli"
