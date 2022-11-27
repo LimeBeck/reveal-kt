@@ -3,13 +3,11 @@ plugins {
     id("maven-publish")
     id("signing")
     id("org.jetbrains.dokka")
-    id("io.kotest.multiplatform")
 }
 
 val revealKtVersion: String by project
 
 val kotlinCoroutinesVersion: String by project
-val kotestVersion: String by project
 val kotlinxHtmlVersion: String by project
 
 group = "dev.limebeck"
@@ -104,9 +102,6 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-framework-engine:$kotestVersion")
-                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
-                implementation("io.kotest:kotest-framework-datatest:$kotestVersion")
                 implementation(kotlin("test"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVersion}") {
                     version {
@@ -122,7 +117,6 @@ kotlin {
         }
         val jvmTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-runner-junit5:$kotestVersion")
             }
         }
         val jsMain by getting {
