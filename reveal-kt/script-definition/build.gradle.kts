@@ -39,6 +39,10 @@ sourceSets {
     test {}
 }
 
+java {
+    withSourcesJar()
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
 }

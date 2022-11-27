@@ -30,6 +30,9 @@ kotlin {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
         }
+        java {
+            withSourcesJar()
+        }
         withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
@@ -87,7 +90,6 @@ kotlin {
 
 application {
     mainClass.set("dev.limebeck.application.ServerKt")
-//    mainModule.set("dev.limebeck.revealkt")
 }
 
 val copyJsTask = tasks.named<Copy>("jvmProcessResources") {
@@ -102,19 +104,19 @@ tasks.named<JavaExec>("run") {
     classpath(tasks.named<Jar>("jvmJar"))
 }
 
+val stubJavaDocJar by tasks.registering(Jar::class) {
+    archiveClassifier.value("javadoc")
+}
+
 // tasks to create an executable jar with all components of the app
 val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     dependsOn(copyJsTask) // make sure JS gets compiled first
-    archiveFileName.set("revealkt.jar")
     archiveClassifier.set("")
     mergeServiceFiles()
     manifest {
         attributes["Main-Class"] = "dev.limebeck.application.ServerKt"
     }
-}
-
-val stubJavaDocJar by tasks.registering(Jar::class) {
-    archiveClassifier.value("javadoc")
+    finalizedBy(stubJavaDocJar)
 }
 
 tasks.named("publish") {
@@ -124,7 +126,10 @@ tasks.named("publish") {
 publishing {
     publications {
         create<MavenPublication>("shadow") {
-            project.shadow.component(this)
+//            from(components["java"])
+            artifact(tasks["shadowJar"])
+            artifact(tasks["sourcesJar"])
+            artifact(stubJavaDocJar)
             artifactId = "revealkt-cli"
             pom {
                 groupId = "dev.limebeck"
@@ -155,7 +160,7 @@ publishing {
 
 tasks.withType<PublishToMavenRepository>().configureEach {
     onlyIf {
-        it.name.contains("shadow")
+        it.name.contains("shadow", ignoreCase = true)
     }
 }
 
@@ -163,6 +168,10 @@ tasks.withType<PublishToMavenLocal>().configureEach {
     onlyIf {
         it.name.contains("shadow", ignoreCase = true)
     }
+}
+
+signing {
+    sign(publishing.publications)
 }
 
 tasks.dokkaHtml.configure {
