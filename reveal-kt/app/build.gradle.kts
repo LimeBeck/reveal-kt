@@ -147,6 +147,8 @@ publishing {
             artifact(stubJavaDocJar)
             artifactId = "revealkt-cli"
             pom {
+                name.set("RevealKt kotlin-wrapper CLI for Reveal JS library")
+                description.set("Kotlin cli module for RevealKt kotlin-wrapper for Reveal JS library")
                 groupId = "dev.limebeck"
                 url.set("https://github.com/LimeBeck/reveal-kt")
                 developers {

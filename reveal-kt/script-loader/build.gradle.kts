@@ -71,8 +71,11 @@ publishing {
     publications {
         create<MavenPublication>("scriptLoader") {
             from(components["java"])
+            artifact(stubJavaDocJar)
             artifactId = "revealkt-script-loader"
             pom {
+                name.set("RevealKt kotlin-wrapper script loader for Reveal JS library")
+                description.set("Kotlin script loader module for RevealKt kotlin-wrapper for Reveal JS library")
                 groupId = "dev.limebeck"
                 url.set("https://github.com/LimeBeck/reveal-kt")
                 developers {
