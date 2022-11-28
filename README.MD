@@ -1,68 +1,74 @@
 # RevealKt
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/limebeck/reveal-kt/CI)
+![GitHub last commit](https://img.shields.io/github/last-commit/limebeck/reveal-kt)
+![GitHub](https://img.shields.io/github/license/limebeck/reveal-kt)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.limebeck/revealkt-cli.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22dev.limebeck%22%20AND%20a:%22ko-te%22)
+
+
 Kotlin DSL wrapper around Reveal JS presentation library
+
+## Usage
+
+Run server with presentation:
+```bash
+jbang revealkt@limebeck.dev ./MyAwesomePresentation.reveal.kts
+```
 
 ## Example
 
+**MyAwesomeScript.reveal.kts**:
 ```kotlin
+import dev.limebeck.revealkt.core.elements.*
 import dev.limebeck.revealkt.dsl.*
-import dev.limebeck.revealkt.dsl.slides.regularSlide
-import dev.limebeck.revealkt.dsl.slides.slide
-import dev.limebeck.revealkt.dsl.slides.verticalSlide
-import dev.limebeck.revealkt.core.elements.Title
-import io.ktor.server.application.*
-import io.ktor.server.cio.*
-import io.ktor.server.engine.*
-import io.ktor.server.html.*
-import io.ktor.server.routing.*
+import dev.limebeck.revealkt.dsl.slides.*
 
-suspend fun ApplicationCall.respondPresentation(title: String = "RevealKt", block: RevealKtBuilder.() -> Unit) {
-    val presentation = revealKt(title, block).build()
+title = "My awesome presentation"
 
-    respondHtml {
-        presentation.render(this)
-    }
+configuration {
+    controls = false
+    progress = false
 }
 
-fun main(args: Array<String>) {
-    embeddedServer(CIO, host = "0.0.0.0", port = 8080) {
-        routing {
-            get("/") {
-                call.respondPresentation {
-                    title = "Hello from my presentation"
-
-                    configuration {
-                        controls = false
-                        progress = false
-                    }
-
-                    slides {
-                        regularSlide {
-                            autoanimate = true
-                            title { "Test 2" }
-                        }
-                        verticalSlide {
-                            val title = Title { "Some text" }
-                            slide {
-                                autoanimate = true
-                                +title
-                                note {
-                                    "Some note"
-                                }
-                            }
-                            slide {
-                                autoanimate = true
-                                +title
-                                title { "Updated text" }
-                                note {
-                                    "Some note"
-                                }
-                            }
-                        }
-                    }
-                }
+slides {
+    regularSlide {
+        autoanimate = true
+        +title { "Hello from my awesome presentation" }
+    }
+    verticalSlide {
+        val title = Title { "Some text" }
+        slide {
+            autoanimate = true
+            +title
+            +note {
+                "Some note"
             }
         }
-    }.start(wait = true)
+        slide {
+            autoanimate = true
+            +title
+            +title { "Updated text" }
+            +note {
+                "Some note"
+            }
+        }
+        slide {
+            autoanimate = true
+            +title
+            +code {
+                //language=JSON
+                """
+                   {
+                    "string": "some string"
+                   } 
+                """.trimIndent()
+            }
+        }
+        slide {
+            +img(src = "image.png") {
+                stretch = true
+            }
+        }
+    }
 }
 ```
