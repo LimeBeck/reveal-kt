@@ -1,0 +1,21 @@
+{
+  "catalogs": {},
+  "aliases": {
+    "revealkt": {
+      "script-ref": "dev.limebeck:revealkt-cli:0.0.2",
+      "description": "CLI for Kotlin DSL wrapper around Reveal JS presentation library",
+      "java": "17"
+    }
+  },
+  "templates": {
+    "revealkt": {
+      "file-refs": {
+        "{basename}/presentation/{basename}.reveal.kts": "template/presentation/{basename}.reveal.kts",
+        "{basename}/presentation/assets/image.png": "template/presentation/assets/image.png",
+        "{basename}/build.gradle.kts": "template/build.gradle.kts",
+        "{basename}/settings.gradle.kts": "template/settings.gradle.kts"
+      },
+      "properties": {}
+    }
+  }
+}

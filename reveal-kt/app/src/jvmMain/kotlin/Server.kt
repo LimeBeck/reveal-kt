@@ -71,6 +71,7 @@ val logger = LoggerFactory.getLogger("ServerLogger")
 
 @OptIn(ExperimentalTime::class)
 fun runServer(config: Config) {
+    println("Starting application...")
     val startTime = TimeSource.Monotonic.markNow()
 
     val basePath = config.basePath
