@@ -15,6 +15,7 @@
         "{basename}/build.gradle.kts": "template/build.gradle.kts",
         "{basename}/settings.gradle.kts": "template/settings.gradle.kts"
       },
+      "description": "Template for Revealkt presentation",
       "properties": {}
     }
   }
