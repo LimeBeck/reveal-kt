@@ -14,4 +14,9 @@ pluginManagement {
         id("org.jetbrains.dokka") version dokkaVersion
         id("io.ktor.plugin") version ktorVersion
     }
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+    }
 }

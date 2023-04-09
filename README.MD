@@ -12,7 +12,14 @@ Kotlin DSL wrapper around Reveal JS presentation library
 
 Run server with presentation:
 ```bash
-jbang revealkt@limebeck.dev ./MyAwesomePresentation.reveal.kts
+jbang revealkt@limebeck.dev run ./MyAwesomePresentation.reveal.kts
+```
+
+Create new presentation from template
+```bash
+jbang revealkt@limebeck.dev init my-awesome-presentation
+cd ./my-awesome-presentation
+jbang revealkt@limebeck.dev run ./presentation/my-awesome-presentation.reveal.kts
 ```
 
 ## Example

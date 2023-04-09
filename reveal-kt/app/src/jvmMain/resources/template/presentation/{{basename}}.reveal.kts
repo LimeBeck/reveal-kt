@@ -38,7 +38,7 @@ configuration {
 slides {
     regularSlide {
         autoanimate = true
-        +title { "{basename}" }
+        +title { "{{basename}}" }
     }
     verticalSlide {
         val title = Title { "Some text" }

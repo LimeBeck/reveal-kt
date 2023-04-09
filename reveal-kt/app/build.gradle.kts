@@ -8,6 +8,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("org.jetbrains.dokka")
+    id("dev.limebeck.build-time-config") version "1.1.0"
 }
 
 val revealKtVersion: String by project
@@ -25,10 +26,21 @@ val ktorVersion: String by project
 val logbackVersion: String by project
 val kotlinxHtmlVersion: String by project
 
+buildTimeConfig {
+    config {
+        destination.set(project.buildDir)
+        objectName.set("RevealkConfig")
+        packageName.set("dev.limebeck.revealkt")
+        configProperties {
+            property<String>("version") set revealKtVersion
+        }
+    }
+}
+
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.jvmTarget = "17"
         }
         java {
             withSourcesJar()
@@ -45,7 +57,7 @@ kotlin {
             commonWebpackConfig {
                 outputFileName = "revealkt.js"
                 cssSupport {
-                    enabled = true
+                    enabled.set(true)
                 }
             }
         }
@@ -80,7 +92,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-js"))
 
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.346")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.530")
                 implementation(npm("reveal.js", "4.4.0"))
             }
         }
@@ -89,7 +101,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("dev.limebeck.application.ServerKt")
+    mainClass.set("dev.limebeck.application.ApplicationKt")
 }
 
 val copyJsTask = tasks.named<Copy>("jvmProcessResources") {

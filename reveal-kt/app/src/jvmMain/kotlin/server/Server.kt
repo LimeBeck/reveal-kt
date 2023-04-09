@@ -1,22 +1,14 @@
-package dev.limebeck.application
+package dev.limebeck.application.server
 
-import com.github.ajalt.clikt.completion.completionOption
-import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.options.default
-import com.github.ajalt.clikt.parameters.options.option
-import com.github.ajalt.clikt.parameters.types.file
-import com.github.ajalt.clikt.parameters.types.int
-import com.github.ajalt.clikt.parameters.types.path
 import dev.limebeck.application.filesWatcher.UpdatedFile
 import dev.limebeck.application.filesWatcher.watchFilesRecursive
+import dev.limebeck.application.printToConsole
+import dev.limebeck.revealkt.RevealkConfig
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
-import io.ktor.server.config.*
 import io.ktor.server.engine.*
-import io.ktor.server.html.*
 import io.ktor.server.logging.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
@@ -27,34 +19,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.produceIn
-import kotlinx.html.*
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.nio.file.Path
 import java.util.*
-import kotlin.io.path.pathString
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 import kotlin.time.measureTimedValue
 
-class Server : CliktCommand() {
-    val port: Int by option(help = "Port").int().default(8080)
-    val host: String by option(help = "Host").default("0.0.0.0")
-    val basePath: Path? by option(help = "Script dir").path()
-    val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
-
-    override fun run() {
-        runServer(
-            Config(
-                server = ServerConfig(host, port),
-                basePath = basePath?.pathString ?: script.parent,
-                script = script
-            )
-        )
-    }
-}
-
-fun main(args: Array<String>) = Server().completionOption().main(args)
 
 data class Config(
     val server: ServerConfig,
@@ -69,7 +40,7 @@ data class ServerConfig(
 
 val logger = LoggerFactory.getLogger("ServerLogger")
 
-@OptIn(ExperimentalTime::class)
+@OptIn(ExperimentalTime::class, FlowPreview::class)
 fun runServer(config: Config) {
     println("Starting application...")
     val startTime = TimeSource.Monotonic.markNow()
@@ -124,12 +95,12 @@ fun runServer(config: Config) {
         module {
             install(StatusPages) {
                 exception<NotFoundException> { call, cause ->
-                    logger.error("<2c1b0315> Error", cause)
+                    logger.error("<2f75b6c6> Page not found", cause)
                     call.respondText(cause.asHtml(), ContentType.Text.Html, status = HttpStatusCode.NotFound)
                 }
 
                 exception<Throwable> { call, cause ->
-                    logger.error("<2c1b0315> Error", cause)
+                    logger.error("<2c1b0315> Internal error", cause)
                     call.respondText(cause.asHtml(), ContentType.Text.Html)
                 }
             }
@@ -178,13 +149,11 @@ fun runServer(config: Config) {
                 }
             }
             environment.monitor.subscribe(ApplicationStarted) {
-                printMessage(
-                    """
-                    Application started at http://${config.server.host}:${config.server.port}
+                """
+                    RevealKt started at http://${config.server.host}:${config.server.port}
                     Start duration: ${startTime.elapsedNow()}
-                """.trimIndent(),
-                    minRowLength = 60
-                )
+                    Application version: ${RevealkConfig.version}
+                """.trimIndent().printToConsole(minRowLength = 60)
             }
         }
     }).start(wait = true)
