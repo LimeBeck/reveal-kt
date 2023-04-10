@@ -153,7 +153,7 @@ publishing {
     }
 
     publications {
-        create<MavenPublication>("shadow") {
+         create<MavenPublication>("shadow") {
             project.shadow.component(this)
             artifact(tasks["sourcesJar"])
             artifact(stubJavaDocJar)
@@ -188,12 +188,14 @@ publishing {
 }
 
 tasks.withType<PublishToMavenRepository>().configureEach {
+    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
     onlyIf {
         it.name.contains("shadow", ignoreCase = true)
     }
 }
 
 tasks.withType<PublishToMavenLocal>().configureEach {
+    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
     onlyIf {
         it.name.contains("shadow", ignoreCase = true)
     }
