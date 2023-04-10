@@ -201,6 +201,22 @@ publishing {
     }
 }
 
+tasks.withType<PublishToMavenRepository>().configureEach {
+    mustRunAfter(
+        ":reveal-kt:lib-dsl:signJvmPublication",
+        ":reveal-kt:lib-dsl:signNativePublication",
+        ":reveal-kt:lib-dsl:signJsPublication",
+    )
+}
+
+tasks.withType<PublishToMavenLocal>().configureEach {
+    mustRunAfter(
+        ":reveal-kt:lib-dsl:signJvmPublication",
+        ":reveal-kt:lib-dsl:signJsPublication",
+        ":reveal-kt:lib-dsl:signNativePublication",
+    )
+}
+
 signing {
     sign(publishing.publications)
 }
