@@ -1,6 +1,6 @@
 # RevealKt
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/limebeck/reveal-kt/CI)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/limebeck/reveal-kt/main.yml?branch=master)
 ![GitHub last commit](https://img.shields.io/github/last-commit/limebeck/reveal-kt)
 ![GitHub](https://img.shields.io/github/license/limebeck/reveal-kt)
 [![Maven Central](https://img.shields.io/maven-central/v/dev.limebeck/revealkt-cli.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22dev.limebeck%22%20AND%20a:%22ko-te%22)
