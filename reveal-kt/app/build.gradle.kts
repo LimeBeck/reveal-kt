@@ -188,12 +188,14 @@ publishing {
 }
 
 tasks.withType<PublishToMavenRepository>().configureEach {
+    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
     onlyIf {
         it.name.contains("shadow", ignoreCase = true)
     }
 }
 
 tasks.withType<PublishToMavenLocal>().configureEach {
+    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
     onlyIf {
         it.name.contains("shadow", ignoreCase = true)
     }
