@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform")
     id("com.github.ben-manes.versions") version "0.42.0"
-    id("org.jetbrains.dokka")
 }
 
 repositories {

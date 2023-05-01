@@ -11,7 +11,7 @@ class UnorderedList(
 ) : RevealKtElement {
     override fun render(tag: HtmlBlockTag) = with(tag) {
         ul {
-            elements.forEachIndexed { index, revealKtElement ->
+            elements.forEach { revealKtElement ->
                 revealKtElement.render(this@ul)
             }
         }
@@ -24,7 +24,7 @@ class OrderedList(
 ) : RevealKtElement {
     override fun render(tag: HtmlBlockTag) = with(tag) {
         ol {
-            elements.forEachIndexed { index, revealKtElement ->
+            elements.forEach { revealKtElement ->
                 revealKtElement.render(this@ol)
             }
         }

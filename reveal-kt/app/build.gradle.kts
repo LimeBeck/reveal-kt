@@ -8,7 +8,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("org.jetbrains.dokka")
-    id("dev.limebeck.build-time-config") version "1.1.0"
+    id("dev.limebeck.build-time-config") version "1.1.2"
 }
 
 val revealKtVersion: String by project
@@ -40,7 +40,7 @@ buildTimeConfig {
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "17"
+            kotlinOptions.jvmTarget = "1.8"
         }
         java {
             withSourcesJar()
@@ -57,7 +57,7 @@ kotlin {
             commonWebpackConfig {
                 outputFileName = "revealkt.js"
                 cssSupport {
-                    enabled.set(true)
+                    enabled = true
                 }
             }
         }
@@ -92,7 +92,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-js"))
 
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.530")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.346")
                 implementation(npm("reveal.js", "4.4.0"))
             }
         }
@@ -188,14 +188,12 @@ publishing {
 }
 
 tasks.withType<PublishToMavenRepository>().configureEach {
-    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
     onlyIf {
         it.name.contains("shadow", ignoreCase = true)
     }
 }
 
 tasks.withType<PublishToMavenLocal>().configureEach {
-    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
     onlyIf {
         it.name.contains("shadow", ignoreCase = true)
     }

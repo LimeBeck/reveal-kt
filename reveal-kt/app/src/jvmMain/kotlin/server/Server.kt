@@ -20,7 +20,9 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.produceIn
 import org.slf4j.LoggerFactory
+import java.awt.Desktop
 import java.io.File
+import java.net.URI
 import java.util.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
@@ -149,11 +151,22 @@ fun runServer(config: Config) {
                 }
             }
             environment.monitor.subscribe(ApplicationStarted) {
+                val url = "http://${config.server.host}:${config.server.port}"
+
                 """
-                    RevealKt started at http://${config.server.host}:${config.server.port}
+                    RevealKt started at $url
                     Start duration: ${startTime.elapsedNow()}
                     Application version: ${RevealkConfig.version}
                 """.trimIndent().printToConsole(minRowLength = 60)
+
+                try {
+                    if (Desktop.isDesktopSupported()) {
+                        val desktop = Desktop.getDesktop()
+                        desktop.browse(URI.create(url))
+                    }
+                } catch (t: Throwable) {
+                    // Ignore
+                }
             }
         }
     }).start(wait = true)
