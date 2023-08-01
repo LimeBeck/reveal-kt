@@ -2,7 +2,7 @@
   "catalogs": {},
   "aliases": {
     "revealkt": {
-      "script-ref": "dev.limebeck:revealkt-cli:0.1.0",
+      "script-ref": "dev.limebeck:revealkt-cli:0.1.2",
       "description": "CLI for Kotlin DSL wrapper around Reveal JS presentation library",
       "java": "17"
     }

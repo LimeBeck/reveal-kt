@@ -4,6 +4,8 @@ import dev.limebeck.revealkt.dsl.RevealKtBuilder
 import java.io.File
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.host.toScriptSource
+import kotlin.script.experimental.jvm.dependenciesFromCurrentContext
+import kotlin.script.experimental.jvm.jvm
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
 import kotlin.script.experimental.jvmhost.createJvmEvaluationConfigurationFromTemplate
@@ -41,7 +43,10 @@ class RevealKtScriptLoader {
 
     private fun BasicJvmScriptingHost.evalFile(scriptFile: File): ResultWithDiagnostics<EvaluationResult> {
         val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<RevealKtScript> {
-
+            jvm {
+                dependenciesFromCurrentContext(wholeClasspath = true)
+            }
+            compilerOptions.append("-Xadd-modules=ALL-MODULE-PATH")
         }
         val evaluationConfiguration = createJvmEvaluationConfigurationFromTemplate<RevealKtScript> {
             implicitReceivers(RevealKtBuilder())

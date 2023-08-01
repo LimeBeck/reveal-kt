@@ -37,6 +37,7 @@ fun main() {
                 ConfigurationDto.Theme.Predefined.SKY -> kotlinext.js.require("reveal.js/dist/theme/sky.css")
                 ConfigurationDto.Theme.Predefined.SOLARIZED -> kotlinext.js.require("reveal.js/dist/theme/solarized.css")
                 ConfigurationDto.Theme.Predefined.WHITE -> kotlinext.js.require("reveal.js/dist/theme/white.css")
+                ConfigurationDto.Theme.Predefined.DRACULA -> kotlinext.js.require("reveal.js/dist/theme/dracula.css")
             }
         }
 

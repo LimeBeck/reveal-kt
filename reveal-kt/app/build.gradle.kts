@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     application
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("maven-publish")
     id("signing")
     id("org.jetbrains.dokka")
@@ -39,9 +39,6 @@ buildTimeConfig {
 
 kotlin {
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
         java {
             withSourcesJar()
         }
@@ -57,7 +54,7 @@ kotlin {
             commonWebpackConfig {
                 outputFileName = "revealkt.js"
                 cssSupport {
-                    enabled = true
+                    enabled.set(true)
                 }
             }
         }
@@ -93,7 +90,7 @@ kotlin {
                 implementation(kotlin("stdlib-js"))
 
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.346")
-                implementation(npm("reveal.js", "4.4.0"))
+                implementation(npm("reveal.js", "4.5.0"))
             }
         }
         val jsTest by getting
@@ -125,9 +122,6 @@ val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     dependsOn(copyJsTask) // make sure JS gets compiled first
     archiveClassifier.set("")
     mergeServiceFiles()
-    manifest {
-        attributes["Main-Class"] = "dev.limebeck.application.ServerKt"
-    }
     finalizedBy(stubJavaDocJar)
 }
 

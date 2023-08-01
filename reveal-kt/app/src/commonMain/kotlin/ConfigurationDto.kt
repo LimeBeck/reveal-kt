@@ -56,6 +56,7 @@ data class ConfigurationDto(
             SKY,
             SOLARIZED,
             WHITE,
+            DRACULA
             ;
 
             companion object {
@@ -72,6 +73,7 @@ data class ConfigurationDto(
                         RevealKt.Configuration.Theme.Predefined.SKY -> SKY
                         RevealKt.Configuration.Theme.Predefined.SOLARIZED -> SOLARIZED
                         RevealKt.Configuration.Theme.Predefined.WHITE -> WHITE
+                        RevealKt.Configuration.Theme.Predefined.DRACULA -> DRACULA
                     }
             }
         }

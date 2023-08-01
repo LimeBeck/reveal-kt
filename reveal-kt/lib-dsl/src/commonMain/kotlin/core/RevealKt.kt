@@ -37,6 +37,7 @@ data class RevealKt(
                 SKY,
                 SOLARIZED,
                 WHITE,
+                DRACULA
                 ;
             }
 
