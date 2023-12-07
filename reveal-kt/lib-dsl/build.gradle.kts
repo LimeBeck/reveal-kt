@@ -8,7 +8,6 @@ plugins {
 val revealKtVersion: String by project
 
 val kotlinCoroutinesVersion: String by project
-val kotlinxHtmlVersion: String by project
 
 group = "dev.limebeck"
 version = revealKtVersion
@@ -96,8 +95,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-html:$kotlinxHtmlVersion")
-                implementation("com.benasher44:uuid:0.6.0")
+                implementation(libs.kxhtml)
+                implementation(libs.uuid)
             }
         }
         val commonTest by getting {

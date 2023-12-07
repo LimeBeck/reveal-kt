@@ -8,7 +8,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("org.jetbrains.dokka")
-    id("dev.limebeck.build-time-config") version "1.1.2"
+    alias(libs.plugins.build.config)
 }
 
 val revealKtVersion: String by project
@@ -19,12 +19,6 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
-
-val kotlinVersion: String by project
-val serializationVersion: String by project
-val ktorVersion: String by project
-val logbackVersion: String by project
-val kotlinxHtmlVersion: String by project
 
 buildTimeConfig {
     config {
@@ -63,7 +57,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":reveal-kt:lib-dsl"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${serializationVersion}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${libs.versions.serialization.get()}")
             }
         }
         val commonTest by getting {
@@ -75,13 +69,13 @@ kotlin {
             dependencies {
                 implementation(project(":reveal-kt:script-definition"))
                 implementation(project(":reveal-kt:script-loader"))
-                implementation("io.ktor:ktor-server-cio:$ktorVersion")
-                implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
-                implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinxHtmlVersion")
-                implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("org.slf4j:slf4j-api:2.0.4")
-                implementation("com.github.ajalt.clikt:clikt:3.5.0")
+                implementation("io.ktor:ktor-server-cio:${libs.versions.ktor.get()}")
+                implementation("io.ktor:ktor-server-status-pages:${libs.versions.ktor.get()}")
+                implementation("io.ktor:ktor-server-html-builder-jvm:${libs.versions.ktor.get()}")
+                implementation(libs.kxhtml.jvm)
+                implementation(libs.logback)
+                implementation(libs.slf4j)
+                implementation(libs.clikt)
             }
         }
         val jvmTest by getting
@@ -90,7 +84,7 @@ kotlin {
                 implementation(kotlin("stdlib-js"))
 
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.346")
-                implementation(npm("reveal.js", "4.5.0"))
+                implementation(npm("reveal.js", "5.0.2"))
             }
         }
         val jsTest by getting

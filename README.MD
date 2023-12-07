@@ -35,6 +35,7 @@ title = "My awesome presentation"
 configuration {
     controls = false
     progress = false
+    view = RevealKt.Configuration.View.SCROLL //also possible RevealKt.Configuration.View.REGULAR
 }
 
 slides {

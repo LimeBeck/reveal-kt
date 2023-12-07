@@ -15,6 +15,7 @@ data class ConfigurationDto(
     val center: Boolean,
     val touch: Boolean,
     val autoAnimateDuration: Double,
+    val view: String?,
     @Contextual
     val theme: Theme,
     val additionalCssStyle: String?,
@@ -27,6 +28,10 @@ data class ConfigurationDto(
         center = configuration.center,
         touch = configuration.touch,
         autoAnimateDuration = configuration.autoAnimateDuration,
+        view = when (configuration.view) {
+            RevealKt.Configuration.View.SCROLL -> "scroll"
+            RevealKt.Configuration.View.REGULAR -> null
+        },
         theme = Theme.of(configuration.theme),
         additionalCssStyle = configuration.additionalCssStyle,
         additionalLinks = configuration.additionalLinks,

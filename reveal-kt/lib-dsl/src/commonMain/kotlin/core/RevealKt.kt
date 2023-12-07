@@ -22,7 +22,13 @@ data class RevealKt(
         val autoAnimateDuration: Double = 0.5,
         val theme: Theme = Theme.Predefined.BLACK,
         val additionalCssStyle: String? = null,
+        val view: View = View.REGULAR
     ) {
+
+        enum class View {
+            SCROLL,
+            REGULAR
+        }
 
         sealed interface Theme {
             enum class Predefined : Theme {

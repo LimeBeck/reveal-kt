@@ -57,6 +57,12 @@ class RevealKtBuilder(
             set(value) {
                 configuration = configuration.copy(additionalCssStyle = value)
             }
+
+        var view: RevealKt.Configuration.View
+            get() = configuration.view
+            set(value) {
+                configuration = configuration.copy(view = value)
+            }
     }
 
     private val slidesBuilder = SlidesBuilder()

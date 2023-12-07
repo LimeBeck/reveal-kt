@@ -2,7 +2,7 @@ package dev.limebeck.application
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.context
-import com.github.ajalt.clikt.output.CliktHelpFormatter
+import com.github.ajalt.clikt.output.MordantHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
@@ -37,7 +37,14 @@ class RunServer : CliktCommand(name = "run", help = "Serve presentation with liv
     val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
 
     init {
-        context { helpFormatter = CliktHelpFormatter(showDefaultValues = true) }
+        context {
+            helpFormatter = {
+                MordantHelpFormatter(
+                    showDefaultValues = true,
+                    context = it
+                )
+            }
+        }
     }
 
     override fun run() {
