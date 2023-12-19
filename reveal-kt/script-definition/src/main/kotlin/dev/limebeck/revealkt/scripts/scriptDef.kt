@@ -15,9 +15,7 @@ import kotlin.script.experimental.jvm.jvm
     compilationConfiguration = RevealKtScriptCompilationConfiguration::class,
     evaluationConfiguration = RevealKtEvaluationConfiguration::class,
 )
-abstract class RevealKtScript {
-
-}
+abstract class RevealKtScript
 
 object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
     jvm {
@@ -33,6 +31,7 @@ object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
     ide {
         acceptedLocations(ScriptAcceptedLocation.Everywhere)
     }
+    compilerOptions.append("-Xadd-modules=ALL-MODULE-PATH")
 
     // Callbacks
     refineConfiguration {
@@ -43,6 +42,7 @@ object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
 
 object RevealKtEvaluationConfiguration : ScriptEvaluationConfiguration({
     scriptsInstancesSharing(false)
+    implicitReceivers(RevealKtBuilder())
 })
 
 // Handler that reconfigures the compilation on the fly
