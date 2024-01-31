@@ -15,6 +15,11 @@ Run server with presentation:
 jbang revealkt@limebeck.dev run ./MyAwesomePresentation.reveal.kts
 ```
 
+Render presentation to static html site:
+```bash
+jbang revealkt@limebeck.dev render ./MyAwesomePresentation.reveal.kts
+```
+
 Create new presentation from template
 ```bash
 jbang revealkt@limebeck.dev init my-awesome-presentation
