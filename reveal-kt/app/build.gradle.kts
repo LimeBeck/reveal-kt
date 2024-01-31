@@ -95,9 +95,12 @@ application {
     mainClass.set("dev.limebeck.application.ApplicationKt")
 }
 
-val copyJsTask = tasks.named<Copy>("jvmProcessResources") {
+val jvmProcessResources = tasks.named<Copy>("jvmProcessResources")
+
+val jsCopyTask = tasks.create<Copy>("jsCopyTask") {
     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
     from(jsBrowserDistribution)
+    into(jvmProcessResources.get().destinationDir.resolve("js"))
     excludes.add("*.zip")
     excludes.add("*.tar")
 }
@@ -113,10 +116,14 @@ val stubJavaDocJar by tasks.registering(Jar::class) {
 
 // tasks to create an executable jar with all components of the app
 val shadow = tasks.getByName<ShadowJar>("shadowJar") {
-    dependsOn(copyJsTask) // make sure JS gets compiled first
+    dependsOn(jsCopyTask) // make sure JS gets compiled first
     archiveClassifier.set("")
     mergeServiceFiles()
     finalizedBy(stubJavaDocJar)
+}
+
+tasks.named("jvmJar") {
+    dependsOn(jsCopyTask)
 }
 
 tasks.named("publish") {

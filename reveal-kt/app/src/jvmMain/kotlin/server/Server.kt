@@ -15,16 +15,12 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.produceIn
+import kotlinx.coroutines.flow.*
 import org.slf4j.LoggerFactory
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
 import java.util.*
-import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 import kotlin.time.measureTimedValue
 
@@ -42,7 +38,7 @@ data class ServerConfig(
 
 val logger = LoggerFactory.getLogger("ServerLogger")
 
-@OptIn(ExperimentalTime::class, FlowPreview::class)
+@OptIn(FlowPreview::class)
 fun runServer(config: Config) {
     println("Starting application...")
     val startTime = TimeSource.Monotonic.markNow()
@@ -72,12 +68,12 @@ fun runServer(config: Config) {
     }
 
     coroutineScope.launch {
-        updatedFilesStateFlow.collect { sf ->
-            if (sf != null && (
-                        sf.any { it.path.contains(config.script.name) }
-                                || sf.any { it.path.contains("assets") }
-                        )
-            ) {
+        updatedFilesStateFlow
+            .filterNotNull()
+            .filter { sf ->
+                sf.any { it.path.contains(config.script.name) }
+                        || sf.any { it.path.contains("assets") }
+            }.collect {
                 val result = measureTimedValue {
                     val loadResult = scriptLoader.loadScript(config.script)
                     renderLoadResult(loadResult)
@@ -85,7 +81,6 @@ fun runServer(config: Config) {
                 logger.info("<00596867> Render time: ${result.duration}")
                 renderedTemplateStateFlow.emit(result.value)
             }
-        }
     }
 
     embeddedServer(CIO, environment = applicationEngineEnvironment {
@@ -124,6 +119,7 @@ fun runServer(config: Config) {
                     ) {
                         withContext(Dispatchers.IO) {
                             this::class.java.classLoader.getResourceAsStream(resourceName)?.readAllBytes()
+                                ?: this::class.java.classLoader.getResourceAsStream("js/$resourceName")?.readAllBytes()
                                 ?: throw NotFoundException()
                         }
                     }

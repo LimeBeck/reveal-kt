@@ -9,15 +9,13 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.path
-import dev.limebeck.application.server.Config
-import dev.limebeck.application.server.ServerConfig
-import dev.limebeck.application.server.runServer
+import dev.limebeck.application.server.*
 import dev.limebeck.application.templates.generatePresentationTemplate
 import dev.limebeck.revealkt.RevealkConfig
+import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.div
-import kotlin.io.path.pathString
+import kotlin.io.path.*
 
 class RevealKtApplication : CliktCommand(
     printHelpOnEmptyArgs = true,
@@ -55,6 +53,64 @@ class RunServer : CliktCommand(name = "run", help = "Serve presentation with liv
                 script = script
             )
         )
+    }
+}
+
+class RenderToFile : CliktCommand(name = "render", help = "Render to file") {
+    val outputDir: Path? by option(help = "Output dir").path(
+        mustBeWritable = true,
+        canBeDir = true,
+        canBeFile = false
+    )
+    val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
+
+    init {
+        context {
+            helpFormatter = {
+                MordantHelpFormatter(
+                    showDefaultValues = true,
+                    context = it
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalPathApi::class)
+    override fun run() {
+        val scriptLoader = RevealKtScriptLoader()
+        when (val loadResult = scriptLoader.loadScript(script)) {
+            is RevealKtScriptLoader.LoadResult.Success -> {
+                val outputDir = outputDir ?: Path.of("./out")
+                if (outputDir.notExists()) {
+                    outputDir.createDirectories()
+                }
+
+                val resources = getResourcesList("js").filter {
+                    it.isFont() || it.name in listOf("revealkt.js", "favicon.ico")
+                }
+
+                resources.forEach {
+                    it.copyTo(outputDir.resolve(it.name))
+                }
+
+                val assetsPath = script.parentFile.resolve("assets").toPath()
+                if (assetsPath.exists()) {
+//                    println("<4a6f2742> Copy assets from $assetsPath to $outputDir")
+                    assetsPath.copyToRecursively(outputDir.resolve("assets"), followLinks = true, overwrite = true)
+                }
+
+                val result = renderLoadResult(loadResult)
+                outputDir.resolve("index.html")
+                    .createFile()
+                    .writeText(result)
+            }
+
+            is RevealKtScriptLoader.LoadResult.Error -> {
+                loadResult.diagnostic.forEach {
+                    logger.error("$it")
+                }
+            }
+        }
     }
 }
 
