@@ -34,6 +34,7 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion")
     api("org.jetbrains.kotlin:kotlin-scripting-jvm:$kotlinVersion")
     api("org.jetbrains.kotlin:kotlin-scripting-jvm-host:$kotlinVersion")
+    api(libs.qrcode)
 
     implementation(project(":reveal-kt:lib-dsl"))
     implementation(project(":reveal-kt:script-definition"))

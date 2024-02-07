@@ -22,6 +22,13 @@ fun unorderedListOf(
     }
 )
 
+@JvmName("unorderedListOfStrings")
+fun unorderedListOf(
+    vararg elements: String,
+    fragmented: Boolean = true,
+    effect: ListItem.Effect = ListItem.Effect.FADE_UP,
+) = unorderedListOf(elements.toList(), fragmented, effect)
+
 @JvmName("unorderedListOfElements")
 fun unorderedListOf(
     list: List<RevealKtElement>,
@@ -36,6 +43,13 @@ fun unorderedListOf(
         )
     }
 )
+
+@JvmName("unorderedListOfElements")
+fun unorderedListOf(
+    vararg elements: RevealKtElement,
+    fragmented: Boolean = true,
+    effect: ListItem.Effect = ListItem.Effect.FADE_UP,
+) = unorderedListOf(elements.toList(), fragmented, effect)
 
 @JvmName("orderedListOfStrings")
 fun orderedListOf(

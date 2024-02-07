@@ -56,47 +56,49 @@ kotlin {
         nodejs()
     }
 
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native") {
-            mavenPublication {
-                artifactId = "revealkt-dsl-native-macos"
-                pom {
-                    name.set("RevealKt kotlin-wrapper for Reveal JS library native-macos")
-                    description.set("Kotlin native-macos module for RevealKt kotlin-wrapper for Reveal JS library")
-                }
-            }
-        }
-
-        hostOs == "Linux" -> linuxX64("native") {
-            mavenPublication {
-                artifactId = "revealkt-dsl-native-linux"
-                pom {
-                    name.set("RevealKt kotlin-wrapper for Reveal JS library native-linux")
-                    description.set("Kotlin native-linux module for RevealKt kotlin-wrapper for Reveal JS library")
-                }
-            }
-        }
-
-        isMingwX64 -> mingwX64("native") {
-            mavenPublication {
-                artifactId = "revealkt-dsl-native-win"
-                pom {
-                    name.set("RevealKt kotlin-wrapper for Reveal JS library native-win")
-                    description.set("Kotlin native-win module for RevealKt kotlin-wrapper for Reveal JS library")
-                }
-            }
-        }
-
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
+//    Disabled native targets because only actual using is jvm/js for now and QrCode lib not published linux/windows targets :(
+//    val hostOs = System.getProperty("os.name")
+//    val isMingwX64 = hostOs.startsWith("Windows")
+//    val nativeTarget = when {
+//        hostOs == "Mac OS X" -> macosX64("native") {
+//            mavenPublication {
+//                artifactId = "revealkt-dsl-native-macos"
+//                pom {
+//                    name.set("RevealKt kotlin-wrapper for Reveal JS library native-macos")
+//                    description.set("Kotlin native-macos module for RevealKt kotlin-wrapper for Reveal JS library")
+//                }
+//            }
+//        }
+//
+//        hostOs == "Linux" -> linuxX64("native") {
+//            mavenPublication {
+//                artifactId = "revealkt-dsl-native-linux"
+//                pom {
+//                    name.set("RevealKt kotlin-wrapper for Reveal JS library native-linux")
+//                    description.set("Kotlin native-linux module for RevealKt kotlin-wrapper for Reveal JS library")
+//                }
+//            }
+//        }
+//
+//        isMingwX64 -> mingwX64("native") {
+//            mavenPublication {
+//                artifactId = "revealkt-dsl-native-win"
+//                pom {
+//                    name.set("RevealKt kotlin-wrapper for Reveal JS library native-win")
+//                    description.set("Kotlin native-win module for RevealKt kotlin-wrapper for Reveal JS library")
+//                }
+//            }
+//        }
+//
+//        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+//    }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kxhtml)
                 implementation(libs.uuid)
+                api(libs.qrcode)
             }
         }
         val commonTest by getting {
@@ -128,12 +130,12 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        val nativeMain by getting
-        val nativeTest by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
-            }
-        }
+//        val nativeMain by getting
+//        val nativeTest by getting {
+//            dependencies {
+//                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+//            }
+//        }
     }
 }
 
@@ -203,7 +205,7 @@ publishing {
 tasks.withType<PublishToMavenRepository>().configureEach {
     mustRunAfter(
         ":reveal-kt:lib-dsl:signJvmPublication",
-        ":reveal-kt:lib-dsl:signNativePublication",
+//        ":reveal-kt:lib-dsl:signNativePublication",
         ":reveal-kt:lib-dsl:signJsPublication",
     )
 }
@@ -212,7 +214,7 @@ tasks.withType<PublishToMavenLocal>().configureEach {
     mustRunAfter(
         ":reveal-kt:lib-dsl:signJvmPublication",
         ":reveal-kt:lib-dsl:signJsPublication",
-        ":reveal-kt:lib-dsl:signNativePublication",
+//        ":reveal-kt:lib-dsl:signNativePublication",
     )
 }
 

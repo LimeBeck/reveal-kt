@@ -1,8 +1,10 @@
 package dev.limebeck.revealkt.dsl
 
+import core.elements.QrCode
 import dev.limebeck.revealkt.core.elements.*
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
+import qrcode.QRCodeBuilder
 
 fun code(
     code: String,
@@ -29,13 +31,36 @@ class ImageConfigurationBuilder {
 }
 
 fun img(
-    id: ID = UuidGenerator.generateId(),
     src: String,
+    id: ID = UuidGenerator.generateId(),
     configurationBlock: (ImageConfigurationBuilder.() -> Unit)? = null,
 ) = Image(
     id = id,
     path = src,
     configuration = ImageConfigurationBuilder().apply { if (configurationBlock != null) configurationBlock() }.build()
+)
+
+class QrCodeConfigurationBuilder {
+    var height: Int? = null
+    var width: Int? = null
+    var stretch: Boolean = false
+    private var _transformBuilder: ((builder: QRCodeBuilder) -> QRCodeBuilder)? = null
+
+    fun transformBuilder(block: (builder: QRCodeBuilder) -> QRCodeBuilder) {
+        _transformBuilder = block
+    }
+
+    fun build(): QrCode.Configuration = QrCode.Configuration(height, width, stretch, _transformBuilder)
+}
+
+fun qrCode(
+    value: String,
+    id: ID = UuidGenerator.generateId(),
+    configurationBlock: (QrCodeConfigurationBuilder.() -> Unit)? = null,
+) = QrCode(
+    id = id,
+    value = value,
+    configuration = QrCodeConfigurationBuilder().apply { if (configurationBlock != null) configurationBlock() }.build()
 )
 
 fun row(

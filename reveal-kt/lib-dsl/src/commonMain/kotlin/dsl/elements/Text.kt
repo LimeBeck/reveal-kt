@@ -7,19 +7,19 @@ import dev.limebeck.revealkt.utils.UuidGenerator
 
 fun title(
     id: ID = UuidGenerator.generateId(),
-    fitText: Boolean = false,
+    fitText: Boolean = true,
     block: () -> String,
 ) = Title(id, fitText, block())
 
 fun title(
     id: ID = UuidGenerator.generateId(),
-    fitText: Boolean = false,
+    fitText: Boolean = true,
     title: String,
 ) = Title(id, fitText, title)
 
 fun title(
     title: String,
-    fitText: Boolean = false,
+    fitText: Boolean = true,
     id: ID = UuidGenerator.generateId(),
 ) = Title(id, fitText, title)
 

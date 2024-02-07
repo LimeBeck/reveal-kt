@@ -25,7 +25,7 @@ suspend fun ApplicationCall.respondSse(events: ReceiveChannel<SseEvent>) =
         response.cacheControl(CacheControl.NoCache(null))
         respondTextWriter(contentType = ContentType.Text.EventStream) {
             events.consumeEach { event ->
-                logger.debug("<0c08a270> Send event $event")
+//                logger.debug("<0c08a270> Send event $event")
                 try {
                     if (event.id != null) {
                         write("id: ${event.id}\n")

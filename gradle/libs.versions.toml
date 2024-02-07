@@ -12,6 +12,7 @@ clikt = { module = "com.github.ajalt.clikt:clikt", version = "4.2.1" }
 kxhtml-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kxhtml" }
 kxhtml = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kxhtml" }
 uuid = { module = "com.benasher44:uuid", version = "0.8.2" }
+qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version = "4.1.1" }
 
 [plugins]
 

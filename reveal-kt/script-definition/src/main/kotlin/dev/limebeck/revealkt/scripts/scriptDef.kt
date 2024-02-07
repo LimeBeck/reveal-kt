@@ -1,14 +1,14 @@
 package dev.limebeck.revealkt.scripts
 
+import dev.limebeck.revealkt.core.RevealKt
 import dev.limebeck.revealkt.dsl.RevealKtBuilder
+import dsl.AssetLoader
 import kotlinx.coroutines.runBlocking
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.*
 import kotlin.script.experimental.dependencies.maven.MavenDependenciesResolver
-import kotlin.script.experimental.jvm.JvmDependency
-import kotlin.script.experimental.jvm.dependenciesFromCurrentContext
-import kotlin.script.experimental.jvm.jvm
+import kotlin.script.experimental.jvm.*
 
 @KotlinScript(
     fileExtension = "reveal.kts",
@@ -19,7 +19,7 @@ abstract class RevealKtScript
 
 object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
     jvm {
-        dependenciesFromCurrentContext(wholeClasspath = true)
+        dependenciesFromClassContext(RevealKt::class, wholeClasspath = true)
     }
     defaultImports(DependsOn::class, Repository::class)
     defaultImports(
@@ -27,7 +27,7 @@ object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
         "dev.limebeck.revealkt.dsl.*",
         "dev.limebeck.revealkt.dsl.slides.*"
     )
-    implicitReceivers(RevealKtBuilder::class)
+    implicitReceivers(RevealKtBuilder::class, AssetLoader::class)
     ide {
         acceptedLocations(ScriptAcceptedLocation.Everywhere)
     }
@@ -42,7 +42,7 @@ object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
 
 object RevealKtEvaluationConfiguration : ScriptEvaluationConfiguration({
     scriptsInstancesSharing(false)
-    implicitReceivers(RevealKtBuilder())
+    constructorArgs()
 })
 
 // Handler that reconfigures the compilation on the fly

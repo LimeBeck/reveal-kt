@@ -31,7 +31,7 @@ data class Code(
                 conditionalAttribute("data-trim", ::trim)
                 conditionalAttribute("data-line-numbers", lines) { lines.isNotBlank() && lines.isNotEmpty() }
 
-                style = "line-height: normal; padding: 0 3px;font-size: small; overflow-wrap:normal"
+                style = "line-height: normal; padding: 0 3px; overflow-wrap:normal"
                 script("text/template") {
                     unsafe {
                         +this@Code.code
