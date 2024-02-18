@@ -5,7 +5,6 @@ import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.MordantHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
-import com.github.ajalt.clikt.parameters.options.defaultLazy
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
@@ -18,7 +17,6 @@ import dev.limebeck.application.server.runServer
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.nio.file.Path
-import kotlin.concurrent.thread
 import kotlin.io.path.pathString
 
 class RenderPdf : CliktCommand(name = "pdf", help = "Render pdf from presentation") {
@@ -27,8 +25,8 @@ class RenderPdf : CliktCommand(name = "pdf", help = "Render pdf from presentatio
     val basePath: Path? by option("-b", help = "Script dir").path()
     val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
     val output: File by option("-o", "--output", help = "Output file")
-        .file(canBeDir = false, mustBeWritable = true)
-        .defaultLazy { File("./output.pdf") }
+        .file(canBeDir = false)
+        .default(File("./output.pdf"))
 
     init {
         context {
@@ -59,13 +57,17 @@ class RenderPdf : CliktCommand(name = "pdf", help = "Render pdf from presentatio
     }
 }
 
-class InstallChrome : CliktCommand(name = "install-chrome", help = "Install chrome") {
+class Chrome: CliktCommand(name = "chrome", help = "Manage chrome installation") {
+    override fun run() {}
+}
+
+class InstallChrome : CliktCommand(name = "install", help = "Install chrome") {
     override fun run() {
         CLI.main(arrayOf("install", "chromium"))
     }
 }
 
-class UninstallChrome : CliktCommand(name = "uninstall-chrome", help = "Uninstall chrome") {
+class UninstallChrome : CliktCommand(name = "uninstall", help = "Uninstall chrome") {
     override fun run() {
         CLI.main(arrayOf("uninstall"))
     }

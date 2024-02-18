@@ -25,18 +25,18 @@ Render presentation to pdf via playwright:
 jbang revealkt@limebeck.dev pdf ./MyAwesomePresentation.reveal.kts -o myPresentation.pdf
 ```
 
-[!CAUTION]
-For now playwright requires to download chromium at first run via npm
+> [!CAUTION]
+> For now playwright requires to download chromium first (uses npm)
 
 Playwright documentation: https://playwright.dev/java/docs/browsers
 
 ```bash
-jbang revealkt@limebeck.dev pdf install-chrome
+jbang revealkt@limebeck.dev chrome install
 ```
 
 Uninstall chrome 
 ```bash
-jbang revealkt@limebeck.dev pdf uninstall-chrome
+jbang revealkt@limebeck.dev chrome uninstall
 ```
 
 

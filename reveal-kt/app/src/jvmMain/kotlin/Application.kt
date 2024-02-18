@@ -11,7 +11,11 @@ fun main(args: Array<String>) = RevealKtCliApplication()
         RunServer(),
         InitTemplate(),
         BundleToStatic(),
-        RenderPdf().subcommands(InstallChrome(), UninstallChrome())
+        RenderPdf(),
+        Chrome().subcommands(
+            InstallChrome(),
+            UninstallChrome(),
+        ),
     )
     .completionOption()
     .main(args)
