@@ -1,62 +1,22 @@
-package dev.limebeck.application
+package dev.limebeck.application.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.MordantHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
-import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
-import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.path
-import dev.limebeck.application.server.*
-import dev.limebeck.application.templates.generatePresentationTemplate
-import dev.limebeck.revealkt.RevealkConfig
+import dev.limebeck.application.getResourcesList
+import dev.limebeck.application.isFont
+import dev.limebeck.application.server.logger
+import dev.limebeck.application.server.renderLoadResult
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.*
 
-class RevealKtApplication : CliktCommand(
-    printHelpOnEmptyArgs = true,
-    help = """
-           RevealKt CLI
-           
-           Application version ${RevealkConfig.version}
-           """.trimIndent()
-) {
-    override fun run() = Unit
-}
-
-class RunServer : CliktCommand(name = "run", help = "Serve presentation with live-reload") {
-    val port: Int by option(help = "Port").int().default(8080)
-    val host: String by option(help = "Host").default("0.0.0.0")
-    val basePath: Path? by option(help = "Script dir").path()
-    val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
-
-    init {
-        context {
-            helpFormatter = {
-                MordantHelpFormatter(
-                    showDefaultValues = true,
-                    context = it
-                )
-            }
-        }
-    }
-
-    override fun run() {
-        runServer(
-            Config(
-                server = ServerConfig(host, port),
-                basePath = basePath?.pathString ?: script.parent,
-                script = script
-            )
-        )
-    }
-}
-
-class RenderToFile : CliktCommand(name = "render", help = "Render to file") {
+class BundleToStatic : CliktCommand(name = "bundle", help = "Bundle to static html file") {
     val outputDir: Path? by option(help = "Output dir").path(
         mustBeWritable = true,
         canBeDir = true,
@@ -111,17 +71,5 @@ class RenderToFile : CliktCommand(name = "render", help = "Render to file") {
                 }
             }
         }
-    }
-}
-
-class InitTemplate : CliktCommand(name = "init", help = "Create presentation template") {
-    val name: String by argument(help = "Presentation name")
-    val basePath: Path by option(help = "Template dir")
-        .path(canBeDir = true, canBeFile = false)
-        .default(Path.of("."))
-    val dirname: String? by option()
-
-    override fun run() {
-        generatePresentationTemplate(name, basePath / (dirname ?: name))
     }
 }

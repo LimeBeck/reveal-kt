@@ -39,7 +39,7 @@ data class ServerConfig(
 val logger = LoggerFactory.getLogger("ServerLogger")
 
 @OptIn(FlowPreview::class)
-fun runServer(config: Config) {
+fun runServer(config: Config, background: Boolean = true) {
     println("Starting application...")
     val startTime = TimeSource.Monotonic.markNow()
 
@@ -156,7 +156,7 @@ fun runServer(config: Config) {
                 """.trimIndent().printToConsole(minRowLength = 60)
 
                 try {
-                    if (Desktop.isDesktopSupported()) {
+                    if (Desktop.isDesktopSupported() && background) {
                         val desktop = Desktop.getDesktop()
                         desktop.browse(URI.create(url))
                     }
@@ -165,5 +165,5 @@ fun runServer(config: Config) {
                 }
             }
         }
-    }).start(wait = true)
+    }).start(wait = background)
 }

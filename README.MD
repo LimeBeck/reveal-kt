@@ -15,10 +15,30 @@ Run server with presentation:
 jbang revealkt@limebeck.dev run ./MyAwesomePresentation.reveal.kts
 ```
 
-Render presentation to static html site:
+Bundle presentation to static html site:
 ```bash
-jbang revealkt@limebeck.dev render ./MyAwesomePresentation.reveal.kts
+jbang revealkt@limebeck.dev bundle ./MyAwesomePresentation.reveal.kts
 ```
+
+Render presentation to pdf via playwright:
+```bash
+jbang revealkt@limebeck.dev pdf ./MyAwesomePresentation.reveal.kts -o myPresentation.pdf
+```
+
+[!CAUTION]
+For now playwright requires to download chromium at first run via npm
+
+Playwright documentation: https://playwright.dev/java/docs/browsers
+
+```bash
+jbang revealkt@limebeck.dev pdf install-chrome
+```
+
+Uninstall chrome 
+```bash
+jbang revealkt@limebeck.dev pdf uninstall-chrome
+```
+
 
 Create new presentation from template
 ```bash

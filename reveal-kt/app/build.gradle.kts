@@ -34,7 +34,7 @@ buildTimeConfig {
 kotlin {
     jvm {
         java {
-            withSourcesJar()
+//            withSourcesJar()
         }
         withJava()
         testRuns["test"].executionTask.configure {
@@ -76,6 +76,7 @@ kotlin {
                 implementation(libs.logback)
                 implementation(libs.slf4j)
                 implementation(libs.clikt)
+                implementation(libs.playwright)
             }
         }
         val jvmTest by getting
