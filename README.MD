@@ -47,6 +47,13 @@ cd ./my-awesome-presentation
 jbang revealkt@limebeck.dev run ./presentation/my-awesome-presentation.reveal.kts
 ```
 
+## Add alias for `revealkt`
+
+```bash
+jbang app install revealkt@limebeck.dev
+revealkt run ./presentation/my-awesome-presentation.reveal.kts
+```
+
 ## Example
 
 **MyAwesomeScript.reveal.kts**:
