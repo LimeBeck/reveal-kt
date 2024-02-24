@@ -58,22 +58,29 @@ revealkt run ./presentation/my-awesome-presentation.reveal.kts
 
 **MyAwesomeScript.reveal.kts**:
 ```kotlin
-import dev.limebeck.revealkt.core.elements.*
-import dev.limebeck.revealkt.dsl.*
-import dev.limebeck.revealkt.dsl.slides.*
+import qrcode.color.Colors
 
 title = "My awesome presentation"
 
 configuration {
     controls = false
     progress = false
-    view = RevealKt.Configuration.View.SCROLL //also possible RevealKt.Configuration.View.REGULAR
 }
 
 slides {
     regularSlide {
         autoanimate = true
         +title { "Hello from my awesome presentation" }
+    }
+    regularSlide {
+        autoanimate = true
+        +qrCode("https://github.com/LimeBeck/reveal-kt") {
+            stretch = true
+            transformBuilder {
+                val logo = loadAsset("logo2.png")
+                it.withSize(20).withColor(Colors.css("#B125EA")).withLogo(logo, 150, 150, clearLogoArea = true)
+            }
+        }
     }
     verticalSlide {
         val title = Title { "Some text" }

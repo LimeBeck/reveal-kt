@@ -14,7 +14,7 @@ slides {
     }
     regularSlide {
         autoanimate = true
-        +qrCode("https://github.com/Kotlin/KEEP/blob/master/proposals/scripting-support.md#implementation-status") {
+        +qrCode("https://github.com/LimeBeck/reveal-kt") {
             stretch = true
             transformBuilder {
                 val logo = loadAsset("logo2.png")
