@@ -2,10 +2,12 @@ package dev.limebeck.revealkt.dsl.slides
 
 import dev.limebeck.revealkt.core.RevealKtElement
 import dev.limebeck.revealkt.dsl.ElementsHolder
+import dev.limebeck.revealkt.dsl.RevealKtMarker
 import dev.limebeck.revealkt.dsl.SlidesHolder
 import dev.limebeck.revealkt.elements.slides.RegularSlide
 import dev.limebeck.revealkt.utils.UuidGenerator
 
+@RevealKtMarker
 class RegularSlideBuilder : ElementsHolder {
     var autoanimate: Boolean = true
     var id = UuidGenerator.generateId()

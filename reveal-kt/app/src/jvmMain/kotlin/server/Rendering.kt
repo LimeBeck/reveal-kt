@@ -10,10 +10,10 @@ import kotlinx.html.stream.createHTML
 import kotlinx.serialization.encodeToString
 
 fun renderLoadResult(loadResult: RevealKtScriptLoader.LoadResult): String {
-    return when (loadResult) {
+    return "<!DOCTYPE html>" + when (loadResult) {
         is RevealKtScriptLoader.LoadResult.Success -> {
             val presentation = loadResult.value.build()
-            createHTML(prettyPrint = true).apply {
+            createHTML(prettyPrint = true, xhtmlCompatible = true).apply {
                 html {
                     render(presentation)
                 }
@@ -21,7 +21,7 @@ fun renderLoadResult(loadResult: RevealKtScriptLoader.LoadResult): String {
         }
 
         is RevealKtScriptLoader.LoadResult.Error -> {
-            createHTML(prettyPrint = true).apply {
+            createHTML(prettyPrint = true, xhtmlCompatible = true).apply {
                 html {
                     head {
                         title { +"Render Error" }

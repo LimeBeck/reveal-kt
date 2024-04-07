@@ -41,7 +41,12 @@ fun main() {
             }
         }
 
-        is ConfigurationDto.Theme.Custom -> kotlinext.js.require(configuration.theme.cssLink)
+        is ConfigurationDto.Theme.Custom -> {
+            val style = document.createElement("style").apply {
+                this.setAttribute("href", configuration.theme.cssLink)
+            }
+            document.head?.appendChild(style)
+        }
     }
 
     kotlinext.js.require("reveal.js/plugin/highlight/monokai.css")

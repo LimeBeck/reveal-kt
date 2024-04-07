@@ -14,4 +14,5 @@
     <logger name="ch.qos" level="WARN"/>
     <logger name="Application" level="${LOG_LEVEL:-WARN}"/>
     <logger name="ServerLogger" level="${LOG_LEVEL:-WARN}"/>
+    <logger name="FilesWatcher" level="${LOG_LEVEL:-WARN}"/>
 </configuration>

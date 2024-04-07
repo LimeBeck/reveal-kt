@@ -1,11 +1,13 @@
 package dev.limebeck.revealkt.core
 
+import dev.limebeck.revealkt.dsl.RevealKtMarker
 import dev.limebeck.revealkt.utils.ID
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.classes
 import kotlinx.html.style
 import kotlin.reflect.KProperty
 
+@RevealKtMarker
 interface RevealKtElement {
     val id: ID
     fun render(tag: HtmlBlockTag)

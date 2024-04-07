@@ -1,12 +1,10 @@
 import dev.limebeck.revealkt.core.RevealKt
 import dev.limebeck.revealkt.core.elements.ListItem
 import dev.limebeck.revealkt.core.elements.RegularText
+import dev.limebeck.revealkt.core.elements.UnorderedList
 import dev.limebeck.revealkt.dsl.*
 import dev.limebeck.revealkt.dsl.slides.regularSlide
-import dev.limebeck.revealkt.dsl.slides.slide
 import dev.limebeck.revealkt.dsl.slides.verticalSlide
-import dev.limebeck.revealkt.core.elements.Title
-import dev.limebeck.revealkt.core.elements.UnorderedList
 import kotlin.test.Test
 
 
@@ -48,11 +46,13 @@ class CommonTest {
             }
 
             slides {
-                regularSlide {
-                    autoanimate = true
-                    +title(fitText = true) { "(Де)мистифицируем" }
-                    +img(src = "gradle-white-primary.png")
-                    +note("Спросить, кто вообще пользовался гредлом")
+                verticalSlide {
+                    regularSlide {
+                        autoanimate = true
+                        +title(fitText = true) { "(Де)мистифицируем" }
+                        +img(src = "gradle-white-primary.png")
+                        +note("Спросить, кто вообще пользовался гредлом")
+                    }
                 }
                 regularSlide {
                     +smallTitle { "Кто я такой?" }

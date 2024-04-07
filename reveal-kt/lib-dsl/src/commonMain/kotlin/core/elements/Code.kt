@@ -9,14 +9,14 @@ data class Code(
     override val id: ID = UuidGenerator.generateId(),
     val trim: Boolean = true,
     val lang: String? = null,
-    val lines: String = "",
+    val lines: String? = null,
     val code: String,
 ) : RevealKtElement {
     constructor(
         id: ID = UuidGenerator.generateId(),
-        trim: Boolean = true,
+        trim: Boolean = false,
         lang: String? = null,
-        lines: String = "",
+        lines: String? = null,
         codeProvider: () -> String,
     ) : this(id, trim, lang, lines, codeProvider())
 
@@ -29,9 +29,8 @@ data class Code(
 
             code {
                 conditionalAttribute("data-trim", ::trim)
-                conditionalAttribute("data-line-numbers", lines) { lines.isNotBlank() && lines.isNotEmpty() }
+                conditionalAttribute("data-line-numbers", lines ?: "") { lines != null }
 
-                style = "line-height: normal; padding: 0 3px; overflow-wrap:normal"
                 script("text/template") {
                     unsafe {
                         +this@Code.code
