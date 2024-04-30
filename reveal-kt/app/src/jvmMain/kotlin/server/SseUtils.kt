@@ -1,5 +1,6 @@
 package dev.limebeck.application.server
 
+import dev.limebeck.application.debug
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -25,7 +26,6 @@ suspend fun ApplicationCall.respondSse(events: ReceiveChannel<SseEvent>) =
         response.cacheControl(CacheControl.NoCache(null))
         respondTextWriter(contentType = ContentType.Text.EventStream) {
             events.consumeEach { event ->
-//                logger.debug("<0c08a270> Send event $event")
                 try {
                     if (event.id != null) {
                         write("id: ${event.id}\n")
@@ -39,7 +39,7 @@ suspend fun ApplicationCall.respondSse(events: ReceiveChannel<SseEvent>) =
                     write("\n")
                     flush()
                 } catch (e: IOException) {
-                    logger.debug("<b785289> Closed socked. Cancel execution")
+                    logger.debug { "<b785289> Closed socked. Cancel execution" }
                     this@coroutineScope.cancel()
                 }
             }

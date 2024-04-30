@@ -9,7 +9,7 @@ import qrcode.QRCodeBuilder
 fun code(
     code: String,
     lang: String? = null,
-    lines: String = "",
+    lines: String? = null,
     trim: Boolean = true,
     id: ID = UuidGenerator.generateId(),
 ) = Code(id, trim, lang, lines, code)
@@ -17,7 +17,7 @@ fun code(
 fun code(
     id: ID = UuidGenerator.generateId(),
     lang: String? = null,
-    lines: String = "",
+    lines: String? = null,
     trim: Boolean = true,
     block: () -> String,
 ) = Code(id, trim, lang, lines, block())

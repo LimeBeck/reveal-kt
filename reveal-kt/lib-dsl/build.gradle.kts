@@ -1,13 +1,11 @@
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     id("maven-publish")
     id("signing")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
 }
 
 val revealKtVersion: String by project
-
-val kotlinCoroutinesVersion: String by project
 
 group = "dev.limebeck"
 version = revealKtVersion
@@ -104,16 +102,11 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVersion}") {
-                    version {
-                        strictly(kotlinCoroutinesVersion)
-                    }
-                }
+                implementation(libs.kotlin.coroutines)
             }
         }
         val jvmMain by getting {
             dependencies {
-//                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinxHtmlVersion")
             }
         }
         val jvmTest by getting {

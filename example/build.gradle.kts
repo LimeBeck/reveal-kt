@@ -1,4 +1,4 @@
-val revealKtVersion = "0.0.2"
+val revealKtVersion = "0.2.4"
 group = "com.example"
 version = "1.0.0-SNAPSHOT"
 
@@ -7,6 +7,7 @@ plugins {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 

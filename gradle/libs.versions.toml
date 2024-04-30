@@ -1,22 +1,29 @@
 [versions]
 
-kotlin = "1.9.0"
+kotlin = "2.0.0-RC2"
 serialization = "1.6.3"
-ktor = "2.1.3"
+ktor = "2.3.10"
 kxhtml = "0.11.0"
+dokka = "1.9.20"
 
 [libraries]
 slf4j = { module = "org.slf4j:slf4j-api", version = "2.0.7" }
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.0"}
-clikt = { module = "com.github.ajalt.clikt:clikt", version = "4.2.2" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
+clikt = { module = "com.github.ajalt.clikt:clikt", version = "4.4.0" }
 kxhtml-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kxhtml" }
 kxhtml = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kxhtml" }
-uuid = { module = "com.benasher44:uuid", version = "0.8.2" }
+uuid = { module = "com.benasher44:uuid", version = "0.8.4" }
 qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version = "4.1.1" }
-playwright = { module = "com.microsoft.playwright:playwright", version = "1.41.2" }
+playwright = { module = "com.microsoft.playwright:playwright", version = "1.43.0" }
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.strictly = "1.8.0" }
+kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
 [plugins]
 
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
-dokka = { id = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "kotlin" }
-build-config = { id = "dev.limebeck.build-time-config", version = "2.2.0"}
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+build-config = { id = "dev.limebeck.build-time-config", version = "2.2.1" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -5,15 +5,6 @@ rootDir.resolve("reveal-kt").list()?.forEach {
 }
 
 pluginManagement {
-    val kotlinVersion: String by settings
-    val dokkaVersion: String by settings
-    val ktorVersion: String by settings
-    plugins {
-        kotlin("multiplatform") version kotlinVersion
-        kotlin("plugin.serialization") version kotlinVersion
-        id("org.jetbrains.dokka") version dokkaVersion
-        id("io.ktor.plugin") version ktorVersion
-    }
     repositories {
         gradlePluginPortal()
         mavenCentral()

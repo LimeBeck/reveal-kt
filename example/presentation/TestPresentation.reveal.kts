@@ -1,5 +1,19 @@
+@file:DependsOn("dev.limebeck:ko-te-jvm:0.2.5")
+
 import dev.limebeck.revealkt.core.RevealKt
 import qrcode.color.Colors
+
+import dev.limebeck.templateEngine.KoTeRenderer
+import kotlinx.coroutines.runBlocking
+
+runBlocking {
+    KoTeRenderer().render(
+        """
+            Test {{ data }}
+        """.trimIndent(),
+        data = mapOf("data" to "Test")
+    ).let(::println)
+}
 
 title = "Hello from my presentation"
 

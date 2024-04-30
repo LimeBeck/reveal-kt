@@ -1,13 +1,13 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     application
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("maven-publish")
     id("signing")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
     alias(libs.plugins.build.config)
 }
 
@@ -57,7 +57,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":reveal-kt:lib-dsl"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${libs.versions.serialization.get()}")
+                implementation(libs.kotlin.serialization)
             }
         }
         val commonTest by getting {
@@ -101,7 +101,7 @@ val jvmProcessResources = tasks.named<Copy>("jvmProcessResources")
 val jsCopyTask = tasks.create<Copy>("jsCopyTask") {
     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
     from(jsBrowserDistribution)
-    into(jvmProcessResources.get().destinationDir.resolve("js"))
+    into(jvmProcessResources.get().destinationDir.resolve("static"))
     excludes.add("*.zip")
     excludes.add("*.tar")
 }

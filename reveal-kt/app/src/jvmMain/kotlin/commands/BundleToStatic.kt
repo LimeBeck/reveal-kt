@@ -7,22 +7,29 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.path
+import dev.limebeck.application.debug
 import dev.limebeck.application.getResourcesList
-import dev.limebeck.application.isFont
-import dev.limebeck.application.server.logger
 import dev.limebeck.application.server.renderLoadResult
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.*
 
 class BundleToStatic : CliktCommand(name = "bundle", help = "Bundle to static html file") {
-    val outputDir: Path? by option(help = "Output dir").path(
-        mustBeWritable = true,
-        canBeDir = true,
-        canBeFile = false
-    )
-    val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
+    companion object {
+        private val logger = LoggerFactory.getLogger("BundleToStatic")
+    }
+
+    val outputDir: Path? by option(help = "Output dir")
+        .path(
+            mustBeWritable = true,
+            canBeDir = true,
+            canBeFile = false
+        )
+
+    val script: File by argument(help = "Script file")
+        .file(canBeDir = false, mustBeReadable = true)
 
     init {
         context {
@@ -45,17 +52,15 @@ class BundleToStatic : CliktCommand(name = "bundle", help = "Bundle to static ht
                     outputDir.createDirectories()
                 }
 
-                val resources = getResourcesList("js").filter {
-                    it.isFont() || it.name in listOf("revealkt.js", "favicon.ico")
-                }
-
+                val resources = getResourcesList("static")
                 resources.forEach {
+                    logger.debug { "<ba8ede71> Copy resource ${it.name} to $outputDir" }
                     it.copyTo(outputDir.resolve(it.name))
                 }
 
                 val assetsPath = script.parentFile.resolve("assets").toPath()
                 if (assetsPath.exists()) {
-//                    println("<4a6f2742> Copy assets from $assetsPath to $outputDir")
+                    logger.debug { "<4a6f2742> Copy assets from $assetsPath to $outputDir" }
                     assetsPath.copyToRecursively(outputDir.resolve("assets"), followLinks = true, overwrite = true)
                 }
 
