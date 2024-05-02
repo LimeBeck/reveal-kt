@@ -59,6 +59,11 @@ fun main() {
         is ConfigurationDto.SlideNumber.Custom -> configuration.slideNumber
     }
 
+    dynamicConfiguration.autoSlide = when {
+        configuration.autoSlide < 0.0 -> false
+        else -> configuration.autoSlide
+    }
+
     Reveal(
         dynamicConfiguration
     ).initialize()
