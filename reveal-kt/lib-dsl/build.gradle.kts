@@ -1,8 +1,11 @@
+import com.google.devtools.ksp.gradle.KspTaskMetadata
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     id("maven-publish")
     id("signing")
     alias(libs.plugins.dokka)
+    alias(libs.plugins.ksp)
 }
 
 val revealKtVersion: String by project
@@ -97,6 +100,8 @@ kotlin {
                 implementation(libs.kxhtml)
                 implementation(libs.uuid)
                 api(libs.qrcode)
+                implementation(libs.arrow.core)
+                implementation(libs.arrow.optics)
             }
         }
         val commonTest by getting {
@@ -129,6 +134,16 @@ kotlin {
 //                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
 //            }
 //        }
+    }
+}
+
+dependencies {
+    add("kspCommonMainMetadata", libs.arrow.ksp)
+}
+
+kotlin.sourceSets.commonMain {
+    tasks.withType<KspTaskMetadata> {
+        kotlin.srcDir(destinationDirectory)
     }
 }
 

@@ -1,5 +1,5 @@
 import dev.limebeck.revealkt.server.ConfigurationDto
-import dev.limebeck.revealkt.server.configurationJsomMapper
+import dev.limebeck.revealkt.server.configurationJsonMapper
 import kotlinx.browser.document
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromDynamic
@@ -10,7 +10,7 @@ external val configurationJson: dynamic
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
-    val configuration = configurationJsomMapper.decodeFromDynamic<ConfigurationDto>(configurationJson)
+    val configuration = configurationJsonMapper.decodeFromDynamic<ConfigurationDto>(configurationJson)
 
     val defaultPlugins = arrayOf(
         kotlinext.js.require("reveal.js/plugin/notes/notes.js"),
@@ -51,8 +51,14 @@ fun main() {
 
     kotlinext.js.require("reveal.js/plugin/highlight/monokai.css")
 
-    val dynamicConfiguration = configurationJsomMapper.encodeToDynamic(configuration)
+    val dynamicConfiguration = configurationJsonMapper.encodeToDynamic(configuration)
     dynamicConfiguration.plugins = defaultPlugins
+    dynamicConfiguration.slideNumber = when(configuration.slideNumber) {
+        ConfigurationDto.SlideNumber.Enable -> true
+        ConfigurationDto.SlideNumber.Disable -> false
+        is ConfigurationDto.SlideNumber.Custom -> configuration.slideNumber
+    }
+
     Reveal(
         dynamicConfiguration
     ).initialize()

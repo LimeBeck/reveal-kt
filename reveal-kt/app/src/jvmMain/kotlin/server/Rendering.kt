@@ -4,7 +4,7 @@ import dev.limebeck.revealkt.core.RevealKt
 import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
 import dev.limebeck.revealkt.server.ConfigurationDto
-import dev.limebeck.revealkt.server.configurationJsomMapper
+import dev.limebeck.revealkt.server.configurationJsonMapper
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
 import kotlinx.serialization.encodeToString
@@ -52,10 +52,17 @@ fun FlowContent.renderSlides(slides: List<Slide>) {
 }
 
 fun HTML.render(presentation: RevealKt) {
+    lang = presentation.meta.language
     val configuration = presentation.configuration
     head {
         meta {
             charset = "utf-8"
+        }
+
+        meta(name = "title", content = presentation.title)
+
+        presentation.meta.description?.let {
+            meta("description", content = it)
         }
         title {
             +presentation.title
@@ -68,7 +75,7 @@ fun HTML.render(presentation: RevealKt) {
             unsafe {
                 raw(
                     """
-                    const configurationJson = ${configurationJsomMapper.encodeToString(ConfigurationDto(configuration))}
+                    const configurationJson = ${configurationJsonMapper.encodeToString(ConfigurationDto(configuration))}
                     """
                 )
             }

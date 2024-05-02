@@ -103,7 +103,8 @@ fun runServer(config: Config, background: Boolean = true) {
                 }
 
                 exception<Throwable> { call, cause ->
-                    logger.error("<2c1b0315> Internal error", cause)
+                    if (cause !is CancellationException)
+                        logger.error("<2c1b0315> Internal error", cause)
                     call.respondText(cause.asHtml(), ContentType.Text.Html)
                 }
             }

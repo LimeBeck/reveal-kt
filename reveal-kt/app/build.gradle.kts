@@ -85,7 +85,7 @@ kotlin {
                 implementation(kotlin("stdlib-js"))
 
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.346")
-                implementation(npm("reveal.js", "5.0.5"))
+                implementation(npm("reveal.js", "5.1.0"))
             }
         }
         val jsTest by getting

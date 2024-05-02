@@ -1,10 +1,10 @@
 [versions]
-
 kotlin = "2.0.0-RC2"
 serialization = "1.6.3"
 ktor = "2.3.10"
 kxhtml = "0.11.0"
 dokka = "1.9.20"
+arrow = "1.2.4"
 
 [libraries]
 slf4j = { module = "org.slf4j:slf4j-api", version = "2.0.7" }
@@ -17,9 +17,11 @@ qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version = "4.1.1" }
 playwright = { module = "com.microsoft.playwright:playwright", version = "1.43.0" }
 kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.strictly = "1.8.0" }
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+arrow-ksp = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref = "arrow" }
+arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
 
 [plugins]
-
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 build-config = { id = "dev.limebeck.build-time-config", version = "2.2.1" }
@@ -27,3 +29,4 @@ ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version = "2.0.0-RC2-1.0.20" }
