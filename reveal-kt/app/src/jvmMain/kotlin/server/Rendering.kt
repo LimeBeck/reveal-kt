@@ -64,9 +64,12 @@ fun HTML.render(presentation: RevealKt) {
         presentation.meta.description?.let {
             meta("description", content = it)
         }
+
         title {
             +presentation.title
         }
+
+        presentation.headModifier(this)
     }
     body {
         renderSlides(presentation.slides)

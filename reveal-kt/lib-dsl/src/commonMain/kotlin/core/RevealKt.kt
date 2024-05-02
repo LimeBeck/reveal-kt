@@ -2,6 +2,7 @@ package dev.limebeck.revealkt.core
 
 import arrow.optics.optics
 import dev.limebeck.revealkt.elements.slides.Slide
+import kotlinx.html.HEAD
 
 @optics
 data class RevealKt(
@@ -9,6 +10,7 @@ data class RevealKt(
     val slides: List<Slide>,
     val configuration: Configuration = defaultConfiguration,
     val meta: Meta = defaultMeta,
+    val headModifier: HEAD.() -> Unit
 ) {
 
     companion object {

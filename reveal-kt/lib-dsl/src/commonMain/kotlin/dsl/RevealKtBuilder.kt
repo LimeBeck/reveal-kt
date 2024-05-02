@@ -7,12 +7,15 @@ import dev.limebeck.revealkt.elements.slides.MarkdownSlide
 import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
+import kotlinx.html.HEAD
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 class RevealKtBuilder(
     var title: String = "RevealKt"
 ) {
+    private var headModifier: HEAD.() -> Unit = {}
+
     class SlidesBuilder : SlidesHolder {
         override val slides = mutableListOf<Slide>()
     }
@@ -346,7 +349,8 @@ class RevealKtBuilder(
             title = title,
             slides = slidesBuilder.slides,
             configuration = configurationBuilder.configuration,
-            meta = metaBuilder.meta
+            meta = metaBuilder.meta,
+            headModifier = headModifier
         )
     }
 
@@ -360,6 +364,10 @@ class RevealKtBuilder(
 
     fun meta(block: MetaBuilder.() -> Unit) {
         metaBuilder.block()
+    }
+
+    fun head(block: HEAD.() -> Unit) {
+        headModifier = block
     }
 }
 
