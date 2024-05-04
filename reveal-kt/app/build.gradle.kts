@@ -22,11 +22,12 @@ repositories {
 
 buildTimeConfig {
     config {
-        destination.set(project.buildDir)
+        destination.set(project.layout.buildDirectory.get().asFile)
         objectName.set("RevealkConfig")
         packageName.set("dev.limebeck.revealkt")
         configProperties {
-            property<String>("version") set revealKtVersion
+            val version by string(revealKtVersion)
+            val kotlinVersion by string(libs.versions.kotlin.get())
         }
     }
 }
