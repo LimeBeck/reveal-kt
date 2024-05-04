@@ -1,13 +1,14 @@
+import com.google.devtools.ksp.gradle.KspTaskMetadata
+
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     id("maven-publish")
     id("signing")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.ksp)
 }
 
 val revealKtVersion: String by project
-
-val kotlinCoroutinesVersion: String by project
 
 group = "dev.limebeck"
 version = revealKtVersion
@@ -99,21 +100,18 @@ kotlin {
                 implementation(libs.kxhtml)
                 implementation(libs.uuid)
                 api(libs.qrcode)
+                implementation(libs.arrow.core)
+                implementation(libs.arrow.optics)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVersion}") {
-                    version {
-                        strictly(kotlinCoroutinesVersion)
-                    }
-                }
+                implementation(libs.kotlin.coroutines)
             }
         }
         val jvmMain by getting {
             dependencies {
-//                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinxHtmlVersion")
             }
         }
         val jvmTest by getting {
@@ -136,6 +134,16 @@ kotlin {
 //                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
 //            }
 //        }
+    }
+}
+
+dependencies {
+    add("kspCommonMainMetadata", libs.arrow.ksp)
+}
+
+kotlin.sourceSets.commonMain {
+    tasks.withType<KspTaskMetadata> {
+        kotlin.srcDir(destinationDirectory)
     }
 }
 

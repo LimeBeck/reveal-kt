@@ -8,12 +8,15 @@ import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.dependencies.*
 import kotlin.script.experimental.dependencies.maven.MavenDependenciesResolver
+import kotlin.script.experimental.host.ScriptingHostConfiguration
 import kotlin.script.experimental.jvm.*
+import kotlin.script.experimental.jvmhost.CompiledScriptJarsCache
 
 @KotlinScript(
     fileExtension = "reveal.kts",
     compilationConfiguration = RevealKtScriptCompilationConfiguration::class,
     evaluationConfiguration = RevealKtEvaluationConfiguration::class,
+    hostConfiguration = RevealKtKtHostConfiguration::class
 )
 abstract class RevealKtScript
 
@@ -31,7 +34,9 @@ object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
     ide {
         acceptedLocations(ScriptAcceptedLocation.Everywhere)
     }
-    compilerOptions.append("-Xadd-modules=ALL-MODULE-PATH")
+    compilerOptions.append(
+        "-Xadd-modules=ALL-MODULE-PATH",
+    )
 
     // Callbacks
     refineConfiguration {
@@ -41,8 +46,19 @@ object RevealKtScriptCompilationConfiguration : ScriptCompilationConfiguration({
 })
 
 object RevealKtEvaluationConfiguration : ScriptEvaluationConfiguration({
-    scriptsInstancesSharing(false)
-    constructorArgs()
+})
+
+object RevealKtKtHostConfiguration : ScriptingHostConfiguration({
+    jvm {
+        val cacheBaseDir = findCacheBaseDir()
+        if (cacheBaseDir != null)
+            compilationCache(
+                CompiledScriptJarsCache { script, scriptCompilationConfiguration ->
+                    cacheBaseDir
+                        .resolve(compiledScriptUniqueName(script, scriptCompilationConfiguration))
+                }
+            )
+    }
 })
 
 // Handler that reconfigures the compilation on the fly

@@ -26,7 +26,8 @@ fun substitute(text: String, values: Map<String, String>) = text.replace(substit
 fun generatePresentationTemplate(name: String, targetDir: Path) {
     val substitutionValues = mapOf(
         "basename" to name,
-        "version" to RevealkConfig.version
+        "version" to RevealkConfig.version,
+        "kotlinVersion" to RevealkConfig.kotlinVersion
     )
 
     targetDir.toFile().mkdirs()

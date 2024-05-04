@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
+    //Hack: won`t build with alias(libs.plugins.kotlin.jvm)
+    id(libs.plugins.kotlin.jvm.get().pluginId)
     id("java-library")
     id("maven-publish")
     id("signing")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
 }
 
 val revealKtVersion: String by project
-val kotlinVersion: String by project
-val kotlinCoroutinesVersion: String by project
+val kotlinVersion: String = libs.versions.kotlin.get()
 
 group = "dev.limebeck"
 version = revealKtVersion
@@ -25,11 +25,7 @@ java {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVersion}") {
-        version {
-            strictly(kotlinCoroutinesVersion)
-        }
-    }
+    implementation(libs.kotlin.coroutines)
 
     api("org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion")
     api("org.jetbrains.kotlin:kotlin-scripting-jvm:$kotlinVersion")

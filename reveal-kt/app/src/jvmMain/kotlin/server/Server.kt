@@ -1,7 +1,9 @@
 package dev.limebeck.application.server
 
+import dev.limebeck.application.debug
 import dev.limebeck.application.filesWatcher.UpdatedFile
 import dev.limebeck.application.filesWatcher.watchFilesRecursive
+import dev.limebeck.application.info
 import dev.limebeck.application.printToConsole
 import dev.limebeck.revealkt.RevealkConfig
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
@@ -9,6 +11,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
+import io.ktor.server.http.content.*
 import io.ktor.server.logging.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
@@ -21,6 +24,8 @@ import java.awt.Desktop
 import java.io.File
 import java.net.URI
 import java.util.*
+import kotlin.io.path.Path
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
 import kotlin.time.measureTimedValue
 
@@ -53,17 +58,16 @@ fun runServer(config: Config, background: Boolean = true) {
         val loadResult = scriptLoader.loadScript(config.script)
         renderLoadResult(loadResult)
     }
-    logger.info("First render took ${firstLoadResult.duration}")
+
+    logger.info { "First render took ${firstLoadResult.duration}" }
 
     val updatedFilesStateFlow = MutableStateFlow<List<UpdatedFile>?>(null)
     val renderedTemplateStateFlow = MutableStateFlow<String>(firstLoadResult.value)
 
     coroutineScope.launch {
-        watchFilesRecursive(basePath) {
-            logger.debug("<0969400d> Files changed: $it")
-            coroutineScope.launch {
-                updatedFilesStateFlow.emit(it)
-            }
+        watchFilesRecursive(Path(basePath)) {
+            logger.debug { "<0969400d> Files changed: $it" }
+            updatedFilesStateFlow.emit(it)
         }
     }
 
@@ -71,14 +75,16 @@ fun runServer(config: Config, background: Boolean = true) {
         updatedFilesStateFlow
             .filterNotNull()
             .filter { sf ->
-                sf.any { it.path.contains(config.script.name) }
+                sf.any { it.path.endsWith(config.script.name) }
                         || sf.any { it.path.contains("assets") }
-            }.collect {
+            }
+            .debounce(500.milliseconds)
+            .collect {
                 val result = measureTimedValue {
                     val loadResult = scriptLoader.loadScript(config.script)
                     renderLoadResult(loadResult)
                 }
-                logger.info("<00596867> Render time: ${result.duration}")
+                logger.info { "<00596867> Render time: ${result.duration}" }
                 renderedTemplateStateFlow.emit(result.value)
             }
     }
@@ -97,32 +103,19 @@ fun runServer(config: Config, background: Boolean = true) {
                 }
 
                 exception<Throwable> { call, cause ->
-                    logger.error("<2c1b0315> Internal error", cause)
+                    if (cause !is CancellationException)
+                        logger.error("<2c1b0315> Internal error", cause)
                     call.respondText(cause.asHtml(), ContentType.Text.Html)
                 }
             }
 
             routing {
-                get("assets/{assetName}") {
-                    val assetName = call.parameters["assetName"]!!
-                    logger.info("<2e9bb124> Get asset $assetName")
-                    call.respondFile(baseDir = File("$basePath/assets"), fileName = assetName)
+                staticFiles("assets/", File("$basePath/assets")) {
+                    enableAutoHeadResponse()
                 }
 
-                get("/{resourceName}") {
-                    val resourceName = call.parameters["resourceName"]!!
-                    logger.info("<955693ee> Get resource $resourceName")
-
-                    call.respondBytes(
-                        contentType = ContentType.defaultForFilePath(resourceName),
-                        status = HttpStatusCode.OK
-                    ) {
-                        withContext(Dispatchers.IO) {
-                            this::class.java.classLoader.getResourceAsStream(resourceName)?.readAllBytes()
-                                ?: this::class.java.classLoader.getResourceAsStream("js/$resourceName")?.readAllBytes()
-                                ?: throw NotFoundException()
-                        }
-                    }
+                staticResources("/", "static") {
+                    enableAutoHeadResponse()
                 }
 
                 get("/") {
@@ -131,7 +124,7 @@ fun runServer(config: Config, background: Boolean = true) {
                 }
 
                 get("/sse") {
-                    logger.debug("<7724a434> Subscribed with ${this.call.request.toLogString()}")
+                    logger.debug { "<7724a434> Subscribed with ${this.call.request.toLogString()}" }
                     val events = renderedTemplateStateFlow
                         .drop(1)
                         .map { SseEvent(data = it, event = "PageUpdated", id = UUID.randomUUID().toString()) }
@@ -146,6 +139,7 @@ fun runServer(config: Config, background: Boolean = true) {
                     }
                 }
             }
+
             environment.monitor.subscribe(ApplicationStarted) {
                 val url = "http://${config.server.host}:${config.server.port}"
 

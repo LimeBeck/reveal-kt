@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm")
+    //Hack: won`t build with alias(libs.plugins.kotlin.jvm)
+    id(libs.plugins.kotlin.jvm.get().pluginId)
     id("java-library")
     id("maven-publish")
     id("signing")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.dokka)
 }
 
 val revealKtVersion: String by project
-val kotlinVersion: String by project
-val kotlinCoroutinesVersion: String by project
+val kotlinVersion: String = libs.versions.kotlin.get()
 
 group = "dev.limebeck"
 version = revealKtVersion
@@ -21,16 +21,14 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinCoroutinesVersion}") {
-        version {
-            strictly(kotlinCoroutinesVersion)
-        }
-    }
 
+    implementation(libs.kotlin.coroutines)
     implementation("org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-scripting-jvm:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-scripting-jvm-host:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven-all:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-serialization-compiler-plugin:$kotlinVersion")
 
     implementation(project(":reveal-kt:lib-dsl"))
 }

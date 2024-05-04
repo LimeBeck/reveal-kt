@@ -1,9 +1,9 @@
 package dev.limebeck.application
 
+import org.slf4j.Logger
 import java.nio.file.FileSystems
 import java.nio.file.Path
 import kotlin.io.path.listDirectoryEntries
-import kotlin.io.path.name
 
 fun printMessage(message: String, symbol: String = "*", minRowLength: Int = 40, borderSize: Int = 2) {
     val lines = message.lines()
@@ -29,13 +29,19 @@ fun String.printToConsole(symbol: String = "*", minRowLength: Int = 40, borderSi
 
 fun getResourcesList(path: String): List<Path> {
     val classLoader = {}::class.java.classLoader
-    val resource = classLoader.getResource(path).toURI()
+    val resource = classLoader.getResource(path)!!.toURI()
     FileSystems.newFileSystem(resource, mapOf("create" to "true"))
-    return Path.of(resource).listDirectoryEntries().map {
-        it
+    return Path.of(resource).listDirectoryEntries()
+}
+
+fun Logger.debug(block: () -> String) {
+    if (isDebugEnabled) {
+        debug(block())
     }
 }
 
-fun Path.isFont() = name.endsWith(".woff")
-        || name.endsWith(".eot")
-        || name.endsWith(".ttf")
+fun Logger.info(block: () -> String) {
+    if (isInfoEnabled) {
+        info(block())
+    }
+}
