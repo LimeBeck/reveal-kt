@@ -137,6 +137,10 @@ tasks.named("jvmJar") {
     dependsOn(jsCopyTask)
 }
 
+tasks.named("jvmTest") {
+    dependsOn(jsCopyTask)
+}
+
 tasks.named("publish") {
     dependsOn(shadow)
 }
