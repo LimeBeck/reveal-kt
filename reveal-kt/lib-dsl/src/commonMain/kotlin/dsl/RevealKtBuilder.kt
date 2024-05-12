@@ -1,16 +1,14 @@
 package dev.limebeck.revealkt.dsl
 
-import arrow.optics.Lens
 import dev.limebeck.revealkt.core.*
 import dev.limebeck.revealkt.core.RevealKt.Configuration
 import dev.limebeck.revealkt.elements.slides.MarkdownSlide
 import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
+import dev.limebeck.revealkt.utils.asLensProvider
 import kotlinx.css.CssBuilder
 import kotlinx.html.HEAD
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 class RevealKtBuilder(
     var title: String = "RevealKt"
@@ -38,40 +36,29 @@ class RevealKtBuilder(
     }
 
     class ConfigurationBuilder {
-        internal var configuration = RevealKt.defaultConfiguration
-
-        private fun <T> lens(prop: Lens<Configuration, T>) =
-            object : ReadWriteProperty<ConfigurationBuilder, T> {
-                override fun getValue(thisRef: ConfigurationBuilder, property: KProperty<*>): T {
-                    return prop.get(configuration)
-                }
-
-                override fun setValue(thisRef: ConfigurationBuilder, property: KProperty<*>, value: T) {
-                    configuration = prop.set(configuration, value)
-                }
-            }
+        internal val configurationLens = RevealKt.defaultConfiguration.asLensProvider()
 
         /**
          * Display presentation control arrows
          */
-        var controls by lens(Configuration.controls)
+        var controls by configurationLens(Configuration.controls)
 
         /**
          * Help the user learn the controls by providing hints, for example by
          * bouncing the down arrow when they first encounter a vertical slide
          */
-        var controlsTutorial by lens(Configuration.controlsTutorial)
+        var controlsTutorial by configurationLens(Configuration.controlsTutorial)
 
         /**
          * Determines where controls appear, "edges" or "bottom-right"
          */
-        var controlsLayout by lens(Configuration.controlsLayout)
+        var controlsLayout by configurationLens(Configuration.controlsLayout)
 
         /**
          *   Visibility rule for backwards navigation arrows; "faded", "hidden"
          *   or "visible"
          */
-        var controlsBackArrows by lens(Configuration.controlsBackArrows)
+        var controlsBackArrows by configurationLens(Configuration.controlsBackArrows)
 
         /**
          * 	Changes the behavior of our navigation directions.
@@ -99,34 +86,34 @@ class RevealKtBuilder(
          * 	from 1.3 -> 2.1. If "grid" is used, the same navigation takes you
          * 	from 1.3 -> 2.3.
          */
-        var navigationMode by lens(Configuration.navigationMode)
+        var navigationMode by configurationLens(Configuration.navigationMode)
 
         /**
          * Randomizes the order of slides each time the presentation loads
          */
-        var shuffle by lens(Configuration.shuffle)
+        var shuffle by configurationLens(Configuration.shuffle)
 
         /**
          * Turns fragments on and off globally
          */
-        var fragments by lens(Configuration.fragments)
+        var fragments by configurationLens(Configuration.fragments)
 
         /**
          * Flags whether to include the current fragment in the URL,
          * 	so that reloading brings you to the same fragment position
          */
-        var fragmentInURL by lens(Configuration.fragmentInURL)
+        var fragmentInURL by configurationLens(Configuration.fragmentInURL)
 
         /**
          * Flags if we should show a help overlay when the question-mark
          * key is pressed
          */
-        var help by lens(Configuration.help)
+        var help by configurationLens(Configuration.help)
 
         /**
          * Flags if it should be possible to pause the presentation (blackout)
          */
-        var pause by lens(Configuration.pause)
+        var pause by configurationLens(Configuration.pause)
 
         /**
          * Controls automatic progression to the next slide
@@ -135,36 +122,36 @@ class RevealKtBuilder(
          *  - 1+:     All slides will progress automatically at the given interval
          *  - <0:  No auto-sliding, even if data-autoslide is present
          */
-        var autoSlide by lens(Configuration.autoSlide)
+        var autoSlide by configurationLens(Configuration.autoSlide)
 
         /**
          * Stop auto-sliding after user input
          */
-        var autoSlideStoppable by lens(Configuration.autoSlideStoppable)
+        var autoSlideStoppable by configurationLens(Configuration.autoSlideStoppable)
 
         /**
          * Specify the average time in seconds that you think you will spend
          * presenting each slide. This is used to show a pacing timer in the
          * speaker view
          */
-        var defaultTiming by lens(Configuration.defaultTiming)
+        var defaultTiming by configurationLens(Configuration.defaultTiming)
 
         /**
          * Enable slide navigation via mouse wheel
          */
-        var mouseWheel by lens(Configuration.mouseWheel)
+        var mouseWheel by configurationLens(Configuration.mouseWheel)
 
         /**
          * Opens links in an iframe preview overlay
          * Add `data-preview-link` and `data-preview-link="false"` to customise each link
          * individually
          */
-        var previewLinks by lens(Configuration.previewLinks)
+        var previewLinks by configurationLens(Configuration.previewLinks)
 
         /**
          * Prints each fragment on a separate slide
          */
-        var pdfSeparateFragments by lens(Configuration.pdfSeparateFragments)
+        var pdfSeparateFragments by configurationLens(Configuration.pdfSeparateFragments)
 
         /**
          *   Display the page number of the current slide
@@ -182,7 +169,7 @@ class RevealKtBuilder(
          *   object and return an array with one string [slideNumber] or
          *   three strings [n1,delimiter,n2]. See #formatSlideNumber().
          */
-        var slideNumber by lens(Configuration.appearance.slideNumber)
+        var slideNumber by configurationLens(Configuration.appearance.slideNumber)
 
         /**
          *  Can be used to limit the contexts in which the slide number appears
@@ -190,8 +177,8 @@ class RevealKtBuilder(
          *  - `PRINT`:    Only when printing to PDF
          *  - `SPEAKER`:  Only in the speaker view
          */
-        var showSlideNumber by lens(Configuration.appearance.showSlideNumber)
-        var additionalCssStyle by lens(Configuration.appearance.additionalCssStyle)
+        var showSlideNumber by configurationLens(Configuration.appearance.showSlideNumber)
+        var additionalCssStyle by configurationLens(Configuration.appearance.additionalCssStyle)
 
         /**
          *  Can be used to initialize reveal.js in one of the following views:
@@ -200,148 +187,148 @@ class RevealKtBuilder(
          * 	- `SCROLL`:  Show the presentation as a tall scrollable page with scroll
          * 	           triggered animations
          */
-        var view by lens(Configuration.appearance.view)
-        var theme by lens(Configuration.appearance.theme)
+        var view by configurationLens(Configuration.appearance.view)
+        var theme by configurationLens(Configuration.appearance.theme)
 
         /**
          * Vertical centering of slides
          */
-        var center by lens(Configuration.appearance.center)
+        var center by configurationLens(Configuration.appearance.center)
 
         /**
          * Enables touch navigation on devices with touch input
          */
-        var touch by lens(Configuration.appearance.touch)
+        var touch by configurationLens(Configuration.appearance.touch)
 
         /**
          * Display a presentation progress bar
          */
-        var progress by lens(Configuration.appearance.progress)
+        var progress by configurationLens(Configuration.appearance.progress)
 
         /**
          * Flags if speaker notes should be visible to all viewers
          */
-        var showNotes by lens(Configuration.appearance.showNotes)
+        var showNotes by configurationLens(Configuration.appearance.showNotes)
 
         /**
          * Flags if slides with data-visibility="hidden" should be kep visible
          */
-        var showHiddenSlides by lens(Configuration.appearance.showHiddenSlides)
+        var showHiddenSlides by configurationLens(Configuration.appearance.showHiddenSlides)
 
         /**
          * Disables the default reveal.js slide layout (scaling and centering)
          * so that you can use custom CSS layout
          */
-        var disableLayout by lens(Configuration.appearance.disableLayout)
+        var disableLayout by configurationLens(Configuration.appearance.disableLayout)
 
         /**
          *  Change the presentation direction to be RTL
          */
-        var rtl by lens(Configuration.appearance.rtl)
+        var rtl by configurationLens(Configuration.appearance.rtl)
 
         /**
          * Enable the slide overview mode
          */
-        var overview by lens(Configuration.appearance.overview)
+        var overview by configurationLens(Configuration.appearance.overview)
 
         /**
          * Enable keyboard shortcuts for navigation
          */
-        var keyboard by lens(Configuration.behavior.keyboard)
+        var keyboard by configurationLens(Configuration.behavior.keyboard)
 
         /**
          * Loop the presentation
          */
-        var loop by lens(Configuration.behavior.loop)
+        var loop by configurationLens(Configuration.behavior.loop)
 
         /**
          * Use 1 based indexing for # links to match slide number (default is zero
          * based)
          */
-        var hashOneBasedIndex by lens(Configuration.behavior.hashOneBasedIndex)
+        var hashOneBasedIndex by configurationLens(Configuration.behavior.hashOneBasedIndex)
 
         /**
          * Add the current slide number to the URL hash so that reloading the
          * page/copying the URL will return you to the same slide
          */
-        var hash by lens(Configuration.behavior.hash)
+        var hash by configurationLens(Configuration.behavior.hash)
 
         /**
          * Flags if we should monitor the hash and change slides accordingly
          */
-        var respondToHashChanges by lens(Configuration.behavior.respondToHashChanges)
+        var respondToHashChanges by configurationLens(Configuration.behavior.respondToHashChanges)
 
         /**
          * Enable support for jump-to-slide navigation shortcuts
          */
-        var jumpToSlide by lens(Configuration.behavior.jumpToSlide)
+        var jumpToSlide by configurationLens(Configuration.behavior.jumpToSlide)
 
         /**
          * Push each slide change to the browser history.  Implies `hash: true`
          */
-        var history by lens(Configuration.behavior.history)
+        var history by configurationLens(Configuration.behavior.history)
 
         /**
          * Focuses body when page changes visibility to ensure keyboard shortcuts work
          */
-        var focusBodyOnPageVisibilityChange by lens(Configuration.behavior.focusBodyOnPageVisibilityChange)
+        var focusBodyOnPageVisibilityChange by configurationLens(Configuration.behavior.focusBodyOnPageVisibilityChange)
 
         /**
          * Hide cursor if inactive
          */
-        var hideInactiveCursor by lens(Configuration.behavior.hideInactiveCursor)
+        var hideInactiveCursor by configurationLens(Configuration.behavior.hideInactiveCursor)
 
         /**
          * Can be used to globally disable auto-animation
          */
-        var autoAnimate by lens(Configuration.animation.autoAnimate)
+        var autoAnimate by configurationLens(Configuration.animation.autoAnimate)
 
         /**
          * Default settings for our auto-animate transitions, can be
          * overridden per-slide or per-element via data arguments
          */
-        var autoAnimateEasing by lens(Configuration.animation.autoAnimateEasing)
+        var autoAnimateEasing by configurationLens(Configuration.animation.autoAnimateEasing)
 
         /**
          * Default settings for our auto-animate transitions, can be
          * overridden per-slide or per-element via data arguments
          */
-        var autoAnimateDuration by lens(Configuration.animation.autoAnimateDuration)
+        var autoAnimateDuration by configurationLens(Configuration.animation.autoAnimateDuration)
 
         /**
          * Default settings for our auto-animate transitions, can be
          * overridden per-slide or per-element via data arguments
          */
-        var autoAnimateUnmatched by lens(Configuration.animation.autoAnimateUnmatched)
+        var autoAnimateUnmatched by configurationLens(Configuration.animation.autoAnimateUnmatched)
 
         /**
          * Transition style
          */
-        var transition by lens(Configuration.animation.transition)
+        var transition by configurationLens(Configuration.animation.transition)
 
         /**
          * Transition speed
          */
-        var transitionSpeed by lens(Configuration.animation.transitionSpeed)
+        var transitionSpeed by configurationLens(Configuration.animation.transitionSpeed)
 
         /**
          * Transition style for full page slide backgrounds
          */
-        var backgroundTransition by lens(Configuration.animation.backgroundTransition)
+        var backgroundTransition by configurationLens(Configuration.animation.backgroundTransition)
 
         /**
          * Parallax background image. CSS syntax, e.g. "a.jpg"
          */
-        var parallaxBackgroundImage by lens(Configuration.animation.parallaxBackgroundImage)
+        var parallaxBackgroundImage by configurationLens(Configuration.animation.parallaxBackgroundImage)
 
         /**
          * Parallax background size. CSS syntax, e.g. "3000px 2000px"
          */
-        var parallaxBackgroundSize by lens(Configuration.animation.parallaxBackgroundSize)
-        var parallaxBackgroundRepeat by lens(Configuration.animation.parallaxBackgroundRepeat)
+        var parallaxBackgroundSize by configurationLens(Configuration.animation.parallaxBackgroundSize)
+        var parallaxBackgroundRepeat by configurationLens(Configuration.animation.parallaxBackgroundRepeat)
 
         fun additionalCss(block: CssBuilder.() -> Unit) {
-            configuration.appearance.additionalCssStyleBuilder.block()
+            configurationLens.get().appearance.additionalCssStyleBuilder.block()
         }
     }
 
@@ -353,7 +340,7 @@ class RevealKtBuilder(
         return RevealKt(
             title = title,
             slides = slidesBuilder.slides,
-            configuration = configurationBuilder.configuration,
+            configuration = configurationBuilder.configurationLens.get(),
             meta = metaBuilder.meta,
             headModifier = headModifier
         )
