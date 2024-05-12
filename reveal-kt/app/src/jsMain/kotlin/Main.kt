@@ -74,5 +74,12 @@ fun main() {
         }
         document.head?.appendChild(style)
     }
+
+    configuration.additionalCssStyleFromBuilder?.let { it: String ->
+        val style = document.createElement("style").apply {
+            textContent = it
+        }
+        document.head?.appendChild(style)
+    }
 }
 

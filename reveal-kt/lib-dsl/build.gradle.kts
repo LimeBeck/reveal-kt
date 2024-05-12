@@ -100,6 +100,7 @@ kotlin {
                 implementation(libs.kxhtml)
                 implementation(libs.uuid)
                 api(libs.qrcode)
+                api(libs.kotlin.css)
                 implementation(libs.arrow.core)
                 implementation(libs.arrow.optics)
             }

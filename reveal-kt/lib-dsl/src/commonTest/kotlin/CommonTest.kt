@@ -5,6 +5,10 @@ import dev.limebeck.revealkt.core.elements.UnorderedList
 import dev.limebeck.revealkt.dsl.*
 import dev.limebeck.revealkt.dsl.slides.regularSlide
 import dev.limebeck.revealkt.dsl.slides.verticalSlide
+import kotlinx.css.Margin
+import kotlinx.css.body
+import kotlinx.css.margin
+import kotlinx.css.px
 import kotlin.test.Test
 
 
@@ -18,6 +22,14 @@ class CommonTest {
             configuration {
                 controls = false
                 progress = true
+                additionalCss {
+                    body {
+                       margin = Margin(0.px)
+                    }
+                    root {
+                        put("--r-heading-color", "#50B848")
+                    }
+                }
                 theme = RevealKt.Configuration.Theme.Predefined.BLACK
                 additionalCssStyle = """
                     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');

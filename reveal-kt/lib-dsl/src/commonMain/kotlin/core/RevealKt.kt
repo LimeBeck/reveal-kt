@@ -2,6 +2,7 @@ package dev.limebeck.revealkt.core
 
 import arrow.optics.optics
 import dev.limebeck.revealkt.elements.slides.Slide
+import kotlinx.css.CssBuilder
 import kotlinx.html.HEAD
 
 @optics
@@ -167,6 +168,7 @@ data class RevealKt(
             val showSlideNumber: ShowSlideNumber = ShowSlideNumber.ALL,
 
             val additionalCssStyle: String = "",
+            val additionalCssStyleBuilder: CssBuilder = CssBuilder(),
 
             /**
              *  Can be used to initialize reveal.js in one of the following views:

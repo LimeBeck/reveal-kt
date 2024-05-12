@@ -19,6 +19,7 @@ data class ConfigurationDto(
     @Contextual
     val theme: Theme,
     val additionalCssStyle: String?,
+    val additionalCssStyleFromBuilder: String?,
     val controlsTutorial: Boolean,
     val controlsLayout: String,
     val controlsBackArrows: String,
@@ -72,6 +73,7 @@ data class ConfigurationDto(
         },
         theme = Theme.of(configuration.appearance.theme),
         additionalCssStyle = configuration.appearance.additionalCssStyle,
+        additionalCssStyleFromBuilder = configuration.appearance.additionalCssStyleBuilder.toString(),
         controlsTutorial = configuration.controlsTutorial,
         controlsLayout = configuration.controlsLayout.value,
         controlsBackArrows = configuration.controlsBackArrows.value,

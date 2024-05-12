@@ -12,6 +12,7 @@ logback = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
 clikt = { module = "com.github.ajalt.clikt:clikt", version = "4.4.0" }
 kxhtml-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kxhtml" }
 kxhtml = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kxhtml" }
+kotlin-css = { module = "org.jetbrains.kotlin-wrappers:kotlin-css", version = "1.0.0-pre.746" }
 uuid = { module = "com.benasher44:uuid", version = "0.8.4" }
 qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version = "4.1.1" }
 playwright = { module = "com.microsoft.playwright:playwright", version = "1.43.0" }

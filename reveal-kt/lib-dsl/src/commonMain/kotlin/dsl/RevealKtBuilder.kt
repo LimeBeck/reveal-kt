@@ -7,6 +7,7 @@ import dev.limebeck.revealkt.elements.slides.MarkdownSlide
 import dev.limebeck.revealkt.elements.slides.Slide
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
+import kotlinx.css.CssBuilder
 import kotlinx.html.HEAD
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -338,6 +339,10 @@ class RevealKtBuilder(
          */
         var parallaxBackgroundSize by lens(Configuration.animation.parallaxBackgroundSize)
         var parallaxBackgroundRepeat by lens(Configuration.animation.parallaxBackgroundRepeat)
+
+        fun additionalCss(block: CssBuilder.() -> Unit) {
+            configuration.appearance.additionalCssStyleBuilder.block()
+        }
     }
 
     private val slidesBuilder = SlidesBuilder()
