@@ -1,6 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.gradle.jvm.tasks.Jar
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -31,6 +32,9 @@ kotlin {
     jvm {
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
+        }
+        java {
+            withSourcesJar()
         }
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         binaries {
@@ -124,10 +128,14 @@ val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     mainClass = "dev.limebeck.application.ApplicationKt"
 }
 
+// Use the JVM sources JAR produced by withSourcesJar() for publishing
+val jvmSourcesJar = tasks.named<Jar>("jvmSourcesJar")
+
 publishing {
     publications {
         create<MavenPublication>("shadow") {
             artifact(shadow)
+            artifact(jvmSourcesJar)
             artifactId = "revealkt-cli"
             pom {
                 name.set("RevealKt kotlin-wrapper CLI for Reveal JS library")
