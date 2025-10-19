@@ -161,7 +161,7 @@ jobs:
             -Psigning.password=${{ secrets.GPG_PASSWORD }} \
             -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \
             -PmavenCentralUsername=${{ secrets.OSSRH_USERNAME }} \
-            -mavenCentralPassword=${{ secrets.OSSRH_PASSWORD }}
+            -PmavenCentralPassword=${{ secrets.OSSRH_PASSWORD }}
         env:
           GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
