@@ -21,7 +21,7 @@ import kotlin.io.path.pathString
 
 class RenderPdf : CliktCommand(name = "pdf", help = "Render pdf from presentation") {
     val port: Int by option("-p", "--port", help = "Port").int().default(8080)
-    val host: String by option("-h", "--host", help = "Host").default("0.0.0.0")
+    val host: String by option("-h", "--host", help = "Host").default("localhost")
     val basePath: Path? by option("-b", help = "Script dir").path()
     val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
     val output: File by option("-o", "--output", help = "Output file")

@@ -117,7 +117,7 @@ jobs:
 
       - name: Publish to GitHub Packages
         run: |
-          ./gradlew publish \
+          ./gradlew publishAllPublicationsToMainRepoRepository \
             -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg \
             -Psigning.password=${{ secrets.GPG_PASSWORD }} \
             -Psigning.keyId=${{ secrets.GPG_KEY_ID }}
@@ -156,14 +156,13 @@ jobs:
 
       - name: Publish to Maven Central
         run: |
-          ./gradlew publish \
+          ./gradlew publishToMavenCentral \
             -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg \
             -Psigning.password=${{ secrets.GPG_PASSWORD }} \
-            -Psigning.keyId=${{ secrets.GPG_KEY_ID }}
+            -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \
+            -PmavenCentralUsername=${{ secrets.OSSRH_USERNAME }} \
+            -mavenCentralPassword=${{ secrets.OSSRH_PASSWORD }}
         env:
-          REPO_URI: https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/
-          REPO_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          REPO_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 

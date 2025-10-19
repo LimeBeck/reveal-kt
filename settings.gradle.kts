@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.maven
+
 rootProject.name = "reveal-kt"
 
 rootDir.resolve("reveal-kt").list()?.forEach {
@@ -9,5 +11,12 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         mavenLocal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
     }
 }

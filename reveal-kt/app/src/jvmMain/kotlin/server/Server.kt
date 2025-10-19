@@ -89,75 +89,69 @@ fun runServer(config: Config, background: Boolean = true) {
             }
     }
 
-    embeddedServer(CIO, environment = applicationEngineEnvironment {
+    embeddedServer(CIO, configure = {
         connector {
             host = config.server.host
             port = config.server.port
         }
-
-        module {
-            install(StatusPages) {
-                exception<NotFoundException> { call, cause ->
-                    logger.error("<2f75b6c6> Page not found", cause)
-                    call.respondText(cause.asHtml(), ContentType.Text.Html, status = HttpStatusCode.NotFound)
-                }
-
-                exception<Throwable> { call, cause ->
-                    if (cause !is CancellationException)
-                        logger.error("<2c1b0315> Internal error", cause)
-                    call.respondText(cause.asHtml(), ContentType.Text.Html)
-                }
+    }) {
+        install(StatusPages) {
+            exception<NotFoundException> { call, cause ->
+                logger.error("<2f75b6c6> Page not found", cause)
+                call.respondText(cause.asHtml(), ContentType.Text.Html, status = HttpStatusCode.NotFound)
             }
 
-            routing {
-                staticFiles("assets/", File("$basePath/assets")) {
-                    enableAutoHeadResponse()
-                }
+            exception<Throwable> { call, cause ->
+                if (cause !is CancellationException)
+                    logger.error("<2c1b0315> Internal error", cause)
+                call.respondText(cause.asHtml(), ContentType.Text.Html)
+            }
+        }
 
-                staticResources("/", "static") {
-                    enableAutoHeadResponse()
-                }
-
-                get("/") {
-                    val renderResult = renderedTemplateStateFlow.value.appendSseReloadScript()
-                    call.respondText(renderResult, ContentType.Text.Html)
-                }
-
-                get("/sse") {
-                    logger.debug { "<7724a434> Subscribed with ${this.call.request.toLogString()}" }
-                    val events = renderedTemplateStateFlow
-                        .drop(1)
-                        .map { SseEvent(data = it, event = "PageUpdated", id = UUID.randomUUID().toString()) }
-                        .produceIn(this)
-
-                    try {
-                        call.respondSse(events)
-                    } catch (e: CancellationException) {
-                    } finally {
-                        events.cancel()
-                        this.finish()
-                    }
-                }
+        routing {
+            staticFiles("assets/", File("$basePath/assets")) {
+                enableAutoHeadResponse()
             }
 
-            environment.monitor.subscribe(ApplicationStarted) {
-                val url = "http://${config.server.host}:${config.server.port}"
+            staticResources("/", "static") {
+                enableAutoHeadResponse()
+            }
 
-                """
-                    RevealKt started at $url
-                    Start duration: ${startTime.elapsedNow()}
-                    Application version: ${RevealkConfig.version}
-                """.trimIndent().printToConsole(minRowLength = 60)
+            get("/") {
+                val renderResult = renderedTemplateStateFlow.value.appendSseReloadScript()
+                call.respondText(renderResult, ContentType.Text.Html)
+            }
+
+            get("/sse") {
+                logger.debug { "<7724a434> Subscribed with ${this.call.request.toLogString()}" }
+                val events = renderedTemplateStateFlow
+                    .drop(1)
+                    .map { SseEvent(data = it, event = "PageUpdated", id = UUID.randomUUID().toString()) }
+                    .produceIn(this.call)
 
                 try {
-                    if (Desktop.isDesktopSupported() && background) {
-                        val desktop = Desktop.getDesktop()
-                        desktop.browse(URI.create(url))
-                    }
-                } catch (t: Throwable) {
-                    // Ignore
+                    call.respondSse(events)
+                } catch (e: CancellationException) {
+                } finally {
+                    events.cancel()
                 }
             }
         }
-    }).start(wait = background)
+
+        monitor.subscribe(ApplicationStarted) {
+            val url = "http://${config.server.host}:${config.server.port}"
+
+            """
+                RevealKt started at $url
+                Start duration: ${startTime.elapsedNow()}
+                Application version: ${RevealkConfig.version}
+            """.trimIndent().printToConsole(minRowLength = 60)
+
+           runCatching {
+                if (Desktop.isDesktopSupported() && background) {
+                    val desktop = Desktop.getDesktop()
+                    desktop.browse(URI.create(url))
+                }
+            }        }
+    }.start(wait = background)
 }

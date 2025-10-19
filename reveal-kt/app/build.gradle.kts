@@ -1,24 +1,19 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.kotlin.dsl.register
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    application
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("maven-publish")
-    id("signing")
     alias(libs.plugins.dokka)
     alias(libs.plugins.build.config)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.publish)
 }
 
 val revealKtVersion: String by project
 group = "dev.limebeck"
 version = revealKtVersion
-
-repositories {
-    mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-}
 
 buildTimeConfig {
     config {
@@ -33,22 +28,16 @@ buildTimeConfig {
 }
 
 kotlin {
-    targets.all {
-        compilations.all {
-            compileTaskProvider.configure {
-                compilerOptions {
-                    freeCompilerArgs.add("-Xexpect-actual-classes")
-                }
-            }
-        }
-    }
     jvm {
-        java {
-//            withSourcesJar()
-        }
-        withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
+        }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        binaries {
+            // Configures a JavaExec task named "runJvm" and a Gradle distribution for the "main" compilation in this target
+            executable {
+                mainClass.set("dev.limebeck.application.ApplicationKt")
+            }
         }
     }
     js(IR) {
@@ -70,18 +59,22 @@ kotlin {
                 implementation(libs.kotlin.serialization)
             }
         }
+
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
+
         val jvmMain by getting {
             dependencies {
+                implementation(kotlin("stdlib"))
                 implementation(project(":reveal-kt:script-definition"))
                 implementation(project(":reveal-kt:script-loader"))
-                implementation("io.ktor:ktor-server-cio:${libs.versions.ktor.get()}")
-                implementation("io.ktor:ktor-server-status-pages:${libs.versions.ktor.get()}")
-                implementation("io.ktor:ktor-server-html-builder-jvm:${libs.versions.ktor.get()}")
+//                implementation(libs.kotlin.serialization)
+                implementation(libs.ktor.server.cio)
+                implementation(libs.ktor.server.status.pages)
+                implementation(libs.ktor.server.html.builder.jvm)
                 implementation(libs.kxhtml.jvm)
                 implementation(libs.logback)
                 implementation(libs.slf4j)
@@ -89,48 +82,31 @@ kotlin {
                 implementation(libs.playwright)
             }
         }
+
         val jvmTest by getting
+
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+//                implementation(libs.kotlin.serialization)
 
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.346")
+                implementation(libs.kotlin.extensions)
                 implementation(npm("reveal.js", "5.1.0"))
             }
         }
+
         val jsTest by getting
     }
 }
 
-application {
-    mainClass.set("dev.limebeck.application.ApplicationKt")
-}
-
 val jvmProcessResources = tasks.named<Copy>("jvmProcessResources")
 
-val jsCopyTask = tasks.create<Copy>("jsCopyTask") {
+val jsCopyTask = tasks.register<Copy>("jsCopyTask") {
     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
     from(jsBrowserDistribution)
     into(jvmProcessResources.get().destinationDir.resolve("static"))
     excludes.add("*.zip")
     excludes.add("*.tar")
-}
-
-tasks.named<JavaExec>("run") {
-    dependsOn(tasks.named<Jar>("jvmJar"))
-    classpath(tasks.named<Jar>("jvmJar"))
-}
-
-val stubJavaDocJar by tasks.registering(Jar::class) {
-    archiveClassifier.value("javadoc")
-}
-
-// tasks to create an executable jar with all components of the app
-val shadow = tasks.getByName<ShadowJar>("shadowJar") {
-    dependsOn(jsCopyTask) // make sure JS gets compiled first
-    archiveClassifier.set("")
-    mergeServiceFiles()
-    finalizedBy(stubJavaDocJar)
 }
 
 tasks.named("jvmJar") {
@@ -141,80 +117,36 @@ tasks.named("jvmTest") {
     dependsOn(jsCopyTask)
 }
 
-tasks.named("publish") {
-    dependsOn(shadow)
+val shadow = tasks.getByName<ShadowJar>("shadowJar") {
+    dependsOn(jsCopyTask) // make sure JS gets compiled first
+    archiveClassifier.set("")
+    mergeServiceFiles()
+    mainClass = "dev.limebeck.application.ApplicationKt"
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "MainRepo"
-            url = uri(
-                System.getenv("REPO_URI")
-                    ?: project.findProperty("repo.uri") as String
-            )
-            credentials {
-                username = System.getenv("REPO_USERNAME")
-                    ?: project.findProperty("repo.username") as String?
-                password = System.getenv("REPO_PASSWORD")
-                    ?: project.findProperty("repo.password") as String?
-            }
-        }
-    }
-
     publications {
-         create<MavenPublication>("shadow") {
-            project.shadow.component(this)
-            artifact(tasks["sourcesJar"])
-            artifact(stubJavaDocJar)
+        create<MavenPublication>("shadow") {
+            artifact(shadow)
             artifactId = "revealkt-cli"
             pom {
                 name.set("RevealKt kotlin-wrapper CLI for Reveal JS library")
                 description.set("Kotlin cli module for RevealKt kotlin-wrapper for Reveal JS library")
                 groupId = "dev.limebeck"
-                url.set("https://github.com/LimeBeck/reveal-kt")
-                developers {
-                    developer {
-                        id.set("LimeBeck")
-                        name.set("Anatoly Nechay-Gumen")
-                        email.set("mail@limebeck.dev")
-                    }
-                }
-                licenses {
-                    license {
-                        name.set("MIT license")
-                        url.set("https://github.com/LimeBeck/reveal-kt/blob/master/LICENCE")
-                        distribution.set("repo")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/LimeBeck/reveal-kt.git")
-                    developerConnection.set("scm:git:ssh://github.com/LimeBeck/reveal-kt.git")
-                    url.set("https://github.com/LimeBeck/reveal-kt")
-                }
             }
         }
     }
 }
 
-tasks.withType<PublishToMavenRepository>().configureEach {
-    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
-    onlyIf {
-        it.name.contains("shadow", ignoreCase = true)
-    }
+//HACK: Publish CLI only
+tasks.withType(PublishToMavenRepository::class.java).configureEach {
+    enabled = (publication.name == "shadow")
 }
 
-tasks.withType<PublishToMavenLocal>().configureEach {
-    mustRunAfter(":reveal-kt:app:signKotlinMultiplatformPublication")
-    onlyIf {
-        it.name.contains("shadow", ignoreCase = true)
-    }
+tasks.withType(PublishToMavenLocal::class.java).configureEach {
+    enabled = (publication.name == "shadow")
 }
 
-signing {
-    sign(publishing.publications)
-}
-
-tasks.dokkaHtml.configure {
-    outputDirectory.set(buildDir.resolve("dokka"))
+tasks.withType(Sign::class.java).configureEach {
+    onlyIf { name.contains("Shadow", ignoreCase = true) }
 }

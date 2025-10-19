@@ -1,22 +1,14 @@
-import com.google.devtools.ksp.gradle.KspTaskMetadata
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    id("maven-publish")
-    id("signing")
     alias(libs.plugins.dokka)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.publish)
 }
 
 val revealKtVersion: String by project
 
 group = "dev.limebeck"
 version = revealKtVersion
-
-repositories {
-    mavenCentral()
-    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
-}
 
 kotlin {
     metadata {
@@ -36,9 +28,6 @@ kotlin {
                 name.set("RevealKt kotlin-wrapper for Reveal JS library JVM")
                 description.set("Kotlin JVM module for RevealKt kotlin-wrapper for Reveal JS library")
             }
-        }
-        compilations.all {
-//            kotlinOptions.jvmTarget = "1.8"
         }
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
@@ -96,6 +85,9 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
+            //Hack for ksp working with Gradle 9
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+
             dependencies {
                 implementation(libs.kxhtml)
                 implementation(libs.uuid)
@@ -105,30 +97,36 @@ kotlin {
                 implementation(libs.arrow.optics)
             }
         }
+
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.kotlin.coroutines)
             }
         }
+
         val jvmMain by getting {
             dependencies {
             }
         }
+
         val jvmTest by getting {
             dependencies {
             }
         }
+
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
             }
         }
+
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
         }
+
 //        val nativeMain by getting
 //        val nativeTest by getting {
 //            dependencies {
@@ -142,40 +140,21 @@ dependencies {
     add("kspCommonMainMetadata", libs.arrow.ksp)
 }
 
-kotlin.sourceSets.commonMain {
-    tasks.withType<KspTaskMetadata> {
-        kotlin.srcDir(destinationDirectory)
+//Hack for ksp working with Gradle 9
+listOf(
+    "compileKotlinJs",
+    "jsSourcesJar",
+    "compileKotlinJvm",
+    "jvmSourcesJar",
+    "dokkaGeneratePublicationHtml",
+    "sourcesJar"
+).forEach {
+    tasks.named(it).configure {
+        dependsOn("kspCommonMainKotlinMetadata")
     }
-}
-
-val stubJavaDocJar by tasks.registering(Jar::class) {
-    archiveClassifier.value("javadoc")
 }
 
 publishing {
-    kotlin.targets.forEach { target ->
-        val targetPublication: Publication? = publications.findByName(target.name)
-        if (targetPublication is MavenPublication) {
-            targetPublication.artifact(stubJavaDocJar.get())
-        }
-    }
-
-    repositories {
-        maven {
-            name = "MainRepo"
-            url = uri(
-                System.getenv("REPO_URI")
-                    ?: project.findProperty("repo.uri") as String
-            )
-            credentials {
-                username = System.getenv("REPO_USERNAME")
-                    ?: project.findProperty("repo.username") as String?
-                password = System.getenv("REPO_PASSWORD")
-                    ?: project.findProperty("repo.password") as String?
-            }
-        }
-    }
-
     publications {
         withType<MavenPublication> {
             val publicationName = this.name
@@ -185,52 +164,7 @@ publishing {
                     description.set("RevealJs kotlin wrapper and dsl")
                     artifactId = "revealkt-dsl"
                 }
-                groupId = "dev.limebeck"
-                url.set("https://github.com/LimeBeck/reveal-kt")
-                developers {
-                    developer {
-                        id.set("LimeBeck")
-                        name.set("Anatoly Nechay-Gumen")
-                        email.set("mail@limebeck.dev")
-                    }
-                }
-                licenses {
-                    license {
-                        name.set("MIT license")
-                        url.set("https://github.com/LimeBeck/reveal-kt/blob/master/LICENCE")
-                        distribution.set("repo")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/LimeBeck/reveal-kt.git")
-                    developerConnection.set("scm:git:ssh://github.com/LimeBeck/reveal-kt.git")
-                    url.set("https://github.com/LimeBeck/reveal-kt")
-                }
             }
         }
     }
-}
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    mustRunAfter(
-        ":reveal-kt:lib-dsl:signJvmPublication",
-//        ":reveal-kt:lib-dsl:signNativePublication",
-        ":reveal-kt:lib-dsl:signJsPublication",
-    )
-}
-
-tasks.withType<PublishToMavenLocal>().configureEach {
-    mustRunAfter(
-        ":reveal-kt:lib-dsl:signJvmPublication",
-        ":reveal-kt:lib-dsl:signJsPublication",
-//        ":reveal-kt:lib-dsl:signNativePublication",
-    )
-}
-
-signing {
-    sign(publishing.publications)
-}
-
-tasks.dokkaHtml.configure {
-    outputDirectory.set(buildDir.resolve("dokka"))
 }

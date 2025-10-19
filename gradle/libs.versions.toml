@@ -1,33 +1,49 @@
 [versions]
-kotlin = "2.0.0-RC2"
-serialization = "1.6.3"
-ktor = "2.3.10"
-kxhtml = "0.11.0"
-dokka = "1.9.20"
-arrow = "1.2.4"
+kotlin = "2.2.20"
+serialization = "1.9.0"
+ktor = "3.3.1"
+kxhtml = "0.12.0"
+dokka = "2.1.0"
+arrow = "2.2.0-beta.3"
 
 [libraries]
-slf4j = { module = "org.slf4j:slf4j-api", version = "2.0.7" }
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.6" }
+slf4j = { module = "org.slf4j:slf4j-api", version = "2.0.17" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.19" }
 clikt = { module = "com.github.ajalt.clikt:clikt", version = "4.4.0" }
 kxhtml-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kxhtml" }
 kxhtml = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kxhtml" }
 kotlin-css = { module = "org.jetbrains.kotlin-wrappers:kotlin-css", version = "1.0.0-pre.746" }
+kotlin-extensions = { module = "org.jetbrains.kotlin-wrappers:kotlin-extensions", version = "1.0.1-pre.346" }
 uuid = { module = "com.benasher44:uuid", version = "0.8.4" }
-qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version = "4.1.1" }
-playwright = { module = "com.microsoft.playwright:playwright", version = "1.43.0" }
-kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.strictly = "1.8.0" }
+qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version = "4.5.0" }
+playwright = { module = "com.microsoft.playwright:playwright", version = "1.56.0" }
+
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.10.2" }
 kotlin-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlin-serialization-plugin = { module = "org.jetbrains.kotlin:kotlin-serialization-compiler-plugin", version.ref = "kotlin" }
+
+kotlin-scripting-common = { module = "org.jetbrains.kotlin:kotlin-scripting-common", version.ref = "kotlin" }
+kotlin-scripting-jvm = { module = "org.jetbrains.kotlin:kotlin-scripting-jvm", version.ref = "kotlin" }
+kotlin-scripting-jvm-host = { module = "org.jetbrains.kotlin:kotlin-scripting-jvm-host", version.ref = "kotlin" }
+kotlin-scripting-dependencies = { module = "org.jetbrains.kotlin:kotlin-scripting-dependencies", version.ref = "kotlin" }
+kotlin-scripting-dependencies-maven-all = { module = "org.jetbrains.kotlin:kotlin-scripting-dependencies-maven-all", version.ref = "kotlin" }
+
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 arrow-ksp = { module = "io.arrow-kt:arrow-optics-ksp-plugin", version.ref = "arrow" }
 arrow-optics = { module = "io.arrow-kt:arrow-optics", version.ref = "arrow" }
 
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
+ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
+ktor-server-html-builder-jvm = { module = "io.ktor:ktor-server-html-builder-jvm", version.ref = "ktor" }
+
 [plugins]
-versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
+versions = { id = "com.github.ben-manes.versions", version = "0.53.0" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-build-config = { id = "dev.limebeck.build-time-config", version = "2.2.1" }
-ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+build-config = { id = "dev.limebeck.build-time-config", version = "2.3.1" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "2.0.0-RC2-1.0.20" }
+shadow = { id = "com.gradleup.shadow", version = "9.2.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.4" }
+publish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
+publish-base = { id = "com.vanniktech.maven.publish.base", version = "0.34.0" }
