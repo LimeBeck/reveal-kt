@@ -3,7 +3,7 @@
 [![CI](https://github.com/LimeBeck/reveal-kt/actions/workflows/main.yml/badge.svg)](https://github.com/LimeBeck/reveal-kt/actions/workflows/main.yml)
 ![GitHub last commit](https://img.shields.io/github/last-commit/limebeck/reveal-kt)
 ![GitHub](https://img.shields.io/github/license/limebeck/reveal-kt)
-[![Maven Central](https://img.shields.io/maven-central/v/dev.limebeck/revealkt-cli.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22dev.limebeck%22%20AND%20a:%22ko-te%22)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.limebeck/revealkt-cli.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/dev.limebeck/revealkt-cli)
 
 
 Kotlin DSL wrapper around Reveal JS presentation library
