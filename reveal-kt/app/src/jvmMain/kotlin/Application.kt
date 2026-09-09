@@ -1,6 +1,8 @@
 package dev.limebeck.application
 
 import com.github.ajalt.clikt.completion.completionOption
+import com.github.ajalt.clikt.core.Context
+import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
 import dev.limebeck.application.commands.*
@@ -20,13 +22,12 @@ fun main(args: Array<String>) = RevealKtCliApplication()
     .completionOption()
     .main(args)
 
-class RevealKtCliApplication : CliktCommand(
-    printHelpOnEmptyArgs = true,
-    help = """
+class RevealKtCliApplication : CliktCommand() {
+    override val printHelpOnEmptyArgs = true
+    override fun help(context: Context) = """
            RevealKt CLI
            
            Application version ${RevealkConfig.version}
            """.trimIndent()
-) {
     override fun run() = Unit
 }

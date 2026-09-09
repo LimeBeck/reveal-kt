@@ -1,5 +1,6 @@
 package dev.limebeck.application.commands
 
+import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.MordantHelpFormatter
@@ -19,7 +20,9 @@ import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.pathString
 
-class RenderPdf : CliktCommand(name = "pdf", help = "Render pdf from presentation") {
+class RenderPdf : CliktCommand(name = "pdf") {
+    override fun help(context: Context) = "Render pdf from presentation"
+
     val port: Int by option("-p", "--port", help = "Port").int().default(8080)
     val host: String by option("-h", "--host", help = "Host").default("localhost")
     val basePath: Path? by option("-b", help = "Script dir").path()
@@ -45,29 +48,37 @@ class RenderPdf : CliktCommand(name = "pdf", help = "Render pdf from presentatio
         runServer(
             Config(
                 server = ServerConfig(host, port),
-                basePath = basePath?.pathString ?: script.parent,
-                script = script
+                basePath = basePath?.toAbsolutePath()?.normalize()?.pathString ?: script.absoluteFile.normalize().parent,
+                script = script.absoluteFile.normalize()
             ),
-            background = false
-        )
-        runBlocking {
-            val outputData = renderer.render("http://$host:$port/?print-pdf")
-            output.writeBytes(outputData)
+            background = false,
+            liveReload = false
+        ).use {
+            runBlocking {
+                val outputData = renderer.render("http://$host:$port/?print-pdf")
+                output.writeBytes(outputData)
+            }
         }
     }
 }
 
-class Chrome: CliktCommand(name = "chrome", help = "Manage chrome installation") {
+class Chrome: CliktCommand(name = "chrome") {
+    override fun help(context: Context) = "Manage chrome installation"
+
     override fun run() {}
 }
 
-class InstallChrome : CliktCommand(name = "install", help = "Install chrome") {
+class InstallChrome : CliktCommand(name = "install") {
+    override fun help(context: Context) = "Install chrome"
+
     override fun run() {
         CLI.main(arrayOf("install", "chromium"))
     }
 }
 
-class UninstallChrome : CliktCommand(name = "uninstall", help = "Uninstall chrome") {
+class UninstallChrome : CliktCommand(name = "uninstall") {
+    override fun help(context: Context) = "Uninstall chrome"
+
     override fun run() {
         CLI.main(arrayOf("uninstall"))
     }

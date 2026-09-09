@@ -78,7 +78,7 @@ fun HTML.render(presentation: RevealKt) {
             unsafe {
                 raw(
                     """
-                    const configurationJson = ${configurationJsonMapper.encodeToString(ConfigurationDto(configuration))}
+                    const configurationJson = ${configurationJsonMapper.encodeToString(ConfigurationDto(configuration)).replace("<", "\\u003c")}
                     """
                 )
             }

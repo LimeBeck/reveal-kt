@@ -13,7 +13,18 @@ class RevealKtScriptLoader {
     private val scriptingHost = BasicJvmScriptingHost()
 
     fun loadScript(scriptFile: File): LoadResult {
-        val result = scriptingHost.evalFile(scriptFile, scriptFile.parentFile.resolve("assets").absolutePath)
+        val normalizedScript = scriptFile.absoluteFile.normalize()
+        val result = scriptingHost.evalFile(normalizedScript, normalizedScript.parentFile.resolve("assets").path)
+        val evaluationError = result.valueOrNull()?.returnValue as? ResultValue.Error
+        if (evaluationError != null) {
+            return LoadResult.Error(result.reports + ScriptDiagnostic(
+                ScriptDiagnostic.unspecifiedError,
+                evaluationError.error.toString(),
+                ScriptDiagnostic.Severity.ERROR,
+                sourcePath = normalizedScript.path,
+                exception = evaluationError.error
+            ))
+        }
 
         val implicitReceivers = result.valueOrNull()
             ?.configuration

@@ -44,7 +44,7 @@ kotlin {
             }
         }
     }
-    js(IR) {
+    js {
         binaries.executable()
         useCommonJs()
         browser {
@@ -87,7 +87,11 @@ kotlin {
             }
         }
 
-        val jvmTest by getting
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.apache.pdfbox:pdfbox:3.0.5")
+            }
+        }
 
         val jsMain by getting {
             dependencies {
@@ -95,7 +99,7 @@ kotlin {
 //                implementation(libs.kotlin.serialization)
 
                 implementation(libs.kotlin.extensions)
-                implementation(npm("reveal.js", "5.1.0"))
+                implementation(npm("reveal.js", "6.0.1"))
             }
         }
 
@@ -124,6 +128,9 @@ tasks.named("jvmTest") {
 val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     dependsOn(jsCopyTask) // make sure JS gets compiled first
     archiveClassifier.set("")
+    filesMatching(listOf("META-INF/services/**", "META-INF/*.kotlin_module")) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
     mergeServiceFiles()
     mainClass = "dev.limebeck.application.ApplicationKt"
 }
@@ -157,4 +164,11 @@ tasks.withType(PublishToMavenLocal::class.java).configureEach {
 
 tasks.withType(Sign::class.java).configureEach {
     onlyIf { name.contains("Shadow", ignoreCase = true) }
+}
+
+// Integration tests exercise the same self-contained archive shipped to users.
+tasks.named<Test>("jvmTest") {
+    dependsOn(shadow)
+    systemProperty("revealkt.cli.jar", shadow.archiveFile.get().asFile.absolutePath)
+    maxHeapSize = "1g"
 }

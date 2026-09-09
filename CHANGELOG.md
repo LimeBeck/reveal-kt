@@ -1,0 +1,28 @@
+# Unreleased
+
+## Stable CLI (P0)
+
+- Updated Kotlin/Gradle, Ktor, Playwright and Reveal.js integration.
+- Script paths accept bare filenames, relative/absolute paths and spaces.
+- Repeated `bundle` updates HTML and resources. Removed source assets remain in the output; unrelated files are preserved. Use a fresh directory for a clean export.
+- Live reload keeps complete event paths, watches newly created directories and reloads when assets change even if the HTML is identical.
+- Custom CSS themes use stylesheet links; custom slide numbers reach Reveal.js as strings.
+- Compilation and evaluation failures cause exports to exit unsuccessfully, with script diagnostics.
+- PDF export waits for Reveal.js, print layout, fonts and images with bounded waits and browser diagnostics. Server and watcher resources are released on completion or failure.
+- CI runs JVM, JavaScript and packaged CLI/browser/PDF checks before tag publication and uploads reports and CLI archives.
+
+## Supported environment and checks
+
+The supported CLI platform for this release is Linux x86-64 with Java 21 or 25 (CI: Ubuntu 24.04, Temurin). Other operating systems and older Java runtimes are not yet validated. The JVM library bytecode target remains 11; this is not a promise that the complete CLI runs on Java 11.
+
+Build and run the complete checks:
+
+```sh
+./gradlew :reveal-kt:app:shadowJar
+java -cp 'reveal-kt/app/build/libs/*' com.microsoft.playwright.CLI install --with-deps chromium
+./gradlew build
+```
+
+The integration suite executes the packaged JAR in temporary directories, including paths with spaces. Chromium is required, and tests fail if it is missing. The PDF fixture contains two slides and local image/theme assets. The default math plugin loads MathJax from a CDN, so browser/PDF checks currently need network access. Other external presentation resources also need network access; failed resources abort PDF export. Readiness stages have a 30-second timeout each. Video playback and arbitrary asynchronous user JavaScript are outside the PDF readiness contract.
+
+The required CI job is `Linux / Java …`; repository administrators must select these checks in branch protection if merge blocking is desired. Release publication is already gated by these jobs in the workflow.

@@ -2,12 +2,16 @@ package dev.limebeck.application.filesWatcher
 
 import dev.limebeck.application.debug
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.isActive
 import org.slf4j.LoggerFactory
 import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 import java.time.Instant
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.isDirectory
 
 val logger = LoggerFactory.getLogger("FilesWatcher")
 
@@ -36,25 +40,25 @@ private fun WatchService.registerRecursive(root: Path) {
 
 suspend fun watchFilesRecursive(path: Path, block: suspend (events: List<UpdatedFile>) -> Unit) =
     withContext(Dispatchers.IO) {
-        val watchService = FileSystems
-            .getDefault()
-            .newWatchService()
-            .apply {
-                registerRecursive(path)
-            }
-
-        var key: WatchKey
-        while (watchService.take().also { key = it } != null) {
-            block(
-                key.pollEvents().map { watchEvent ->
-
-                    UpdatedFile(
-                        path = watchEvent.context().toString(),
-                        type = watchEvent.kind(),
-                        updateTime = Instant.now()
-                    )
+        FileSystems.getDefault().newWatchService().use { service ->
+            service.registerRecursive(path.toAbsolutePath().normalize())
+            while (currentCoroutineContext().isActive) {
+                val key = service.poll(100, MILLISECONDS) ?: continue
+                val directory = key.watchable() as Path
+                val events = key.pollEvents().map { event ->
+                    val changed = (event.context() as? Path)?.let { directory.resolve(it).normalize() }
+                        ?: directory
+                    if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE && changed.isDirectory()) {
+                        try {
+                            service.registerRecursive(changed)
+                        } catch (_: NoSuchFileException) {
+                            // The directory may have been deleted again before registration.
+                        }
+                    }
+                    UpdatedFile(path = changed.toString(), type = event.kind(), updateTime = Instant.now())
                 }
-            )
-            key.reset()
+                key.reset()
+                block(events)
+            }
         }
     }
