@@ -8,114 +8,21 @@
 
 Kotlin DSL wrapper around Reveal JS presentation library
 
-## Usage
+## Get started
 
-Run server with presentation:
-```bash
-jbang revealkt@limebeck.dev run ./MyAwesomePresentation.reveal.kts
+Use the [step-by-step guide](docs/getting-started.md) to install the standalone CLI, generate a presentation, preview edits and export HTML/PDF. It also explains script trust and how to diagnose the environment with `doctor`.
+
+```sh
+# After defining revealkt as described in the guide:
+revealkt init Demo
+revealkt doctor Demo/presentation/Demo.reveal.kts
+revealkt run Demo/presentation/Demo.reveal.kts --host 127.0.0.1
 ```
 
-Bundle presentation to static html site:
-```bash
-jbang revealkt@limebeck.dev bundle ./MyAwesomePresentation.reveal.kts
-```
+The CLI includes three complete examples: `init --example technical`, `lesson` and `custom-theme` (provide a presentation name as well). They cover code, incremental fragments, custom CSS and image assets.
 
-Render presentation to pdf via playwright:
-```bash
-jbang revealkt@limebeck.dev pdf ./MyAwesomePresentation.reveal.kts -o myPresentation.pdf
-```
+- [Assets, themes, numbering and troubleshooting](docs/presentation-reference.md)
+- [Roadmap](ROADMAP.md)
+- [Changes, supported runtimes and validation](CHANGELOG.md)
 
-> [!CAUTION]
-> For now playwright requires to download chromium first (uses npm)
-
-Playwright documentation: https://playwright.dev/java/docs/browsers
-
-```bash
-jbang revealkt@limebeck.dev chrome install
-```
-
-Uninstall chrome 
-```bash
-jbang revealkt@limebeck.dev chrome uninstall
-```
-
-
-Create new presentation from template
-```bash
-jbang revealkt@limebeck.dev init my-awesome-presentation
-cd ./my-awesome-presentation
-jbang revealkt@limebeck.dev run ./presentation/my-awesome-presentation.reveal.kts
-```
-
-## Add alias for `revealkt`
-
-```bash
-jbang app install revealkt@limebeck.dev
-revealkt run ./presentation/my-awesome-presentation.reveal.kts
-```
-
-## Example
-
-**MyAwesomeScript.reveal.kts**:
-```kotlin
-import qrcode.color.Colors
-
-title = "My awesome presentation"
-
-configuration {
-    controls = false
-    progress = false
-}
-
-slides {
-    regularSlide {
-        autoanimate = true
-        +title { "Hello from my awesome presentation" }
-    }
-    regularSlide {
-        autoanimate = true
-        +qrCode("https://github.com/LimeBeck/reveal-kt") {
-            stretch = true
-            transformBuilder {
-                val logo = loadAsset("logo2.png")
-                it.withSize(20).withColor(Colors.css("#B125EA")).withLogo(logo, 150, 150, clearLogoArea = true)
-            }
-        }
-    }
-    verticalSlide {
-        val title = Title { "Some text" }
-        slide {
-            autoanimate = true
-            +title
-            +note {
-                "Some note"
-            }
-        }
-        slide {
-            autoanimate = true
-            +title
-            +title { "Updated text" }
-            +note {
-                "Some note"
-            }
-        }
-        slide {
-            autoanimate = true
-            +title
-            +code {
-                //language=JSON
-                """
-                   {
-                    "string": "some string"
-                   } 
-                """.trimIndent()
-            }
-        }
-        slide {
-            +img(src = "image.png") {
-                stretch = true
-            }
-        }
-    }
-}
-```
+The supported CLI platform is Linux x86-64 with Java 21 or 25. Chromium is required for PDF export. A Kotlin script executes with your user's permissions; review scripts before running them.

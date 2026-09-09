@@ -10,14 +10,8 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.coroutineScope
 import java.io.IOException
 
-fun String.appendSseReloadScript() = this + """
-        <script type="text/javascript">
-            var source = new EventSource('/sse');
-            source.addEventListener('PageUpdated', function(e) {
-                location.reload()
-            }, false);
-        </script>
-""".trimIndent()
+fun String.appendSseReloadScript(revision: Long = 0) = this +
+    """<script src="/revealkt-live-reload.js" data-revision="$revision"></script>"""
 
 data class SseEvent(val data: String, val event: String? = null, val id: String? = null)
 

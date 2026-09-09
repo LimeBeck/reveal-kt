@@ -1,4 +1,4 @@
-val revealKtVersion = "1.0.0"
+val revealKtVersion = "1.1.0"
 group = "com.example"
 version = "1.0.0-SNAPSHOT"
 

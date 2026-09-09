@@ -6,6 +6,7 @@ import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.MordantHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
@@ -71,8 +72,14 @@ class Chrome: CliktCommand(name = "chrome") {
 class InstallChrome : CliktCommand(name = "install") {
     override fun help(context: Context) = "Install chrome"
 
+    private val withDeps by option("--with-deps", help = "Install Chromium system libraries (may require administrator privileges)").flag()
+
     override fun run() {
-        CLI.main(arrayOf("install", "chromium"))
+        CLI.main(buildList {
+            add("install")
+            if (withDeps) add("--with-deps")
+            add("chromium")
+        }.toTypedArray())
     }
 }
 

@@ -3,6 +3,7 @@ package dev.limebeck.revealkt.scripts
 import dev.limebeck.revealkt.dsl.RevealKtBuilder
 import dsl.AssetLoader
 import java.io.File
+import java.util.concurrent.CancellationException
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.host.toScriptSource
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
@@ -14,23 +15,20 @@ class RevealKtScriptLoader {
 
     fun loadScript(scriptFile: File): LoadResult {
         val normalizedScript = scriptFile.absoluteFile.normalize()
-        val result = scriptingHost.evalFile(normalizedScript, normalizedScript.parentFile.resolve("assets").path)
+        val result = try {
+            scriptingHost.evalFile(normalizedScript, normalizedScript.parentFile.resolve("assets").path)
+        } catch (error: Exception) {
+            if (error is CancellationException) throw error
+            return failure(normalizedScript, error)
+        }
         val evaluationError = result.valueOrNull()?.returnValue as? ResultValue.Error
         if (evaluationError != null) {
-            return LoadResult.Error(result.reports + ScriptDiagnostic(
-                ScriptDiagnostic.unspecifiedError,
-                evaluationError.error.toString(),
-                ScriptDiagnostic.Severity.ERROR,
-                sourcePath = normalizedScript.path,
-                exception = evaluationError.error
-            ))
+            return failure(normalizedScript, evaluationError.error, result.reports)
         }
 
         val implicitReceivers = result.valueOrNull()
             ?.configuration
-            ?.notTransientData
-            ?.entries
-            ?.find { it.key.name == "implicitReceivers" }?.value as? List<*>
+            ?.get(ScriptEvaluationConfiguration.implicitReceivers)
 
         val builder = implicitReceivers?.filterIsInstance<RevealKtBuilder>()?.firstOrNull()
 
@@ -39,6 +37,21 @@ class RevealKtScriptLoader {
         } else {
             LoadResult.Success(builder)
         }
+    }
+
+    private fun failure(script: File, error: Throwable, reports: List<ScriptDiagnostic> = emptyList()): LoadResult.Error {
+        val causes = generateSequence(error) { it.cause }.take(20).toList()
+        val cause = causes.last()
+        val frame = causes.asReversed().asSequence().flatMap { it.stackTrace.asSequence() }
+            .firstOrNull { it.fileName == script.name && it.lineNumber > 0 }
+        return LoadResult.Error(reports + ScriptDiagnostic(
+            code = ScriptDiagnostic.unspecifiedError,
+            message = cause.toString(),
+            severity = ScriptDiagnostic.Severity.ERROR,
+            sourcePath = script.path,
+            location = frame?.let { SourceCode.Location(SourceCode.Position(it.lineNumber, 1)) },
+            exception = cause
+        ))
     }
 
     sealed interface LoadResult {

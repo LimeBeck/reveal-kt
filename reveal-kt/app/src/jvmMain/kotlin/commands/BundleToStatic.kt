@@ -13,6 +13,7 @@ import dev.limebeck.application.debug
 import dev.limebeck.application.getResourcesList
 import dev.limebeck.application.server.renderLoadResult
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
+import dev.limebeck.revealkt.scripts.formatDiagnostics
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Path
@@ -72,7 +73,7 @@ class BundleToStatic : CliktCommand(name = "bundle") {
             is RevealKtScriptLoader.LoadResult.Error -> {
                 throw CliktError(
                     "Failed to export ${script.absolutePath}:\n" +
-                        loadResult.diagnostic.joinToString("\n") { it.render() }
+                        loadResult.formatDiagnostics(script)
                 )
             }
         }

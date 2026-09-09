@@ -1,78 +1,21 @@
 import dev.limebeck.revealkt.core.RevealKt
-import dev.limebeck.revealkt.core.elements.*
 import dev.limebeck.revealkt.dsl.*
 import dev.limebeck.revealkt.dsl.slides.*
 
-title = "Hello from my awesome presentation"
-
+title = "{{basename}}"
 configuration {
-    controls = false
-    progress = false
     theme = RevealKt.Configuration.Theme.Predefined.BLACK
-    additionalCssStyle = """
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
-
-		.reveal h1,
-		.reveal h2,
-		.reveal h3,
-		.reveal h4,
-		.reveal h5,
-		.reveal h6 {
-			font-family: 'Roboto', sans-serif;
-		}
-
-		.reveal .slide {
-			font-family: 'Roboto', sans-serif;
-		}
-
-		.container {
-			display: flex;
-		}
-
-		.col {
-			flex: 1;
-		}
-    """.trimIndent()
+    pdfSeparateFragments = false
 }
-
 slides {
     regularSlide {
-        autoanimate = true
-        +title { "{{basename}}" }
+        +title { "My first presentation" }
+        +regularText { "Edit this text and save to see live reload." }
+        +note { "Press S in the browser to open speaker notes." }
     }
-    verticalSlide {
-        val title = Title { "Some text" }
-        slide {
-            autoanimate = true
-            +title
-            +note {
-                "Some note"
-            }
-        }
-        slide {
-            autoanimate = true
-            +title
-            +title { "Updated text" }
-            +note {
-                "Some note"
-            }
-        }
-        slide {
-            autoanimate = true
-            +title
-            +code {
-                //language=JSON
-                """
-                   {
-                    "string": "some string"
-                   } 
-                """.trimIndent()
-            }
-        }
-        slide {
-            +img(src = "image.png") {
-                stretch = true
-            }
-        }
+    regularSlide {
+        +title { "Add an image" }
+        +img(src = "image.png") { height = 350 }
+        +regularText { "Images live in the assets directory beside this script." }
     }
 }

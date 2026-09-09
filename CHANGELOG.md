@@ -1,4 +1,14 @@
-# Unreleased
+# 1.1.0 (release candidate)
+
+## First-time use (stage 3)
+
+- Add `doctor` with Java, script/resource/output directory and Chromium launch checks, corrective actions and nonzero failure status; it does not execute scripts or install software. Add explicit `chrome install --with-deps` for Ubuntu prerequisites.
+- Keep the last working presentation and current slide when a live update fails. Show escaped diagnostics in a collapsible browser panel and the terminal, including for newly opened tabs; recover on the next successful save.
+- Format compiler diagnostics with file, line, column and cause. Runtime diagnostics retain the available script stack line without inventing a column.
+- Ship `init --example technical`, `lesson` and `custom-theme` with all assets, plus a simpler starter. Refuse to overwrite generated files.
+- Add an installation-to-PDF guide, asset/theme/numbering reference and script trust documentation. Keep the roadmap in English.
+- Avoid loading MathJax for ordinary slides without math markers. Math and Markdown presentations still use the CDN; full offline export remains outside this stage.
+- Verify the guide and examples through a copied CLI JAR with an empty Java user home/Maven repository; test failure/recovery and doctor diagnostics.
 
 ## Stable CLI (P0)
 
@@ -23,6 +33,6 @@ java -cp 'reveal-kt/app/build/libs/*' com.microsoft.playwright.CLI install --wit
 ./gradlew build
 ```
 
-The integration suite executes the packaged JAR in temporary directories, including paths with spaces. Chromium is required, and tests fail if it is missing. The PDF fixture contains two slides and local image/theme assets. The default math plugin loads MathJax from a CDN, so browser/PDF checks currently need network access. Other external presentation resources also need network access; failed resources abort PDF export. Readiness stages have a 30-second timeout each. Video playback and arbitrary asynchronous user JavaScript are outside the PDF readiness contract.
+The integration suite executes the packaged JAR in temporary directories, including paths with spaces. Chromium is required, and tests fail if it is missing. The PDF fixture contains two slides and local image/theme assets. MathJax is loaded from a CDN when slides contain math markers; the fixed fixtures use local resources. Other external presentation resources also need network access; failed resources abort PDF export. Readiness stages have a 30-second timeout each. Video playback and arbitrary asynchronous user JavaScript are outside the PDF readiness contract.
 
 The required CI job is `Linux / Java …`; repository administrators must select these checks in branch protection if merge blocking is desired. Release publication is already gated by these jobs in the workflow.
