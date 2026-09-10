@@ -65,7 +65,10 @@ subprojects {
     mavenPublishing {
         publishToMavenCentral()
 
-        signAllPublications()
+        // Local publication checks do not need release signing keys.
+        if (!providers.gradleProperty("unsignedPublication").isPresent) {
+            signAllPublications()
+        }
 
         pom {
             url = "https://github.com/LimeBeck/reveal-kt"

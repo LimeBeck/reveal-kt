@@ -117,8 +117,9 @@ val jsCopyTask = tasks.register<Copy>("jsCopyTask") {
     excludes.add("*.tar")
 }
 
-tasks.named("jvmJar") {
+tasks.named<Jar>("jvmJar") {
     dependsOn(jsCopyTask)
+    manifest.attributes["Main-Class"] = "dev.limebeck.application.ApplicationKt"
 }
 
 tasks.named("jvmTest") {
@@ -127,7 +128,7 @@ tasks.named("jvmTest") {
 
 val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     dependsOn(jsCopyTask) // make sure JS gets compiled first
-    archiveClassifier.set("")
+    archiveClassifier.set("all")
     filesMatching(listOf("META-INF/services/**", "META-INF/*.kotlin_module")) {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }
@@ -135,35 +136,30 @@ val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     mainClass = "dev.limebeck.application.ApplicationKt"
 }
 
-// Use the JVM sources JAR produced by withSourcesJar() for publishing
-val jvmSourcesJar = tasks.named<Jar>("jvmSourcesJar")
-
+// Publish the JVM component so Maven/JBang can resolve its runtime dependencies.
 publishing {
-    publications {
-        create<MavenPublication>("shadow") {
-            artifact(shadow)
-            artifact(jvmSourcesJar)
+    publications.withType<MavenPublication>().configureEach {
+        if (name == "jvm") {
             artifactId = "revealkt-cli"
             pom {
                 name.set("RevealKt kotlin-wrapper CLI for Reveal JS library")
                 description.set("Kotlin cli module for RevealKt kotlin-wrapper for Reveal JS library")
-                groupId = "dev.limebeck"
             }
         }
     }
 }
 
-//HACK: Publish CLI only
-tasks.withType(PublishToMavenRepository::class.java).configureEach {
-    enabled = (publication.name == "shadow")
+// The browser bundle is embedded in the JVM resources, not published separately.
+tasks.withType<PublishToMavenRepository>().configureEach {
+    enabled = (publication.name == "jvm")
 }
 
-tasks.withType(PublishToMavenLocal::class.java).configureEach {
-    enabled = (publication.name == "shadow")
+tasks.withType<PublishToMavenLocal>().configureEach {
+    enabled = (publication.name == "jvm")
 }
 
-tasks.withType(Sign::class.java).configureEach {
-    onlyIf { name.contains("Shadow", ignoreCase = true) }
+tasks.withType<Sign>().configureEach {
+    onlyIf { name == "signJvmPublication" }
 }
 
 // Integration tests exercise the same self-contained archive shipped to users.
