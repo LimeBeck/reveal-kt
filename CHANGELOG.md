@@ -1,4 +1,4 @@
-# 1.1.0 (release candidate)
+# 1.1.0
 
 ## First-time use (stage 3)
 

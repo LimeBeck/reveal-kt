@@ -1,14 +1,14 @@
 # From a Kotlin script to HTML and PDF
 
-This guide describes the CLI built from this revision. You need Linux x86-64 and Java 21 or 25. Chromium is needed for PDF export; you can write slides, preview them and bundle HTML before installing it. The CLI includes the Kotlin compiler, DSL, Reveal.js and example resources. Node.js, Gradle and Maven are not required to run the downloaded JAR.
+This guide describes RevealKt 1.1.0. You need Linux x86-64 and Java 21 or 25. Chromium is needed for PDF export; you can write slides, preview them and bundle HTML before installing it. The CLI includes the Kotlin compiler, DSL, Reveal.js and example resources. Node.js, Gradle and Maven are not required to run the downloaded JAR.
 
 ## 1. Install the CLI
 
 Run `java -version` and check that the selected runtime is Java 21 or 25. Set `JAVA_HOME` and `PATH` to your JDK if necessary.
 
-Once 1.1.0 is published, download **`app-1.1.0.jar`** from [GitHub Releases](https://github.com/LimeBeck/reveal-kt/releases). Before publication, download the `cli-java-21` artifact from a successful [CI run](https://github.com/LimeBeck/reveal-kt/actions/workflows/main.yml) for the revision you want to use. GitHub may require you to sign in to download artifacts. Unzip it and take **`app-1.1.0.jar`**, the self-contained CLI. The smaller `app-jvm`, sources and javadoc JARs are not the CLI. Rename it to `revealkt.jar` and put it in a permanent directory, for example `$HOME/Applications/revealkt/`.
+Download **`app-1.1.0.jar`** from [GitHub Releases](https://github.com/LimeBeck/reveal-kt/releases/tag/v1.1.0). This is the self-contained CLI; the smaller `app-jvm`, sources and javadoc JARs are not the CLI. Rename it to `revealkt.jar` and put it in a permanent directory, for example `$HOME/Applications/revealkt/`.
 
-Until this revision is published, an older Maven Central artifact or JBang alias may not include `doctor` and the new examples. As an alternative to a CI artifact, build this revision once with `./gradlew :reveal-kt:app:shadowJar`, then copy `reveal-kt/app/build/libs/app-1.1.0.jar` out of the checkout. Subsequent commands only need that JAR.
+To build from source instead, run `./gradlew :reveal-kt:app:shadowJar` and copy `reveal-kt/app/build/libs/app-1.1.0.jar` out of the checkout. Subsequent commands only need that JAR.
 
 In Bash or Zsh, define a command for this terminal (adjust the path):
 
@@ -21,7 +21,7 @@ You can add the function to your shell configuration. Alternatively, replace `re
 
 ### Run with JBang
 
-Alternatively, [install JBang](https://www.jbang.dev/download/) and use it to launch the CLI. After version 1.1.0 is published to Maven Central:
+Alternatively, [install JBang](https://www.jbang.dev/download/) and use it to launch the CLI. Run version 1.1.0 from Maven Central:
 
 ```sh
 jbang run --java 21 dev.limebeck:revealkt-cli:1.1.0 --help
@@ -38,14 +38,14 @@ jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.0
 
 Follow any shell/PATH instructions from `jbang app setup`. If you already defined the `revealkt` shell function above, remove it with `unset -f revealkt` to use the installed command.
 
-Before Maven publication, JBang can run the downloaded or locally built JAR directly:
+JBang can also run the downloaded or locally built JAR directly:
 
 ```sh
 jbang run --java 21 /absolute/path/to/app-1.1.0.jar --help
 jbang app install --java 21 --name revealkt /absolute/path/to/app-1.1.0.jar
 ```
 
-Keep that JAR at its installed path. The Maven coordinate requires publication to Maven Central; a GitHub release draft alone does not make it available. Chromium installation and all presentation commands below remain the same.
+Keep that JAR at its installed path. Chromium installation and all presentation commands below remain the same.
 
 ## 2. Generate a presentation
 
@@ -69,7 +69,7 @@ My presentation/
       image.png
 ```
 
-The Gradle files are for IDE integration and reference published libraries; you do not need to run Gradle to use the CLI. A development revision can precede the corresponding Maven publication.
+The Gradle files are for IDE integration and reference published libraries; you do not need to run Gradle to use the CLI.
 
 `doctor` reports Java, the script and resource directories, output write access and a real Chromium launch. It **does not execute the script**. The output directory may be new: doctor checks the nearest existing parent and removes its temporary write probe. Missing Chromium produces `[FAIL]`, a nonzero exit code and an installation command; HTML preview and bundle remain usable.
 

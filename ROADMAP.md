@@ -1,6 +1,6 @@
 # RevealKt Roadmap
 
-Status: P0 is implemented and verified locally on Linux / Java 21. Stage 3 is complete; version 1.1.0 is being prepared. P0 CI passed on Java 21 and 25; the final 1.1.0 revision must pass the same checks before publication. Updated September 9, 2026.
+Status: Stages 1–3 are complete for version 1.1.0. The implementation is verified locally on Linux / Java 21 and in CI on Java 21 and 25. Stage 4 is next. Updated September 10, 2026.
 
 Maintain this roadmap in English. Follow the stages below in order and mark tasks complete only after their acceptance checks pass. Use idiomatic Kotlin for implementation.
 
@@ -47,7 +47,7 @@ P0 is required for the next stable release; P1 is the next priority; P2 follows 
 
 **Done when:** required checks protect the core workflows, failures block publication, and test reports and the verified CLI are available as CI artifacts.
 
-**Release milestone A — stable CLI:** stages 1 and 2 are complete, limitations are documented and changes are recorded in release notes. Included in the 1.1.0 release candidate.
+**Release milestone A — stable CLI:** stages 1 and 2 are complete, limitations are documented and changes are recorded in release notes. Included in version 1.1.0.
 
 ### P0 verification
 
