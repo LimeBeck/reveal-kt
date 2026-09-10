@@ -34,7 +34,7 @@ kotlin {
         }
     }
 
-    js(IR) {
+    js {
         mavenPublication {
             artifactId = "revealkt-dsl-js"
             pom {
@@ -139,6 +139,12 @@ kotlin {
 dependencies {
     add("kspCommonMainMetadata", libs.arrow.ksp)
 }
+
+// Platform processors also read the sources generated for commonMain.
+tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }
+    .configureEach {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
 
 //Hack for ksp working with Gradle 9
 listOf(

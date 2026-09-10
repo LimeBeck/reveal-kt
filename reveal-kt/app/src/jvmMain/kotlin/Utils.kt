@@ -2,6 +2,7 @@ package dev.limebeck.application
 
 import org.slf4j.Logger
 import java.nio.file.FileSystems
+import java.nio.file.FileSystemAlreadyExistsException
 import java.nio.file.Path
 import kotlin.io.path.listDirectoryEntries
 
@@ -30,7 +31,13 @@ fun String.printToConsole(symbol: String = "*", minRowLength: Int = 40, borderSi
 fun getResourcesList(path: String): List<Path> {
     val classLoader = {}::class.java.classLoader
     val resource = classLoader.getResource(path)!!.toURI()
-    FileSystems.newFileSystem(resource, mapOf("create" to "true"))
+    if (resource.scheme == "jar") {
+        try {
+            FileSystems.newFileSystem(resource, emptyMap<String, Any>())
+        } catch (_: FileSystemAlreadyExistsException) {
+            // The classpath archive is shared for the lifetime of this process.
+        }
+    }
     return Path.of(resource).listDirectoryEntries()
 }
 

@@ -1,5 +1,6 @@
 package dev.limebeck.application.server
 
+import com.github.ajalt.clikt.core.CliktError
 import dev.limebeck.application.debug
 import dev.limebeck.application.filesWatcher.UpdatedFile
 import dev.limebeck.application.filesWatcher.watchFilesRecursive
@@ -21,8 +22,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.slf4j.LoggerFactory
 import java.awt.Desktop
+import java.io.Closeable
 import java.io.File
 import java.net.URI
+import java.nio.file.StandardWatchEventKinds.OVERFLOW
 import java.util.*
 import kotlin.io.path.Path
 import kotlin.time.Duration.Companion.milliseconds
@@ -43,40 +46,57 @@ data class ServerConfig(
 
 val logger = LoggerFactory.getLogger("ServerLogger")
 
+private data class RenderedPage(val revision: Long, val html: String)
+
 @OptIn(FlowPreview::class)
-fun runServer(config: Config, background: Boolean = true) {
+fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = true): Closeable {
     println("Starting application...")
     val startTime = TimeSource.Monotonic.markNow()
 
-    val basePath = config.basePath
+    val basePath = Path(config.basePath).toAbsolutePath().normalize()
+    val scriptPath = config.script.toPath().toAbsolutePath().normalize()
+    val assetsPath = basePath.resolve("assets")
 
     val scriptLoader = RevealKtScriptLoader()
 
-    val coroutineScope = CoroutineScope(SupervisorJob())
-
     val firstLoadResult = measureTimedValue {
         val loadResult = scriptLoader.loadScript(config.script)
+        if (loadResult is RevealKtScriptLoader.LoadResult.Error) {
+            throw CliktError(
+                "Failed to load ${config.script.absolutePath}:\n" +
+                    loadResult.diagnostic.joinToString("\n") { it.render() }
+            )
+        }
         renderLoadResult(loadResult)
     }
 
     logger.info { "First render took ${firstLoadResult.duration}" }
 
+    val serverJob = SupervisorJob()
+    val coroutineScope = CoroutineScope(serverJob + Dispatchers.IO)
     val updatedFilesStateFlow = MutableStateFlow<List<UpdatedFile>?>(null)
-    val renderedTemplateStateFlow = MutableStateFlow<String>(firstLoadResult.value)
+    val renderedTemplateStateFlow = MutableStateFlow(RenderedPage(revision = 0, html = firstLoadResult.value))
 
-    coroutineScope.launch {
-        watchFilesRecursive(Path(basePath)) {
-            logger.debug { "<0969400d> Files changed: $it" }
-            updatedFilesStateFlow.emit(it)
+    if (liveReload) {
+        val roots = listOf(basePath, scriptPath.parent).distinct()
+        val watchRoots = roots.filter { candidate ->
+            roots.none { other -> other != candidate && candidate.startsWith(other) }
+        }
+        watchRoots.forEach { root ->
+            coroutineScope.launch {
+                watchFilesRecursive(root) { updatedFilesStateFlow.emit(it) }
+            }
         }
     }
 
     coroutineScope.launch {
         updatedFilesStateFlow
             .filterNotNull()
-            .filter { sf ->
-                sf.any { it.path.endsWith(config.script.name) }
-                        || sf.any { it.path.contains("assets") }
+            .filter { events ->
+                events.any { event ->
+                    val changed = Path(event.path)
+                    event.type == OVERFLOW || changed == scriptPath || changed.startsWith(assetsPath)
+                }
             }
             .debounce(500.milliseconds)
             .collect {
@@ -85,11 +105,13 @@ fun runServer(config: Config, background: Boolean = true) {
                     renderLoadResult(loadResult)
                 }
                 logger.info { "<00596867> Render time: ${result.duration}" }
-                renderedTemplateStateFlow.emit(result.value)
+                renderedTemplateStateFlow.update { page ->
+                    RenderedPage(revision = page.revision + 1, html = result.value)
+                }
             }
     }
 
-    embeddedServer(CIO, configure = {
+    val server = embeddedServer(CIO, configure = {
         connector {
             host = config.server.host
             port = config.server.port
@@ -109,7 +131,7 @@ fun runServer(config: Config, background: Boolean = true) {
         }
 
         routing {
-            staticFiles("assets/", File("$basePath/assets")) {
+            staticFiles("assets/", assetsPath.toFile()) {
                 enableAutoHeadResponse()
             }
 
@@ -118,7 +140,8 @@ fun runServer(config: Config, background: Boolean = true) {
             }
 
             get("/") {
-                val renderResult = renderedTemplateStateFlow.value.appendSseReloadScript()
+                val html = renderedTemplateStateFlow.value.html
+                val renderResult = if (liveReload) html.appendSseReloadScript() else html
                 call.respondText(renderResult, ContentType.Text.Html)
             }
 
@@ -126,7 +149,9 @@ fun runServer(config: Config, background: Boolean = true) {
                 logger.debug { "<7724a434> Subscribed with ${this.call.request.toLogString()}" }
                 val events = renderedTemplateStateFlow
                     .drop(1)
-                    .map { SseEvent(data = it, event = "PageUpdated", id = UUID.randomUUID().toString()) }
+                    .map { page ->
+                        SseEvent(data = page.revision.toString(), event = "PageUpdated", id = UUID.randomUUID().toString())
+                    }
                     .produceIn(this.call)
 
                 try {
@@ -147,11 +172,34 @@ fun runServer(config: Config, background: Boolean = true) {
                 Application version: ${RevealkConfig.version}
             """.trimIndent().printToConsole(minRowLength = 60)
 
-           runCatching {
+            runCatching {
                 if (Desktop.isDesktopSupported() && background) {
                     val desktop = Desktop.getDesktop()
                     desktop.browse(URI.create(url))
                 }
-            }        }
-    }.start(wait = background)
+            }
+        }
+        monitor.subscribe(ApplicationStopped) { coroutineScope.cancel() }
+    }
+    val handle = Closeable {
+        try {
+            server.stop(100, 1000)
+        } finally {
+            runBlocking { serverJob.cancelAndJoin() }
+        }
+    }
+    val shutdownHook = Thread { handle.close() }
+    val runtime = Runtime.getRuntime()
+    runtime.addShutdownHook(shutdownHook)
+    try {
+        server.start(wait = background)
+    } catch (error: Throwable) {
+        handle.close()
+        runtime.removeShutdownHook(shutdownHook)
+        throw error
+    }
+    return Closeable {
+        handle.close()
+        runtime.removeShutdownHook(shutdownHook)
+    }
 }

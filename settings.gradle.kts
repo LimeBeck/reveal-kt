@@ -2,9 +2,9 @@ import org.gradle.kotlin.dsl.maven
 
 rootProject.name = "reveal-kt"
 
-rootDir.resolve("reveal-kt").list()?.forEach {
-    include(":reveal-kt:$it")
-}
+rootDir.resolve("reveal-kt").listFiles()
+    ?.filter { it.resolve("build.gradle.kts").isFile }
+    ?.forEach { include(":reveal-kt:${it.name}") }
 
 pluginManagement {
     repositories {

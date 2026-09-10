@@ -25,6 +25,8 @@ suspend fun ApplicationCall.respondSse(events: ReceiveChannel<SseEvent>) =
     coroutineScope {
         response.cacheControl(CacheControl.NoCache(null))
         respondTextWriter(contentType = ContentType.Text.EventStream) {
+            write(": connected\n\n")
+            flush()
             events.consumeEach { event ->
                 try {
                     if (event.id != null) {
