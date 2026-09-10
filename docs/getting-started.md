@@ -19,6 +19,34 @@ revealkt --help
 
 You can add the function to your shell configuration. Alternatively, replace `revealkt` in every command below with `java -jar /absolute/path/to/revealkt.jar`.
 
+### Run with JBang
+
+Alternatively, [install JBang](https://www.jbang.dev/download/) and use it to launch the CLI. After version 1.1.0 is published to Maven Central:
+
+```sh
+jbang run --java 21 dev.limebeck:revealkt-cli:1.1.0 --help
+jbang run --java 21 dev.limebeck:revealkt-cli:1.1.0 init Demo
+jbang run --java 21 dev.limebeck:revealkt-cli:1.1.0 run Demo/presentation/Demo.reveal.kts --host 127.0.0.1
+```
+
+To install the `revealkt` command for the rest of this guide, use [JBang app installation](https://www.jbang.dev/documentation/jbang/latest/app-installation.html):
+
+```sh
+jbang app setup
+jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.0
+```
+
+Follow any shell/PATH instructions from `jbang app setup`. If you already defined the `revealkt` shell function above, remove it with `unset -f revealkt` to use the installed command.
+
+Before Maven publication, JBang can run the downloaded or locally built JAR directly:
+
+```sh
+jbang run --java 21 /absolute/path/to/app-1.1.0.jar --help
+jbang app install --java 21 --name revealkt /absolute/path/to/app-1.1.0.jar
+```
+
+Keep that JAR at its installed path. The Maven coordinate requires publication to Maven Central; a GitHub release draft alone does not make it available. Chromium installation and all presentation commands below remain the same.
+
 ## 2. Generate a presentation
 
 From the directory where you keep presentations:

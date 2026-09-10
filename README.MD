@@ -10,7 +10,7 @@ Kotlin DSL wrapper around Reveal JS presentation library
 
 ## Get started
 
-Use the [step-by-step guide](docs/getting-started.md) to install the standalone CLI, generate a presentation, preview edits and export HTML/PDF. It also explains script trust and how to diagnose the environment with `doctor`.
+Use the [step-by-step guide](docs/getting-started.md) to install the CLI as a standalone JAR or through JBang, generate a presentation, preview edits and export HTML/PDF. It also explains script trust and how to diagnose the environment with `doctor`.
 
 ```sh
 # After defining revealkt as described in the guide:
