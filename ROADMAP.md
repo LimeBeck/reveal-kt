@@ -1,109 +1,118 @@
-# Дорожная карта RevealKt
+# RevealKt Roadmap
 
-Статус: P0 реализован и проверен локально на Linux / Java 21, 9 сентября 2026 года. Проверки CI для Java 21 и 25 настроены; их удалённый запуск в этой сессии не выполнялся.
+Status: Stages 1–3 are complete for version 1.1.0. The implementation is verified locally on Linux / Java 21 and in CI on Java 21 and 25. Stage 4 is next. Updated September 10, 2026.
 
-Цель ближайшего цикла — надёжный путь от Kotlin-скрипта до презентации в браузере, статического HTML и PDF. Основная аудитория — Kotlin-разработчики, авторы технических докладов и учебных материалов.
+Maintain this roadmap in English. Follow the stages below in order and mark tasks complete only after their acceptance checks pass. Use idiomatic Kotlin for implementation.
 
-Сроки ниже — оценки трудозатрат одного разработчика, знакомого с проектом, а не календарные обязательства. Этапы выполняются последовательно; минимальные регрессионные тесты добавляются вместе с исправлениями. Номера релизов назначаются после проверки совместимости API.
+The goal of the next development cycle is a reliable path from a Kotlin script to a browser presentation, static HTML and PDF. The primary audience is Kotlin developers, technical speakers and educators.
 
-## Последовательность
+The estimates below describe development effort for one developer familiar with the project, not calendar commitments. Stages are sequential; minimal regression tests accompany fixes. Release numbers will be assigned after API compatibility has been checked.
 
-| Этап | Приоритет | Оценка | Результат |
+## Sequence
+
+| Stage | Priority | Estimate | Outcome |
 | --- | --- | --- | --- |
-| 1. Стабилизация основных сценариев | P0 | 1–2 недели | Предсказуемая работа CLI и экспорта |
-| 2. Автоматическая проверка качества | P0 | 1–2 недели | Регрессии обнаруживаются до выпуска |
-| 3. Удобство первого использования | P1 | 2–3 недели | Пользователь проходит весь путь по документации |
-| 4. Укрепление API и расширяемость | P1/P2 | После этапов 1–3; оценка по выбранному объёму | Переиспользуемые компоненты и устойчивые расширения |
+| 1. Stabilize core workflows | P0 | 1–2 weeks | Predictable CLI and export behavior |
+| 2. Automate quality checks | P0 | 1–2 weeks | Regressions detected before release |
+| 3. Improve first-time use | P1 | 2–3 weeks | Users complete the workflow by following the documentation |
+| 4. Strengthen the API and extensibility | P1/P2 | After stages 1–3; estimate depends on selected scope | Reusable components and stable extensions |
 
-P0 — необходимо для ближайшего стабильного релиза; P1 — следующий приоритет; P2 — после подтверждения спроса. Чекбоксы отражают выполнение задач, а не наличие прототипа или незавершённых изменений.
+P0 is required for the next stable release; P1 is the next priority; P2 follows demonstrated demand. Checkboxes represent completed work, not prototypes or unfinished changes.
 
-## 1. Стабилизация основных сценариев
+## 1. Stabilize core workflows
 
-- [x] Завершить текущее обновление зависимостей и интеграции Reveal.js; подтвердить сборку и работу собранного CLI.
-- [x] Нормализовать пути к скриптам и ресурсам: поддержать имя файла без `./`, относительные и абсолютные пути, пробелы в именах.
-- [x] Сделать повторный `bundle` в существующий каталог успешным: обновлять ресурсы и HTML; определить поведение для устаревших файлов без удаления посторонних данных.
-- [x] Исправить live reload ресурсов: сохранять полный контекст пути события и отслеживать новые вложенные каталоги.
-- [x] Исправить загрузку пользовательской CSS-темы и передачу строкового формата номера слайда.
-- [x] Проверить обработку ошибок компиляции и выполнения скрипта: понятная диагностика и ненулевой код завершения для неуспешного экспорта.
-- [x] Сделать жизненный цикл сервера управляемым: остановка сервера, закрытие watcher и отмена корутин после PDF-экспорта и при ошибках.
-- [x] Заменить фиксированную задержку PDF-рендера ожиданием готовности презентации и необходимых ресурсов с ограничением времени и диагностикой тайм-аута.
-- [x] Добавить регрессионные проверки для исправленных ошибок.
+- [x] Complete the current dependency and Reveal.js integration upgrade; verify the build and packaged CLI.
+- [x] Normalize script and resource paths: support bare filenames, relative and absolute paths, and spaces.
+- [x] Allow repeated `bundle` into an existing directory: update resources and HTML; define stale-file behavior without deleting unrelated data.
+- [x] Fix asset live reload: retain the full event path and watch newly created nested directories.
+- [x] Fix custom CSS theme loading and forwarding of string slide-number formats.
+- [x] Verify script compilation and execution failures: actionable diagnostics and nonzero exit codes for failed exports.
+- [x] Manage the server lifecycle: stop the server, close the watcher and cancel coroutines after PDF export and on failure.
+- [x] Replace the fixed PDF render delay with bounded waits for presentation and resource readiness, including timeout diagnostics.
+- [x] Add regression coverage for the corrected defects.
 
-**Готово, когда:** на тестовой презентации проходит цепочка `init → run → изменение скрипта и assets → bundle → повторный bundle → pdf`; PDF-команда завершается самостоятельно, а ошибочный скрипт не выдаёт успешный результат экспорта.
+**Done when:** a test presentation passes `init → run → script and asset edits → bundle → repeated bundle → pdf`; PDF exits independently, and an invalid script cannot produce a successful export result.
 
-## 2. Автоматическая проверка качества
+## 2. Automate quality checks
 
-- [x] Запускать проверки на pull request и push в основную ветку; отделить проверку изменений от публикации релиза.
-- [x] Проверять HTML-рендеринг DSL содержательными утверждениями о структуре, атрибутах и экранировании.
-- [x] Проверять преобразование конфигурации от DSL до значений, получаемых Reveal.js, включая пользовательские варианты настроек.
-- [x] Добавить интеграционные тесты CLI для путей, повторного экспорта и ошибок скриптов.
-- [x] Добавить браузерные проверки инициализации, тем, нумерации, ресурсов и live reload.
-- [x] Проверять PDF-экспорт на небольшой фиксированной презентации: создание документа, ожидаемое число страниц и завершение процесса.
-- [x] Запускать проверку основных сценариев через собранный CLI JAR, включая наличие JS-ресурсов и файлов шаблона.
-- [x] Исправить пути публикации артефактов и отчётов тестов в CI.
-- [x] Определить поддерживаемые версии Java и ОС; настроить соответствующие проверки, начиная с основной платформы.
+- [x] Run checks on pull requests and pushes to the main branch; separate verification from release publication.
+- [x] Test DSL HTML rendering with meaningful assertions about structure, attributes and escaping.
+- [x] Test configuration conversion from the DSL to values received by Reveal.js, including custom settings.
+- [x] Add CLI integration tests for paths, repeated export and script failures.
+- [x] Add browser checks for initialization, themes, numbering, assets and live reload.
+- [x] Test PDF export using a small fixed presentation: document creation, expected page count and process termination.
+- [x] Run core workflow checks through the packaged CLI JAR, including JS resources and template files.
+- [x] Correct CI artifact and test-report upload paths.
+- [x] Define supported Java versions and operating systems; configure checks starting with the primary platform.
 
-**Готово, когда:** обязательные проверки защищают основные сценарии, их падение блокирует публикацию, а отчёты и проверенный CLI доступны в артефактах CI.
+**Done when:** required checks protect the core workflows, failures block publication, and test reports and the verified CLI are available as CI artifacts.
 
-**Релизная точка A — стабильный CLI:** этапы 1 и 2 завершены, ограничения описаны, изменения перечислены в заметках к релизу. Это ближайшая цель выпуска.
+**Release milestone A — stable CLI:** stages 1 and 2 are complete, limitations are documented and changes are recorded in release notes. Included in version 1.1.0.
 
-### Подтверждение P0
+### P0 verification
 
-- `./gradlew build --console=plain`: **BUILD SUCCESSFUL**, 10 тестов без ошибок (6 JVM-тестов приложения, 2 JVM- и 2 JS-теста DSL).
-- [Интеграционный сценарий собранного CLI](reveal-kt/app/src/jvmTest/kotlin/CliIntegrationTest.kt): `init`, пути без `./`, относительные/абсолютные пути и пробелы, повторный bundle, сохранность файлов, браузерная инициализация и темы, нумерация, live reload скрипта и вложенных assets, PDF из двух страниц, освобождение порта, ошибки компиляции/выполнения и отсутствующих ресурсов.
-- [HTML и конфигурация](reveal-kt/app/src/jvmTest/kotlin/RenderingTest.kt), [watcher и отмена](reveal-kt/app/src/jvmTest/kotlin/WatcherTest.kt), [тайм-аут PDF](reveal-kt/app/src/jvmTest/kotlin/PdfReadinessTest.kt).
-- [CI](.github/workflows/main.yml): PR, push в `master`, матрица Java 21/25, отчёты и CLI-артефакты; публикация по тегам зависит от успешных проверок.
-- [Изменения, ограничения и команды проверки](CHANGELOG.md). В частности, MathJax загружается из CDN, а устаревшие файлы bundle сохраняются. Защита слияния через обязательные статусы настраивается администраторами репозитория; зависимость публикации от проверок задана в workflow.
+- `./gradlew build --console=plain`: **BUILD SUCCESSFUL**, 10 tests without failures (6 application JVM tests, 2 DSL JVM tests and 2 DSL JS tests), including the final Kotlin refactoring.
+- [Packaged CLI integration scenario](reveal-kt/app/src/jvmTest/kotlin/CliIntegrationTest.kt): `init`, bare filenames, relative/absolute paths and spaces, repeated bundle, preserved files, browser initialization and themes, numbering, script and nested-asset live reload, a two-page PDF, port release, compilation/evaluation failures and missing resources.
+- [HTML and configuration](reveal-kt/app/src/jvmTest/kotlin/RenderingTest.kt), [watcher cancellation](reveal-kt/app/src/jvmTest/kotlin/WatcherTest.kt), [PDF timeout](reveal-kt/app/src/jvmTest/kotlin/PdfReadinessTest.kt).
+- [CI](.github/workflows/main.yml): pull requests, pushes to `master`, Java 21/25 matrix, reports and CLI artifacts; tag publication depends on successful checks.
+- [Changes, limitations and validation commands](CHANGELOG.md). MathJax uses a CDN; stale bundle files are retained. Repository administrators select required merge checks in branch protection; the workflow already gates release publication.
 
-## 3. Удобство первого использования
+## 3. Improve first-time use
 
-- [ ] Подготовить пошаговое руководство: установка → шаблон → первый слайд → live reload → HTML → PDF.
-- [ ] Добавить команду `doctor` для диагностики Java, доступности Chromium и необходимых каталогов; вывод должен предлагать конкретное действие при проблеме.
-- [ ] Сделать ошибки доступными для исправления: путь к скрипту, строка и причина, если эти данные предоставляет компилятор.
-- [ ] При неудачном обновлении в режиме разработки сохранять последнюю рабочую презентацию и явно показывать ошибку.
-- [ ] Подготовить законченные примеры: технический доклад с кодом, учебная презентация с фрагментами, презентация с пользовательской темой и ресурсами.
-- [ ] Документировать структуру `assets`, пользовательские темы, форматы нумерации и ограничения HTML/PDF-экспорта.
-- [ ] Описать модель доверия: Kotlin-скрипт исполняет код с правами пользователя.
-- [ ] Проверить инструкцию в чистом окружении, без локальных артефактов разработки.
+- [x] Write a step-by-step guide: installation → template → first slide → live reload → HTML → PDF.
+- [x] Add `doctor` to diagnose Java, Chromium availability and required directories; report a concrete corrective action for each problem.
+- [x] Make errors actionable: show the script path, line and cause when available from the compiler.
+- [x] Preserve the last working presentation after a failed development update and clearly display the error.
+- [x] Provide complete examples: a technical talk with code, a lesson with fragments, and a presentation with a custom theme and assets.
+- [x] Document the `assets` layout, custom themes, numbering formats and HTML/PDF export limitations.
+- [x] Explain the trust model: Kotlin scripts execute with the user's permissions.
+- [x] Verify the instructions in a clean environment without local development artifacts.
 
-**Готово, когда:** новый пользователь проходит путь до HTML и PDF по документации без изменения исходников проекта и помощи автора; проверки окружения объясняют отсутствующие зависимости.
+**Done when:** a new user reaches HTML and PDF by following the documentation without modifying the project's source code or asking its author for help; environment checks explain missing dependencies.
 
-**Релизная точка B — самостоятельное использование:** этап 3 завершён; примеры и инструкция проверены на поставляемом CLI.
+**Release milestone B — self-service use:** stage 3 is complete; examples and instructions have been verified against the distributed CLI.
 
-## 4. Укрепление API и расширяемость
+### Stage 3 verification
 
-### Сначала — устойчивость API
+- `./gradlew build --console=plain`: **BUILD SUCCESSFUL**, 14 tests without failures (10 application JVM, 2 DSL JVM and 2 DSL JS tests), on Linux / Java 21.
+- [Getting started](docs/getting-started.md) and [presentation reference](docs/presentation-reference.md) cover installation, editing, assets, exports, troubleshooting and script trust.
+- [First-use integration tests](reveal-kt/app/src/jvmTest/kotlin/FirstUseIntegrationTest.kt) execute a copied CLI JAR with an empty Java user home and Maven repository, verify all four templates through HTML and PDF, block remote requests for local examples, and check actionable failures. Chromium and system libraries remain installed prerequisites.
+- [Live-update regression tests](reveal-kt/app/src/jvmTest/kotlin/CliIntegrationTest.kt) verify compilation/runtime errors, retained slides, diagnostics in existing/new tabs and recovery after a successful save.
 
-- [ ] Зафиксировать границы DSL, загрузчика скриптов, HTML-рендера и CLI; выделять новые модули только при конкретной необходимости.
-- [ ] Сократить дублирование преобразований конфигурации и установить единое место адаптации к Reveal.js.
-- [ ] Определить публично поддерживаемый API и правила совместимости; проверять старые примеры при изменениях.
-- [ ] Определить объём поддержки JVM и JS, включая поведение загрузки ресурсов; явно обозначить неподдерживаемые сценарии.
-- [ ] Проверить необходимость существующих обходных настроек KSP/Gradle и упростить их после подтверждения корректности сборки.
+## 4. Strengthen the API and extensibility
 
-### Затем — возможности по обратной связи
+### First: API stability
 
-- [ ] Добавить переиспользуемые компоненты: титульный слайд, сравнение, код с пояснениями и карточка спикера.
-- [ ] Оформить механизм тем и шаблонов с примерами расширения.
-- [ ] Спроектировать явный API подключения пользовательских Reveal.js-плагинов и их ресурсов.
-- [ ] Определить требования к работе без сети и воспроизводимому экспорту; документировать внешние зависимости и реализовать выбранный объём.
+- [ ] Define boundaries between the DSL, script loader, HTML renderer and CLI; introduce modules only for a concrete need.
+- [ ] Reduce duplicate configuration conversions and establish one Reveal.js adaptation layer.
+- [ ] Define the supported public API and compatibility policy; verify existing examples when it changes.
+- [ ] Define JVM and JS support, including resource loading; explicitly identify unsupported scenarios.
+- [ ] Review the existing KSP/Gradle workarounds and simplify them after confirming correct builds.
 
-**Готово для отдельного выпуска, когда:** выбранная возможность имеет пример использования, проверку поведения и описание совместимости. Весь этап не обязан входить в один релиз.
+### Then: capabilities driven by feedback
 
-## Что пока отложено
+- [ ] Add reusable components: title slide, comparison, annotated code and speaker card.
+- [ ] Establish theme and template extension mechanisms with examples.
+- [ ] Design an explicit API for custom Reveal.js plugins and their resources.
+- [ ] Define offline and reproducible-export requirements; document external dependencies and implement the selected scope.
 
-- Визуальный редактор слайдов.
-- Облачное хранение и совместное редактирование.
-- Дополнительные нативные платформы.
-- Собственный движок презентаций.
+**Ready for a separate release when:** the selected capability has a working example, behavioral tests and compatibility documentation. The whole stage does not have to ship in one release.
 
-Возвращаться к этим направлениям после появления конкретных пользовательских сценариев и оценки стоимости поддержки.
+## Deferred
 
-## Контроль прогресса
+- Visual slide editor.
+- Cloud storage and collaborative editing.
+- Additional native platforms.
+- A custom presentation engine.
 
-На завершении каждого этапа:
+Revisit these directions after concrete user scenarios and an implementation-cost assessment are available.
 
-1. Проверять критерии готовности и отмечать выполненные задачи со ссылками на PR или результаты проверок.
-2. Обновлять известные ограничения и документацию.
-3. Пересматривать следующий этап по ошибкам и обратной связи пользователей.
+## Progress tracking
 
-Основные показатели ближайшего цикла: прохождение всей цепочки CLI, отсутствие ручных обходов в инструкции, завершение экспорта без зависания и обнаружение регрессий в CI. Время первого запуска и повторного рендера сначала измерить на фиксированной презентации; целевые значения назначить по результатам измерений.
+At the end of each stage:
+
+1. Verify acceptance criteria and mark completed tasks with links to PRs or validation results.
+2. Update known limitations and documentation.
+3. Reassess the next stage using defects and user feedback.
+
+The next cycle's key indicators are completion of the entire CLI workflow, documentation without manual workarounds, exports that terminate independently, and regressions detected in CI. Measure initial and repeated render times on a fixed presentation before setting performance targets.

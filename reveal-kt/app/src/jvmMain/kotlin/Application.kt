@@ -11,6 +11,7 @@ import dev.limebeck.revealkt.RevealkConfig
 fun main(args: Array<String>) = RevealKtCliApplication()
     .subcommands(
         RunServer(),
+        Doctor(),
         InitTemplate(),
         BundleToStatic(),
         RenderPdf(),

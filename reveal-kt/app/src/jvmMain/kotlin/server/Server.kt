@@ -8,6 +8,7 @@ import dev.limebeck.application.info
 import dev.limebeck.application.printToConsole
 import dev.limebeck.revealkt.RevealkConfig
 import dev.limebeck.revealkt.scripts.RevealKtScriptLoader
+import dev.limebeck.revealkt.scripts.formatDiagnostics
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
@@ -26,7 +27,6 @@ import java.io.Closeable
 import java.io.File
 import java.net.URI
 import java.nio.file.StandardWatchEventKinds.OVERFLOW
-import java.util.*
 import kotlin.io.path.Path
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
@@ -46,7 +46,17 @@ data class ServerConfig(
 
 val logger = LoggerFactory.getLogger("ServerLogger")
 
-private data class RenderedPage(val revision: Long, val html: String)
+private data class RenderedPage(val revision: Long, val html: String, val error: String? = null)
+
+private fun loadPage(script: File, loader: RevealKtScriptLoader): Result<String> = try {
+    when (val result = loader.loadScript(script)) {
+        is RevealKtScriptLoader.LoadResult.Success -> Result.success(renderLoadResult(result))
+        is RevealKtScriptLoader.LoadResult.Error -> Result.failure(IllegalArgumentException(result.formatDiagnostics(script)))
+    }
+} catch (error: Exception) {
+    if (error is CancellationException) throw error
+    Result.failure(IllegalStateException("${script.absolutePath}: error: ${error.message}", error))
+}
 
 @OptIn(FlowPreview::class)
 fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = true): Closeable {
@@ -60,14 +70,7 @@ fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = 
     val scriptLoader = RevealKtScriptLoader()
 
     val firstLoadResult = measureTimedValue {
-        val loadResult = scriptLoader.loadScript(config.script)
-        if (loadResult is RevealKtScriptLoader.LoadResult.Error) {
-            throw CliktError(
-                "Failed to load ${config.script.absolutePath}:\n" +
-                    loadResult.diagnostic.joinToString("\n") { it.render() }
-            )
-        }
-        renderLoadResult(loadResult)
+        loadPage(config.script, scriptLoader).getOrElse { throw CliktError(it.message.orEmpty()) }
     }
 
     logger.info { "First render took ${firstLoadResult.duration}" }
@@ -101,13 +104,21 @@ fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = 
             .debounce(500.milliseconds)
             .collect {
                 val result = measureTimedValue {
-                    val loadResult = scriptLoader.loadScript(config.script)
-                    renderLoadResult(loadResult)
+                    loadPage(config.script, scriptLoader)
                 }
                 logger.info { "<00596867> Render time: ${result.duration}" }
-                renderedTemplateStateFlow.update { page ->
-                    RenderedPage(revision = page.revision + 1, html = result.value)
-                }
+                result.value.fold(
+                    onSuccess = { html ->
+                        renderedTemplateStateFlow.update { page ->
+                            RenderedPage(revision = page.revision + 1, html = html)
+                        }
+                    },
+                    onFailure = { error ->
+                        val message = error.message.orEmpty()
+                        logger.error(message)
+                        renderedTemplateStateFlow.update { it.copy(error = message) }
+                    }
+                )
             }
     }
 
@@ -140,17 +151,19 @@ fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = 
             }
 
             get("/") {
-                val html = renderedTemplateStateFlow.value.html
-                val renderResult = if (liveReload) html.appendSseReloadScript() else html
+                val page = renderedTemplateStateFlow.value
+                val renderResult = if (liveReload) page.html.appendSseReloadScript(page.revision) else page.html
                 call.respondText(renderResult, ContentType.Text.Html)
             }
 
             get("/sse") {
                 logger.debug { "<7724a434> Subscribed with ${this.call.request.toLogString()}" }
                 val events = renderedTemplateStateFlow
-                    .drop(1)
                     .map { page ->
-                        SseEvent(data = page.revision.toString(), event = "PageUpdated", id = UUID.randomUUID().toString())
+                        SseEvent(
+                            data = page.error ?: page.revision.toString(),
+                            event = if (page.error == null) "PageUpdated" else "RenderError"
+                        )
                     }
                     .produceIn(this.call)
 

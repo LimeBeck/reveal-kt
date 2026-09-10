@@ -119,7 +119,7 @@ jobs:
 
       - name: Publish to Maven Central
         run: |
-          ./gradlew publishToMavenCentral \
+          ./gradlew publishAndReleaseToMavenCentral \
             -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg \
             -Psigning.password=${{ secrets.GPG_PASSWORD }} \
             -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \

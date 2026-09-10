@@ -1,0 +1,22 @@
+/* A complete small theme: core Reveal CSS supplies layout, this file supplies appearance. */
+:root {
+    --r-background-color: #102c35;
+    --r-main-color: #e9f1ee;
+    --r-heading-color: #85ebbd;
+    --r-main-font: system-ui, sans-serif;
+    --r-main-font-size: 32px;
+    --r-heading-font: system-ui, sans-serif;
+    --r-link-color: #85ebbd;
+}
+.reveal-viewport { background: var(--r-background-color); color: var(--r-main-color); }
+.reveal { font-family: var(--r-main-font); font-size: var(--r-main-font-size); line-height: 1.45; }
+.reveal h1, .reveal h2, .reveal h3 { color: var(--r-heading-color); margin: 0 0 0.6em; line-height: 1.15; }
+.reveal h1 { font-size: 2.1em; }
+.reveal h2 { font-size: 1.7em; }
+.reveal p { margin: 0.7em 0; }
+.reveal ul, .reveal ol { display: inline-block; text-align: left; max-width: 90%; }
+.reveal li { margin: 0.35em 0; }
+.reveal a, .reveal .controls { color: var(--r-link-color); }
+.reveal pre { font-size: 0.65em; text-align: left; }
+.reveal img { max-width: 100%; }
+.reveal .slide-number { color: #e9f1ee; background: #102c35; }

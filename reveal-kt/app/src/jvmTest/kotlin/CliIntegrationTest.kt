@@ -102,6 +102,27 @@ class CliIntegrationTest {
                     script.writeText(fixture.replace("Second", "Updated"))
                     page.waitForFunction("() => document.body.textContent.includes('Updated')")
                     page.waitForFunction("() => window.revealKtReady === true && source.readyState === 1")
+                    page.evaluate("() => { window.revealKtDeck.slide(1); window.lastGoodMarker = true; }")
+                    for (invalid in listOf("unknownSymbolForDiagnostic", fixture + "\nerror(\"live execution failed\")")) {
+                        script.writeText(invalid)
+                        page.waitForFunction("() => document.getElementById('revealkt-error') !== null")
+                        assertTrue(page.locator("#revealkt-error").textContent().contains("deck.reveal.kts"))
+                        assertTrue(page.locator(".slides").textContent().contains("Updated"))
+                        assertEquals(true, page.evaluate("() => window.lastGoodMarker"))
+                        assertEquals(1, page.evaluate("() => window.revealKtDeck.getIndices().h"))
+                        val newTab = browser.newPage()
+                        try {
+                            newTab.navigate("http://127.0.0.1:$port/")
+                            newTab.waitForFunction("() => document.getElementById('revealkt-error') !== null")
+                            assertTrue(newTab.locator(".slides").textContent().contains("Updated"))
+                        } finally {
+                            newTab.close()
+                        }
+                        script.writeText(fixture.replace("Second", "Updated"))
+                        page.waitForFunction("() => !document.getElementById('revealkt-error') && window.revealKtReady === true")
+                        page.waitForFunction("() => source.readyState === 1")
+                        page.evaluate("() => { window.revealKtDeck.slide(1); window.lastGoodMarker = true; }")
+                    }
                     val nested = assets.resolve("new/nested").createDirectories()
                     nested.resolve("live.css").writeText("first")
                     page.waitForFunction("() => window.revealKtReady === true && source.readyState === 1")

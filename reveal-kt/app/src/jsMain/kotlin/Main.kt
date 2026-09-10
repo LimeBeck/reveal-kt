@@ -6,6 +6,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromDynamic
 import kotlinx.serialization.json.encodeToDynamic
 import kotlin.js.Promise
+import org.w3c.dom.Element
 
 @JsModule("reveal.js")
 external class Reveal(configuration: dynamic) {
@@ -19,14 +20,15 @@ external val configurationJson: dynamic
 fun main() {
     val configuration = configurationJsonMapper.decodeFromDynamic<ConfigurationDto>(configurationJson)
 
-    val defaultPlugins = arrayOf(
+    val defaultPlugins = mutableListOf<dynamic>(
         kotlinext.js.require<dynamic>("reveal.js/plugin/notes"),
         kotlinext.js.require<dynamic>("reveal.js/plugin/highlight"),
         kotlinext.js.require<dynamic>("reveal.js/plugin/markdown"),
         kotlinext.js.require<dynamic>("reveal.js/plugin/search"),
         kotlinext.js.require<dynamic>("reveal.js/plugin/zoom"),
-        kotlinext.js.require<dynamic>("reveal.js/plugin/math"),
-    )
+    ).apply {
+        if (requiresMathRendering()) add(kotlinext.js.require<dynamic>("reveal.js/plugin/math"))
+    }.toTypedArray()
 
     kotlinext.js.require<dynamic>("reveal.js/reset.css")
     kotlinext.js.require<dynamic>("reveal.js/reveal.css")
@@ -82,4 +84,16 @@ fun main() {
         }
         document.head?.appendChild(style)
     }
+}
+
+private fun requiresMathRendering(): Boolean {
+    val slides = document.querySelector(".slides")?.cloneNode(true) as? Element ?: return false
+    // Markdown is expanded by a plugin after this check, so preserve math support for it.
+    if (slides.querySelector(".math, script[type^='math/tex'], [data-markdown]") != null) return true
+    val ignored = slides.querySelectorAll("script, noscript, style, textarea, pre, code")
+    for (index in 0 until ignored.length) {
+        ignored.item(index)?.let { node -> node.parentNode?.removeChild(node) }
+    }
+    val text = slides.textContent.orEmpty()
+    return listOf("$", "\\(", "\\[", "\\begin{").any(text::contains)
 }
