@@ -117,3 +117,20 @@ dependencies {
     dokka(project(":reveal-kt:script-definition"))
     dokka(project(":reveal-kt:script-loader"))
 }
+
+// A complete static website, including examples compiled by the packaged CLI.
+// Serve/publish build/site, never the unrendered docs source directory.
+tasks.register<Exec>("buildSite") {
+    group = "documentation"
+    description = "Build the documentation site and render its RevealKt examples"
+    dependsOn(":reveal-kt:app:shadowJar")
+    val cli = layout.projectDirectory.file("reveal-kt/app/build/libs/revealkt.jar")
+    val site = layout.buildDirectory.dir("site")
+    inputs.file(cli)
+    inputs.dir("docs")
+    inputs.dir("reveal-kt/app/src/jvmMain/resources/examples")
+    inputs.file("scripts/build-site.py")
+    outputs.dir(site)
+    commandLine("python3", "scripts/build-site.py", "--cli", cli.asFile.absolutePath,
+        "--output", site.get().asFile.absolutePath)
+}

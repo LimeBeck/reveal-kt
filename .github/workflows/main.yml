@@ -42,6 +42,17 @@ jobs:
             **/build/test-results/**/*.xml
             **/build/reports/tests/**
           if-no-files-found: error
+      - name: Build documentation and render example presentations
+        if: matrix.java == '21'
+        run: ./gradlew buildSite --console=plain
+      - name: Upload documentation site
+        if: matrix.java == '21'
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-site
+          path: build/site
+          include-hidden-files: true
+          if-no-files-found: error
       - name: Upload verified CLI
         uses: actions/upload-artifact@v4
         with:
