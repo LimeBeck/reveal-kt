@@ -19,6 +19,12 @@
       tab.tabIndex = selected ? 0 : -1;
     });
     document.querySelector('#example-panel').setAttribute('aria-labelledby', `tab-${id}`);
+    const deckUrl = `examples/${id}/index.html`;
+    const frame = document.querySelector('#example-frame');
+    // Let the real Reveal.js bundle handle navigation and fragments inside its frame.
+    if (frame.getAttribute('src') !== deckUrl) frame.src = deckUrl;
+    frame.title = `${example.name} — RevealKt presentation`;
+    document.querySelector('#example-open').href = deckUrl;
     document.querySelector('#source-name').textContent = `${example.name}.reveal.kts`;
     document.querySelector('#example-code').innerHTML = highlight(example.source);
     document.querySelector('.example-source pre').scrollTop = 0;

@@ -253,3 +253,13 @@ footer > a:last-child { font-size: 11px; text-decoration: none; }
   .syntax-string { color: #28602e; }
   details:not([open]) > p { display: block; }
 }
+
+/* Real, build-generated Reveal.js documents, isolated from the documentation CSS. */
+.example-deck { border: 1px solid var(--line); border-radius: 7px; overflow: hidden; background: #191919; }
+.example-deck .panel-top { background: var(--surface); flex-wrap: wrap; padding: 12px 18px; }
+.example-deck a { color: var(--accent); white-space: nowrap; }
+.example-deck iframe { display: block; border: 0; width: 100%; aspect-ratio: 16 / 9; min-height: 230px; }
+.deck-hint { font-size: 11px; margin: 10px 0; }
+.example-code-details { padding-top: 12px; }
+.example-code-details .example-source { margin-top: 16px; }
+@media print { .example-deck, .deck-hint { display: none; } }

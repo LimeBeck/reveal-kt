@@ -88,7 +88,7 @@ jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.1</cod
     </section>
     <section id="examples">
       <div class="section-heading"><div><div class="eyebrow">02 / INCLUDED IN THE CLI</div><h2>Start with a working example</h2></div><span class="tag">3 complete Kotlin scripts</span></div>
-      <p class="section-intro">Read the actual source shipped with RevealKt. Create a project and run it locally to see the presentation in Reveal.js.</p>
+      <p class="section-intro">Explore real presentations compiled from the bundled Kotlin scripts. Use the slide controls below, or open a presentation in its own tab.</p>
       <noscript><p>Run <code>revealkt init RetryTalk --example technical</code>, <code>revealkt init NullSafety --example lesson</code>, or <code>revealkt init BrandDeck --example custom-theme</code>. <a href="https://github.com/LimeBeck/reveal-kt/tree/master/reveal-kt/app/src/jvmMain/resources/examples">Browse all example sources on GitHub ↗</a></p></noscript>
       <div class="example-tabs" role="tablist" aria-label="Example scripts">
         <button role="tab" id="tab-technical" aria-selected="true" aria-controls="example-panel" data-example="technical">Technical talk</button>
@@ -97,10 +97,17 @@ jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.1</cod
       </div>
       <div id="example-panel" role="tabpanel" aria-labelledby="tab-technical">
         <div class="example-caption"><p id="example-description"></p><a id="example-source-link" href="https://github.com/LimeBeck/reveal-kt/tree/master/reveal-kt/app/src/jvmMain/resources/examples/technical">Source &amp; assets ↗</a></div>
+        <div class="example-deck">
+          <div class="panel-top"><span>RENDERED WITH REVEALKT · REVEAL.JS</span><a id="example-open" href="examples/technical/index.html" target="_blank" rel="noopener">Open presentation ↗</a></div>
+          <iframe id="example-frame" src="examples/technical/index.html" title="Technical talk — RevealKt presentation" loading="lazy" allowfullscreen></iframe>
+        </div>
+        <p class="deck-hint">Click inside the presentation to use arrow keys. Press Esc for the slide overview.</p>
+        <details class="example-code-details"><summary>View Kotlin source</summary>
         <div class="example-source">
           <div class="panel-top"><span id="source-name">RetryTalk.reveal.kts</span><button class="copy" id="copy-example" aria-label="Copy example script">Copy</button></div>
           <pre tabindex="0" aria-label="Complete example Kotlin script"><code id="example-code"></code></pre>
         </div>
+        </details>
         <div class="example-run"><h3>Run this presentation</h3><p>Run from your projects directory. The first command creates the script and all required assets.</p></div>
         <div class="code-block"><button class="copy" aria-label="Copy example commands">Copy</button><pre><code id="example-command">revealkt init RetryTalk --example technical
 revealkt run RetryTalk/presentation/RetryTalk.reveal.kts --host 127.0.0.1</code></pre></div>
