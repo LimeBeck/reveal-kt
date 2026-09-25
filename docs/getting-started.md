@@ -1,14 +1,14 @@
 # From a Kotlin script to HTML and PDF
 
-This guide describes RevealKt 1.1.0. You need Linux x86-64 and Java 21 or 25. Chromium is needed for PDF export; you can write slides, preview them and bundle HTML before installing it. The CLI includes the Kotlin compiler, DSL, Reveal.js and example resources. Node.js, Gradle and Maven are not required to run the downloaded JAR.
+This guide describes RevealKt 1.1.1. You need Linux x86-64 and Java 21 or 25. Chromium is needed for PDF export; you can write slides, preview them and bundle HTML before installing it. The CLI includes the Kotlin compiler, DSL, Reveal.js and example resources. Node.js, Gradle and Maven are not required to run the downloaded JAR.
 
 ## 1. Install the CLI
 
 Run `java -version` and check that the selected runtime is Java 21 or 25. Set `JAVA_HOME` and `PATH` to your JDK if necessary.
 
-Download **`app-1.1.0.jar`** from [GitHub Releases](https://github.com/LimeBeck/reveal-kt/releases/tag/v1.1.0). This is the self-contained CLI; the smaller `app-jvm`, sources and javadoc JARs are not the CLI. Rename it to `revealkt.jar` and put it in a permanent directory, for example `$HOME/Applications/revealkt/`.
+Download **`app-1.1.1-all.jar`** from [GitHub Releases](https://github.com/LimeBeck/reveal-kt/releases/tag/v1.1.1). This is the self-contained CLI; the smaller `app-jvm`, sources and javadoc JARs are not the CLI. Rename it to `revealkt.jar` and put it in a permanent directory, for example `$HOME/Applications/revealkt/`.
 
-To build from source instead, run `./gradlew :reveal-kt:app:shadowJar` and copy `reveal-kt/app/build/libs/app-1.1.0.jar` out of the checkout. Subsequent commands only need that JAR.
+To build from source instead, run `./gradlew :reveal-kt:app:shadowJar` and copy `reveal-kt/app/build/libs/app-1.1.1-all.jar` out of the checkout. Subsequent commands only need that JAR.
 
 In Bash or Zsh, define a command for this terminal (adjust the path):
 
@@ -19,21 +19,23 @@ revealkt --help
 
 You can add the function to your shell configuration. Alternatively, replace `revealkt` in every command below with `java -jar /absolute/path/to/revealkt.jar`.
 
+Starting with 1.1.1, builds produce `app-<version>-all.jar` for GitHub Releases. This standalone JAR includes runtime dependencies. Maven Central receives the smaller `revealkt-cli` JAR with dependencies declared in its POM; launch it through JBang using Maven coordinates rather than `java -jar`. JBang downloads and caches those dependencies. The published 1.1.0 release retains its original packaging.
+
 ### Run with JBang
 
-Alternatively, [install JBang](https://www.jbang.dev/download/) and use it to launch the CLI. Run version 1.1.0 from Maven Central:
+Alternatively, [install JBang](https://www.jbang.dev/download/) and use it to launch the CLI. Run version 1.1.1 from Maven Central:
 
 ```sh
-jbang run --java 21 dev.limebeck:revealkt-cli:1.1.0 --help
-jbang run --java 21 dev.limebeck:revealkt-cli:1.1.0 init Demo
-jbang run --java 21 dev.limebeck:revealkt-cli:1.1.0 run Demo/presentation/Demo.reveal.kts --host 127.0.0.1
+jbang run --java 21 dev.limebeck:revealkt-cli:1.1.1 --help
+jbang run --java 21 dev.limebeck:revealkt-cli:1.1.1 init Demo
+jbang run --java 21 dev.limebeck:revealkt-cli:1.1.1 run Demo/presentation/Demo.reveal.kts --host 127.0.0.1
 ```
 
 To install the `revealkt` command for the rest of this guide, use [JBang app installation](https://www.jbang.dev/documentation/jbang/latest/app-installation.html):
 
 ```sh
 jbang app setup
-jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.0
+jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.1
 ```
 
 Follow any shell/PATH instructions from `jbang app setup`. If you already defined the `revealkt` shell function above, remove it with `unset -f revealkt` to use the installed command.
@@ -41,8 +43,8 @@ Follow any shell/PATH instructions from `jbang app setup`. If you already define
 JBang can also run the downloaded or locally built JAR directly:
 
 ```sh
-jbang run --java 21 /absolute/path/to/app-1.1.0.jar --help
-jbang app install --java 21 --name revealkt /absolute/path/to/app-1.1.0.jar
+jbang run --java 21 /absolute/path/to/app-1.1.1-all.jar --help
+jbang app install --java 21 --name revealkt /absolute/path/to/app-1.1.1-all.jar
 ```
 
 Keep that JAR at its installed path. Chromium installation and all presentation commands below remain the same.

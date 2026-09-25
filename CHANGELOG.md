@@ -1,3 +1,12 @@
+# 1.1.1
+
+## CLI distribution
+
+- Publish a regular CLI JAR to Maven Central with runtime dependencies in its POM, resolved automatically by JBang. Keep the existing `dev.limebeck:revealkt-cli` coordinates and executable main class.
+- Ship the self-contained `app-1.1.1-all.jar` through GitHub Releases. The main Maven JAR shrinks from approximately 297 MB to 4.84 MB while retaining presentation resources.
+- Add a CI check that publishes to a temporary Maven repository, launches the CLI through JBang, and compiles and bundles a starter presentation. Local checks use unsigned publications; release publications remain signed.
+- Update the installation guide, JBang catalog and example to 1.1.1.
+
 # 1.1.0
 
 ## First-time use (stage 3)

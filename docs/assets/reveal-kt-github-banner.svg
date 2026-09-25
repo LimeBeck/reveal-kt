@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F0F13"/>
+      <stop offset="50%" stop-color="#14141B"/>
+      <stop offset="100%" stop-color="#0B0B0E"/>
+    </linearGradient>
+
+    <!-- Kotlin Brand Gradients -->
+    <linearGradient id="kt-top" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7F52FF"/>
+      <stop offset="60%" stop-color="#A839DF"/>
+      <stop offset="100%" stop-color="#E24462"/>
+    </linearGradient>
+    <linearGradient id="kt-bottom" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7F52FF"/>
+      <stop offset="100%" stop-color="#4F2AC9"/>
+    </linearGradient>
+
+    <!-- Ambient Glows -->
+    <radialGradient id="glow-purple" cx="50%" cy="38%" r="48%">
+      <stop offset="0%" stop-color="#7F52FF" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#7F52FF" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#7F52FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-pink" cx="80%" cy="20%" r="40%">
+      <stop offset="0%" stop-color="#E24462" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#E24462" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="shadow-card" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#7F52FF" flood-opacity="0.2"/>
+    </filter>
+
+    <!-- Subtle Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.03"/>
+    </pattern>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif; font-size: 72px; font-weight: 800; fill: #FFFFFF; letter-spacing: -1.5px; }
+    .title-accent { fill: #7F52FF; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif; font-size: 24px; font-weight: 400; fill: #A1A1AA; letter-spacing: -0.2px; }
+    .badge-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif; font-size: 14px; font-weight: 500; fill: #E4E4E7; letter-spacing: 0.2px; }
+    .code-accent { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 15px; fill: #C4B5FD; }
+  </style>
+
+  <!-- Background Base -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+
+  <!-- Glows -->
+  <circle cx="640" cy="230" r="420" fill="url(#glow-purple)"/>
+  <circle cx="950" cy="180" r="350" fill="url(#glow-pink)"/>
+
+  <!-- CENTERED LOGO MARK (Deck of Slides) -->
+  <g transform="translate(640, 195)" text-anchor="middle">
+    <g transform="translate(-105, -75)">
+      <!-- Back slide 2 -->
+      <rect x="0" y="0" width="180" height="108" rx="14" fill="#23232C" stroke="#353544" stroke-width="2.5" opacity="0.6"/>
+      <!-- Back slide 1 -->
+      <rect x="15" y="11" width="180" height="108" rx="14" fill="#2B2B38" stroke="#48485E" stroke-width="2.5" opacity="0.85"/>
+      <!-- Front active slide -->
+      <rect x="30" y="22" width="180" height="108" rx="14" fill="#181820" stroke="#7F52FF" stroke-width="4.5" filter="url(#shadow-card)"/>
+
+      <!-- Kotlin Mark -->
+      <g transform="translate(95, 51) scale(2.083)">
+        <path d="M0 0 L24 0 L12 12 L0 24 Z" fill="url(#kt-top)"/>
+        <path d="M0 24 L12 12 L24 24 Z" fill="url(#kt-bottom)"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- TYPOGRAPHY SECTION -->
+  <g transform="translate(640, 365)" text-anchor="middle">
+    <text class="title">reveal<tspan class="title-accent">-kt</tspan></text>
+    <text y="48" class="subtitle">Craft elegant Reveal.js presentations with pure Kotlin</text>
+  </g>
+
+  <!-- FEATURE PILLS / TAGS (Expansive, perfectly padded, non-compressed) -->
+  <g transform="translate(640, 475)">
+    <!-- Pill 1: Type-Safe DSL (Center = -240, Width = 176) -->
+    <g transform="translate(-240, 0)">
+      <rect x="-88" y="-21" width="176" height="42" rx="21" fill="#1E1E26" stroke="#323242" stroke-width="1.2"/>
+      <circle cx="-58" cy="0" r="4.5" fill="#7F52FF"/>
+      <text x="-44" y="5" class="badge-text" text-anchor="start">Type-Safe DSL</text>
+    </g>
+
+    <!-- Pill 2: Reveal.js Powered (Center = 0, Width = 200) -->
+    <g transform="translate(0, 0)">
+      <rect x="-100" y="-21" width="200" height="42" rx="21" fill="#1E1E26" stroke="#323242" stroke-width="1.2"/>
+      <circle cx="-70" cy="0" r="4.5" fill="#E24462"/>
+      <text x="-56" y="5" class="badge-text" text-anchor="start">Reveal.js Powered</text>
+    </g>
+
+    <!-- Pill 3: Kotlin / JS & Wasm (Center = 245, Width = 216) -->
+    <g transform="translate(245, 0)">
+      <rect x="-108" y="-21" width="216" height="42" rx="21" fill="#1E1E26" stroke="#323242" stroke-width="1.2"/>
+      <circle cx="-78" cy="0" r="4.5" fill="#10B981"/>
+      <text x="-64" y="5" class="badge-text" text-anchor="start">Kotlin / JS &amp; Wasm</text>
+    </g>
+  </g>
+
+  <!-- Separator & Code Hint -->
+  <line x1="260" y1="550" x2="1020" y2="550" stroke="#252530" stroke-width="1"/>
+  <text x="640" y="586" text-anchor="middle" class="code-accent">buildPresentation { slide { ... } }</text>
+</svg>
