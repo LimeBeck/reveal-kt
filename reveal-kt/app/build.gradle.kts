@@ -129,6 +129,7 @@ tasks.named("jvmTest") {
 val shadow = tasks.getByName<ShadowJar>("shadowJar") {
     dependsOn(jsCopyTask) // make sure JS gets compiled first
     archiveClassifier.set("all")
+    archiveFileName.set("revealkt.jar")
     filesMatching(listOf("META-INF/services/**", "META-INF/*.kotlin_module")) {
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
     }

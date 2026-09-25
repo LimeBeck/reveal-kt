@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cli-java-${{ matrix.java }}
-          path: reveal-kt/app/build/libs/*-all.jar
+          path: reveal-kt/app/build/libs/revealkt.jar
           if-no-files-found: error
 
   release:
@@ -67,9 +67,9 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" release/*-all.jar --clobber
+            gh release upload "$RELEASE_TAG" release/revealkt.jar --clobber
           else
-            gh release create "$RELEASE_TAG" release/*-all.jar --verify-tag --generate-notes
+            gh release create "$RELEASE_TAG" release/revealkt.jar --verify-tag --generate-notes
           fi
 
   publish:
