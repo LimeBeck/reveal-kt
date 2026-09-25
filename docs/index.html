@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Craft Reveal.js presentations with pure Kotlin. Get started with RevealKt, explore runnable examples, and export your slides to HTML and PDF.">
+  <meta name="theme-color" content="#0f0f13">
+  <title>RevealKt — presentations in pure Kotlin</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/examples.js" defer></script>
+  <script src="assets/site.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="header">
+  <a class="brand" href="#overview" aria-label="RevealKt home"><img src="assets/favicon.svg" width="36" height="36" alt="">reveal<span class="brand-kt">-kt</span><span class="version">1.1.1</span></a>
+  <div class="header-right">
+    <span class="header-caption">Kotlin → Reveal.js</span>
+    <a href="https://github.com/LimeBeck/reveal-kt" class="github">GitHub <span aria-hidden="true">↗</span></a>
+    <button id="menu-toggle" aria-expanded="false" aria-controls="sidebar" class="menu-toggle">Menu</button>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-title">DOCUMENTATION</div>
+    <nav aria-label="Documentation sections">
+      <a href="#overview" class="active"><span>01</span> Overview</a>
+      <a href="#quickstart"><span>02</span> Quick start</a>
+      <a href="#examples"><span>03</span> Examples <span class="nav-dot"></span></a>
+      <a href="#commands"><span>04</span> CLI commands</a>
+      <a href="#customization"><span>05</span> Themes &amp; assets</a>
+      <a href="#faq"><span>06</span> Troubleshooting</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span> Built for developers<p>Your editor.<br>Your Git. Your slides.</p><a href="https://github.com/LimeBeck/reveal-kt/blob/master/CHANGELOG.md">Changelog ↗</a></div>
+  </aside>
+  <main id="main">
+    <section id="overview" class="hero">
+      <div class="hero-heading">
+        <div class="eyebrow"><span class="status-dot"></span> OPEN SOURCE · KOTLIN DSL</div>
+        <h1>Your ideas.<br><span>Written in Kotlin.</span></h1>
+        <p class="lead">Craft elegant Reveal.js presentations with pure Kotlin. Preview as you write. Share as HTML or PDF.</p>
+        <div class="hero-actions"><a class="button primary" href="#quickstart">Get started <span>↗</span></a><a class="text-link" href="#examples">Explore examples <span>↓</span></a></div>
+      </div>
+      <div class="hero-code code-block">
+        <div class="panel-top"><span><span class="file-dot"></span> hello.reveal.kts</span><span>YOUR FIRST PRESENTATION</span></div>
+        <button class="copy" aria-label="Copy starter script">Copy</button>
+        <pre tabindex="0" aria-label="Complete starter Kotlin script"><code><span class="syntax-keyword">import</span> dev.limebeck.revealkt.dsl.*
+<span class="syntax-keyword">import</span> dev.limebeck.revealkt.dsl.slides.*
+
+title = <span class="syntax-string">"Hello, Kotlin."</span>
+<span class="syntax-call">slides</span> {
+    <span class="syntax-call">regularSlide</span> {
+        +<span class="syntax-call">title</span> { <span class="syntax-string">"Hello, Kotlin."</span> }
+        +<span class="syntax-call">regularText</span> { <span class="syntax-string">"From an idea to your first slide."</span> }
+    }
+}</code></pre>
+        <div class="editor-foot"><span class="status-dot"></span> Save as hello.reveal.kts · run with the CLI</div>
+      </div>
+      <div class="features">
+        <div><span class="feature-icon">{ }</span><h3>Type-safe DSL</h3><p>Familiar Kotlin, reusable functions, and version-controlled slides.</p></div>
+        <div><span class="feature-icon">↻</span><h3>Live preview</h3><p>Save your script. The browser reloads your presentation.</p></div>
+        <div><span class="feature-icon">↗</span><h3>Ready to present</h3><p>Speaker notes, incremental fragments, and HTML or PDF export.</p></div>
+      </div>
+    </section>
+    <section id="quickstart">
+      <div class="section-heading"><div><div class="eyebrow">01 / FROM SCRIPT TO SLIDES</div><h2>Start in three steps</h2></div><span class="tag">Linux x86-64 · Java 21 / 25</span></div>
+      <p class="section-intro">The packaged CLI needs no Node.js, Gradle, or Maven installation. Use JBang below, or download the standalone JAR.</p>
+      <div class="steps">
+        <article class="step">
+          <span class="step-number">1</span>
+          <div><h3>Install the CLI</h3><p>Check <code>java -version</code> and <a href="https://www.jbang.dev/download/">install JBang</a>. Run these commands and follow the PATH setup instructions.</p>
+            <div class="code-block"><button class="copy" aria-label="Copy installation commands">Copy</button><pre><code>jbang app setup
+jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.1</code></pre></div>
+            <details><summary>Prefer a standalone JAR?</summary><p>Download the self-contained CLI JAR from <a href="https://github.com/LimeBeck/reveal-kt/releases/tag/v1.1.1">release 1.1.1</a>, rather than the sources, javadoc, or app-jvm artifacts. Rename it to <code>revealkt.jar</code> if needed. In the commands below, replace <code>revealkt</code> with <code>java -jar /path/to/revealkt.jar</code>.</p></details>
+          </div>
+        </article>
+        <article class="step">
+          <span class="step-number">2</span>
+          <div><h3>Create a presentation</h3><p>The CLI creates a Demo directory with a script and assets. Open <code>Demo/presentation/Demo.reveal.kts</code> in your editor.</p><div class="code-block"><button class="copy" aria-label="Copy project creation command">Copy</button><pre><code>revealkt init Demo</code></pre></div></div>
+        </article>
+        <article class="step">
+          <span class="step-number">3</span>
+          <div><h3>Preview and make it yours</h3><p>Start the server and open <a href="http://localhost:8080">localhost:8080</a>. Saving your script or assets updates the presentation.</p><div class="code-block"><button class="copy" aria-label="Copy preview command">Copy</button><pre><code>revealkt run Demo/presentation/Demo.reveal.kts --host 127.0.0.1 --port 8080</code></pre></div><div class="keyboard-hints"><span><kbd>←</kbd> <kbd>→</kbd> navigate</span><span><kbd>Esc</kbd> overview</span><span><kbd>S</kbd> speaker notes</span><span><kbd>Ctrl C</kbd> stop server</span></div></div>
+        </article>
+      </div>
+      <div class="callout"><span aria-hidden="true">i</span><p><strong>Chromium is only required for PDF.</strong> Install it with <code>revealkt chrome install</code>. Check your environment with <code>revealkt doctor Demo/presentation/Demo.reveal.kts</code>. Missing Chromium fails the check, but HTML preview and export still work.</p></div>
+    </section>
+    <section id="examples">
+      <div class="section-heading"><div><div class="eyebrow">02 / INCLUDED IN THE CLI</div><h2>Start with a working example</h2></div><span class="tag">3 complete Kotlin scripts</span></div>
+      <p class="section-intro">Explore real presentations compiled from the bundled Kotlin scripts. Use the slide controls below, or open a presentation in its own tab.</p>
+      <noscript><p>Run <code>revealkt init RetryTalk --example technical</code>, <code>revealkt init NullSafety --example lesson</code>, or <code>revealkt init BrandDeck --example custom-theme</code>. <a href="https://github.com/LimeBeck/reveal-kt/tree/master/reveal-kt/app/src/jvmMain/resources/examples">Browse all example sources on GitHub ↗</a></p></noscript>
+      <div class="example-tabs" role="tablist" aria-label="Example scripts">
+        <button role="tab" id="tab-technical" aria-selected="true" aria-controls="example-panel" data-example="technical">Technical talk</button>
+        <button role="tab" id="tab-lesson" aria-selected="false" aria-controls="example-panel" tabindex="-1" data-example="lesson">Interactive lesson</button>
+        <button role="tab" id="tab-custom-theme" aria-selected="false" aria-controls="example-panel" tabindex="-1" data-example="custom-theme">Custom theme</button>
+      </div>
+      <div id="example-panel" role="tabpanel" aria-labelledby="tab-technical">
+        <div class="example-caption"><p id="example-description"></p><a id="example-source-link" href="https://github.com/LimeBeck/reveal-kt/tree/master/reveal-kt/app/src/jvmMain/resources/examples/technical">Source &amp; assets ↗</a></div>
+        <div class="example-deck">
+          <div class="panel-top"><span>RENDERED WITH REVEALKT · REVEAL.JS</span><a id="example-open" href="examples/technical/index.html" target="_blank" rel="noopener">Open presentation ↗</a></div>
+          <iframe id="example-frame" src="examples/technical/index.html" title="Technical talk — RevealKt presentation" loading="lazy" allowfullscreen></iframe>
+        </div>
+        <p class="deck-hint">Click inside the presentation to use arrow keys. Press Esc for the slide overview.</p>
+        <details class="example-code-details"><summary>View Kotlin source</summary>
+        <div class="example-source">
+          <div class="panel-top"><span id="source-name">RetryTalk.reveal.kts</span><button class="copy" id="copy-example" aria-label="Copy example script">Copy</button></div>
+          <pre tabindex="0" aria-label="Complete example Kotlin script"><code id="example-code"></code></pre>
+        </div>
+        </details>
+        <div class="example-run"><h3>Run this presentation</h3><p>Run from your projects directory. The first command creates the script and all required assets.</p></div>
+        <div class="code-block"><button class="copy" aria-label="Copy example commands">Copy</button><pre><code id="example-command">revealkt init RetryTalk --example technical
+revealkt run RetryTalk/presentation/RetryTalk.reveal.kts --host 127.0.0.1</code></pre></div>
+      </div>
+    </section>
+    <section id="commands">
+      <div class="eyebrow">03 / YOUR DAILY WORKFLOW</div><h2>From first draft to final talk</h2><p class="section-intro">Replace <code>Talk.reveal.kts</code> below with the path to your script.</p>
+      <div class="command-grid">
+        <article><span class="command-label">01 · CHECK</span><h3>Ready to go?</h3><p>Check Java, paths, output access, and a real Chromium launch. The script is not executed.</p><div class="code-block"><button class="copy" aria-label="Copy doctor command">Copy</button><pre><code>revealkt doctor Talk.reveal.kts</code></pre></div></article>
+        <article><span class="command-label">02 · PREVIEW</span><h3>Edit with live reload</h3><p>Run a local preview. If an edit fails, the last working presentation stays available.</p><div class="code-block"><button class="copy" aria-label="Copy run command">Copy</button><pre><code>revealkt run Talk.reveal.kts --host 127.0.0.1</code></pre></div></article>
+        <article><span class="command-label">03 · HTML</span><h3>Share a link</h3><p>Publish the entire out directory to a static host, including its JavaScript, CSS, and assets.</p><div class="code-block"><button class="copy" aria-label="Copy bundle command">Copy</button><pre><code>revealkt bundle Talk.reveal.kts --output-dir out</code></pre></div></article>
+        <article><span class="command-label">04 · PDF</span><h3>Take it with you</h3><p>Install Chromium first. A separate port lets you keep the preview server running.</p><div class="code-block"><button class="copy" aria-label="Copy PDF commands">Copy</button><pre><code>revealkt chrome install
+revealkt pdf Talk.reveal.kts --port 8081 -o Talk.pdf</code></pre></div></article>
+      </div>
+    </section>
+    <section id="customization">
+      <div class="eyebrow">04 / MAKE IT YOURS</div><h2>Your slides. Your style.</h2>
+      <div class="reference-grid">
+        <article><h3>Themes and slide numbers</h3><p>Choose a built-in theme and numbering format. Combine all fragment steps on one slide page in PDF.</p><div class="code-block"><button class="copy" aria-label="Copy configuration">Copy</button><pre><code>configuration {
+    theme = RevealKt.Configuration.Theme.Predefined.BLACK
+    slideNumber = RevealKt.Configuration.SlideNumber.Custom("c/t")
+    pdfSeparateFragments = false
+}</code></pre></div><p class="small">Add <code>import dev.limebeck.revealkt.core.RevealKt</code>. Use <code>additionalCssStyle</code> for small CSS overrides.</p></article>
+        <article><h3>Keep assets beside your script</h3><p>Place images and CSS in <code>assets/</code>. The image DSL adds this prefix for you.</p><div class="file-tree"><span>presentation/</span><br>├── Talk.reveal.kts<br>└── assets/<br>&nbsp;&nbsp;&nbsp; ├── logo.svg<br>&nbsp;&nbsp;&nbsp; └── theme.css</div><div class="code-block"><button class="copy" aria-label="Copy image snippet">Copy</button><pre><code>// Inside regularSlide
++img(src = "logo.svg") { width = 320 }</code></pre></div></article>
+      </div>
+      <details><summary>How do I use a custom CSS theme?</summary><p>Set <code>theme = RevealKt.Configuration.Theme.Custom("assets/theme.css")</code> inside <code>configuration</code>. A custom theme replaces the built-in theme; style <code>.reveal-viewport</code>, <code>.reveal</code>, and headings. URLs inside CSS resolve relative to the CSS file. Start with a complete template: <code>revealkt init BrandDeck --example custom-theme</code>.</p></details>
+      <details><summary>How do incremental list items work?</summary><p><code>unorderedListOf</code> and <code>orderedListOf</code> reveal subsequent items as fragments by default. The first item is visible immediately. Pass <code>fragmented = false</code> for a static list. Set <code>pdfSeparateFragments = false</code> to avoid extra PDF pages for fragment steps.</p></details>
+    </section>
+    <section id="faq">
+      <div class="eyebrow">05 / WHEN SOMETHING GOES WRONG</div><h2>A few quick answers</h2>
+      <details><summary>My edit produced an error. What happens now?</summary><p>Fix the script and save again. Successful compilation updates the slides and removes the error panel. Until then, you can navigate the last working presentation. An error on the initial launch exits the command; fix the script and start it again.</p></details>
+      <details><summary>PDF export fails or Chromium will not start</summary><p>Run <code>revealkt chrome install</code>, then <code>revealkt doctor Talk.reveal.kts</code>. On Ubuntu, you may need system libraries: <code>revealkt chrome install --with-deps</code>. If the port is busy, stop the preview or use <code>--port 8081</code>. Create the PDF output's parent directory beforehand.</p></details>
+      <details><summary>Why is my image missing?</summary><p>Check that <code>assets/</code> is beside your script. For <code>assets/images/chart.png</code>, use <code>img(src = "images/chart.png")</code>. Paths are case-sensitive. CSS theme URLs need the full <code>assets/</code> prefix.</p></details>
+      <details><summary>Do exported slides work offline?</summary><p>Built-in JavaScript and CSS ship with the CLI. External images, fonts, and MathJax may still need a network connection, so offline export is not guaranteed. HTML export is a directory, not one file. Repeating bundle does not remove old assets; use a fresh output directory for a clean export.</p></details>
+      <details><summary>Can I run someone else's presentation?</summary><p>A <code>.reveal.kts</code> file is executable Kotlin with your user's permissions, including file and network access. Review scripts before running them. Preview has no authentication; <code>--host 127.0.0.1</code> limits access to your computer. Use bundle for publishing.</p></details>
+      <a class="reference-link" href="https://github.com/LimeBeck/reveal-kt/blob/master/docs/presentation-reference.md">Full reference and export limitations <span>↗</span></a>
+    </section>
+    <footer><a class="brand" href="#overview">reveal<span class="brand-kt">-kt</span></a><span>Your presentations belong with your code.</span><a href="https://github.com/LimeBeck/reveal-kt">Source code ↗</a></footer>
+  </main>
+</div>
+<div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
+</body>
+</html>

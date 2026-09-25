@@ -10,6 +10,10 @@
 
 Kotlin DSL wrapper around Reveal JS presentation library
 
+## Documentation website
+
+The [documentation website](https://limebeck.github.io/reveal-kt/) includes an English-language quick start, CLI reference and three embedded presentations rendered from their actual Kotlin source. Build with `./gradlew buildSite`, then run `python3 -m http.server 4173 --bind 127.0.0.1 --directory build/site` and open [localhost:4173](http://localhost:4173). See [site maintenance and GitHub Pages setup](docs/SITE.md).
+
 ## Get started
 
 Use the [step-by-step guide](docs/getting-started.md) to install the CLI as a standalone JAR or through JBang, generate a presentation, preview edits and export HTML/PDF. It also explains script trust and how to diagnose the environment with `doctor`.
