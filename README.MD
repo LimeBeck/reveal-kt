@@ -1,5 +1,7 @@
 # RevealKt
 
+![RevealKt — Kotlin DSL for Reveal.js presentations](docs/assets/reveal-kt-github-banner.svg)
+
 [![CI](https://github.com/LimeBeck/reveal-kt/actions/workflows/main.yml/badge.svg)](https://github.com/LimeBeck/reveal-kt/actions/workflows/main.yml)
 ![GitHub last commit](https://img.shields.io/github/last-commit/limebeck/reveal-kt)
 ![GitHub](https://img.shields.io/github/license/limebeck/reveal-kt)
