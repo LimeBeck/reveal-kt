@@ -8,8 +8,8 @@
     <div class="reveal">
       <div class="slides">
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="8b971d57-2a75-4bae-a39a-ea6835913a73" style="">A presentation is Kotlin</h1>
-          <pre class="kotlin" data-id="9c6f9561-1e00-45d4-aae7-bfd1e7492f3c"><code data-trim="">
+          <h1 class="r-fit-text" data-id="252fa2d9-9da0-4ef8-a302-e419971d0d38" style="">A presentation is Kotlin</h1>
+          <pre class="kotlin" data-id="8c87d077-26f0-49e5-9d52-555b7a575d3a"><code data-trim="">
               <script type="text/template">slides {
     regularSlide {
         +title { "Hello, Kotlin" }
@@ -17,21 +17,21 @@
     }
 }</script>
             </code></pre>
-<span data-id="c26aec36-e131-452a-a35c-425c2fee173c">RevealKt builds the HTML. Reveal.js handles navigation, layout and interaction. Press Right to explore.</span></section>
+<span data-id="ffe54e18-4b4a-4aab-a2e4-7c7881221c4e">RevealKt builds the HTML. Reveal.js handles navigation, layout and interaction. Press Right to explore.</span></section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="53354b61-d157-41ad-ad16-24b30943dcb9" style="">Walk through the code</h1>
-          <pre class="kotlin" data-id="4bc1daf5-87c3-4563-9834-1e6fe17706a6"><code data-trim="" data-line-numbers="1|2|3">
+          <h1 class="r-fit-text" data-id="967713c9-d926-49b5-9f62-ca3b4d4214d1" style="">Walk through the code</h1>
+          <pre class="kotlin" data-id="2195b2c7-4f79-4a02-9934-7b21f9b7d4cd"><code data-trim="" data-line-numbers="1|2|3">
               <script type="text/template">val name: String? = null
 val length = name?.length ?: 0
 println(length)</script>
             </code></pre>
-<span data-id="83ebb669-a0b9-49e6-b973-461ae8294263">Press Right twice: the highlighted line advances before the next slide. DSL: code(lang = &quot;kotlin&quot;, lines = &quot;1|2|3&quot;).</span></section>
+<span data-id="fe7eb9f3-8ab9-410b-8ec4-1349a22ee1cf">Press Right twice: the highlighted line advances before the next slide. DSL: code(lang = &quot;kotlin&quot;, lines = &quot;1|2|3&quot;).</span></section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="47b233c5-ef24-417b-a0d5-e25d2373b3f7" style="">Compose a two-column layout</h1>
-          <div data-id="048d7ebd-9988-4d5c-90fe-1073496c6d18" class="container">
-            <div class="col" data-id="692a33bd-e45d-44d3-97a0-fce761fe5a4c">
-              <h2 class="" data-id="de4a85a2-1fcd-4c4e-ac40-cca89b318ef7" style="">The DSL</h2>
-              <pre class="kotlin" data-id="7df0720e-53dc-4f58-aada-d6bd34f4d4d2"><code data-trim="">
+          <h1 class="r-fit-text" data-id="6dda000c-c69d-4eb4-b051-c6cdbfdd90ad" style="">Compose a two-column layout</h1>
+          <div data-id="3f49eee9-2e22-4f71-a780-57f0640d74f9" class="container">
+            <div class="col" data-id="ae14adaa-6a68-4be8-873d-5a1a9ca5366f">
+              <h2 class="" data-id="643424ab-c465-479d-b7b5-5e105a1f1a93" style="">The DSL</h2>
+              <pre class="kotlin" data-id="ace37f35-d8b4-41d1-bfc5-31f5ca9b2c0f"><code data-trim="">
                   <script type="text/template">+row {
     column {
         +regularText { "Left" }
@@ -42,15 +42,15 @@ println(length)</script>
 }</script>
                 </code></pre>
             </div>
-            <div class="col" data-id="61bc1b6d-d986-435a-a523-0224dda40e3b">
-              <h2 class="" data-id="751b0e03-d29f-4cd3-b042-939f0ff7fbff" style="">The result</h2>
-<span data-id="45f8c3f9-fb8f-4fce-957d-537f43bd7812">These are actual row and column elements. Put text, code or images side by side.</span></div>
+            <div class="col" data-id="08785cbd-5e6d-4841-8892-77658c44f48f">
+              <h2 class="" data-id="8f625939-07e9-4d5d-893d-4032870c4652" style="">The result</h2>
+<span data-id="39f92d36-0877-4767-816e-5754885b0ac1">These are actual row and column elements. Put text, code or images side by side.</span></div>
           </div>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="97afb4ab-d565-4276-8095-1d9adfce247f" style="">1. Functions</h1>
-<span data-id="ddbc9d9a-7b26-49c5-b520-276af2334a21">Extract repeated content into reusable Kotlin functions.</span>
-          <pre class="kotlin" data-id="0117805f-f2fb-4b30-9ae0-77827e5ee72f"><code data-trim="">
+          <h1 class="r-fit-text" data-id="22ad6ad5-eb01-4ee3-91c9-4fdee2aed52a" style="">1. Functions</h1>
+<span data-id="ad545e29-9dad-4999-8269-b0a85e73b4cc">Extract repeated content into reusable Kotlin functions.</span>
+          <pre class="kotlin" data-id="0ad6bce0-093c-47fd-b37f-1ad768a6ae72"><code data-trim="">
               <script type="text/template">topics.forEach { topic ->
     regularSlide {
         +title { topic.heading }
@@ -58,11 +58,11 @@ println(length)</script>
     }
 }</script>
             </code></pre>
-<span data-id="1ca0e5ea-1735-45f0-a789-a018763ae089">This slide and its neighbor come from the same loop in the source. Open View Kotlin source on the documentation page.</span></section>
+<span data-id="c5d43728-8fe8-411e-b4c5-665da5ea63d4">This slide and its neighbor come from the same loop in the source. Open View Kotlin source on the documentation page.</span></section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="148d3655-a75f-4ab7-8c36-98199746b4ad" style="">2. Data</h1>
-<span data-id="341c470a-4d9a-4d86-b306-61858bf3eb7a">Generate slides from lists, models or calculated values.</span>
-          <pre class="kotlin" data-id="af149c1a-c9c7-4c61-82b9-521da1785119"><code data-trim="">
+          <h1 class="r-fit-text" data-id="ee3298a1-35cd-4b68-917a-aacac92d8b6c" style="">2. Data</h1>
+<span data-id="7591e6b4-58c1-471c-bfb9-c0d3e1767bac">Generate slides from lists, models or calculated values.</span>
+          <pre class="kotlin" data-id="d8f41521-081e-4583-bbfe-0ade5fa465d3"><code data-trim="">
               <script type="text/template">topics.forEach { topic ->
     regularSlide {
         +title { topic.heading }
@@ -70,14 +70,14 @@ println(length)</script>
     }
 }</script>
             </code></pre>
-<span data-id="d9794ff8-7c12-4966-adb3-d9588c46dd6c">This slide and its neighbor come from the same loop in the source. Open View Kotlin source on the documentation page.</span></section>
+<span data-id="27f8883b-838a-4633-b728-8b5fb515f17d">This slide and its neighbor come from the same loop in the source. Open View Kotlin source on the documentation page.</span></section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="6b09de0b-1910-463a-bf01-ea1d875b48e4" style="">Notes for the presenter</h1>
-          <pre class="kotlin" data-id="255e579c-21d1-4daf-85b7-8dff3dcb67e9"><code data-trim="">
+          <h1 class="r-fit-text" data-id="dfb14104-0b01-44ec-a5fa-16814a15ded4" style="">Notes for the presenter</h1>
+          <pre class="kotlin" data-id="d25d82d9-4a8d-4264-b959-37bc03b06b19"><code data-trim="">
               <script type="text/template">+note { "Pause here and ask the audience a question." }</script>
             </code></pre>
-<span data-id="3c2ab482-60bc-4aeb-b76c-ea72bffdfa25">Open this presentation in its own tab, then press S for speaker view. Allow the popup to see the note and presentation timer.</span>
-          <aside class="notes" data-id="19db3666-281e-4ae3-b2ce-6fc4918652de">You found the speaker note! Ask: which parts of your next presentation could be generated from Kotlin data?</aside>
+<span data-id="62830379-8874-4f27-a578-4fa7361e38e5">Open this presentation in its own tab, then press S for speaker view. Allow the popup to see the note and presentation timer.</span>
+          <aside class="notes" data-id="d438c255-8161-4b96-8ffc-f4e36439468f">You found the speaker note! Ask: which parts of your next presentation could be generated from Kotlin data?</aside>
         </section>
       </div>
     </div>

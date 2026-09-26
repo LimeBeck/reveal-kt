@@ -8,31 +8,31 @@
     <div class="reveal">
       <div class="slides">
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="08401c92-50e0-4026-8af1-d2d68e79da27" style="">Let the audience set the pace</h1>
-<span data-id="930e57be-e419-41f3-9e28-500d758b7ca1">Try fragments, vertical navigation and Auto-Animate. These are Reveal.js features driven by the Kotlin DSL.</span>
+          <h1 class="r-fit-text" data-id="6117a8a3-a202-449a-9ffb-aac0748350ca" style="">Let the audience set the pace</h1>
+<span data-id="401be95f-5589-485a-b36b-c2ce9bde4e13">Try fragments, vertical navigation and Auto-Animate. These are Reveal.js features driven by the Kotlin DSL.</span>
           <ul>
-            <li><span data-id="294d0620-59a3-4e90-98a2-09d9635d8bc9">Right / Space: advance</span></li>
-            <li><span data-id="5f35f1a9-51f3-4c78-935f-e6179fc391b0">Down: explore a vertical stack</span></li>
-            <li><span data-id="2f1f6baa-031c-4daa-8435-3a8d1abcaff6">Esc: open the slide overview</span></li>
+            <li><span data-id="eb068e18-2370-4500-a832-a4976c827106">Right / Space: advance</span></li>
+            <li><span data-id="f21028dc-58d2-4649-b113-2c1912b72685">Down: explore a vertical stack</span></li>
+            <li><span data-id="a13407a9-0629-49af-aa88-2d21c63c041d">Esc: open the slide overview</span></li>
           </ul>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="36357ef2-ee8b-462b-9f55-decd68bf47f9" style="">Reveal one idea at a time</h1>
+          <h1 class="r-fit-text" data-id="1545f73f-c455-4727-b513-d4e730d22187" style="">Reveal one idea at a time</h1>
           <ol>
-            <li><span data-id="6e33d206-ca0c-4279-903d-f137718fc321">The first item is visible immediately.</span></li>
-            <li class="fragment fade-up"><span data-id="645886ca-2dae-4149-b498-d006924a4366">Press Right: Reveal.js reveals this fragment.</span></li>
-            <li class="fragment fade-up"><span data-id="0b22b160-26cb-4647-91de-6beda26105ba">Press Right again: one more idea, on the same slide.</span></li>
+            <li><span data-id="a6cba6b9-29db-4a93-bdac-e9824a906629">The first item is visible immediately.</span></li>
+            <li class="fragment fade-up"><span data-id="33541deb-3c33-4a31-85df-94f597e02182">Press Right: Reveal.js reveals this fragment.</span></li>
+            <li class="fragment fade-up"><span data-id="16c44ae0-9cae-43fc-81b2-a0b865878631">Press Right again: one more idea, on the same slide.</span></li>
           </ol>
-          <pre class="kotlin" data-id="c7aa3268-6197-4658-afd7-ee28225715bd"><code data-trim="">
+          <pre class="kotlin" data-id="96169bc4-09c6-4cee-8118-a73dc17c483d"><code data-trim="">
               <script type="text/template">+orderedListOf(points, fragmented = true)</script>
             </code></pre>
-          <aside class="notes" data-id="259922d6-9782-415f-ab6b-de388afb3a55">Use Left to reverse a fragment. pdfSeparateFragments = false combines all steps on one PDF page.</aside>
+          <aside class="notes" data-id="84cd79cf-a129-44fc-9775-110fbe6a92dc">Use Left to reverse a fragment. pdfSeparateFragments = false combines all steps on one PDF page.</aside>
         </section>
         <section>
           <section data-auto-animate="">
-            <h1 class="r-fit-text" data-id="538a722e-38f9-4796-9272-6a202e785990" style="">Go deeper, not further</h1>
-<span data-id="e0022199-ace5-40da-a1b9-49009479f669">This slide begins a vertical stack. Press Down for a detail slide, or Right to skip to the next topic.</span>
-            <pre class="kotlin" data-id="07b6444c-ec44-4703-82ff-a999d46fd4ba"><code data-trim="">
+            <h1 class="r-fit-text" data-id="2f316be3-a7b3-4f9e-a5a3-d76abc9ccacb" style="">Go deeper, not further</h1>
+<span data-id="e4a92bb5-b7fc-4ab9-94ac-65fb98c08c1a">This slide begins a vertical stack. Press Down for a detail slide, or Right to skip to the next topic.</span>
+            <pre class="kotlin" data-id="9f52669e-35f0-4813-a95d-971b99576160"><code data-trim="">
                 <script type="text/template">verticalSlide {
     regularSlide { /* overview */ }
     regularSlide { /* details */ }
@@ -40,29 +40,29 @@
               </code></pre>
           </section>
           <section data-auto-animate="">
-            <h1 class="r-fit-text" data-id="92351b70-6667-4847-89d9-3b80cef36a0f" style="">You are inside the stack</h1>
-<span data-id="e73c116c-7dc5-451e-a2cf-33ee82199061">Press Up to return. Press Esc to see the two-dimensional slide map, then Esc again to resume.</span>
-            <pre class="kotlin" data-id="35916739-1b99-4993-9d92-68ce37dcce73"><code data-trim="">
+            <h1 class="r-fit-text" data-id="edf6a079-ed9c-455f-b060-e86a74bcd1d1" style="">You are inside the stack</h1>
+<span data-id="49de7ffe-325e-4cb9-8abd-55d4980cb49b">Press Up to return. Press Esc to see the two-dimensional slide map, then Esc again to resume.</span>
+            <pre class="kotlin" data-id="bdc67d42-2a01-44aa-9b10-364436b16421"><code data-trim="">
                 <script type="text/template">configuration { overview = true }</script>
               </code></pre>
-            <aside class="notes" data-id="c736edc1-7a8a-417e-a745-fbf55f1cbd3d">Vertical slides let a presenter keep optional details underneath a main topic.</aside>
+            <aside class="notes" data-id="02377185-1888-4f8a-95b5-1ea68d00cf59">Vertical slides let a presenter keep optional details underneath a main topic.</aside>
           </section>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="d17e3f53-4c2b-4624-92f2-e906f9ed92d9" style="">One element, two layouts</h1>
-<span data-id="e13986a2-aa39-4c66-bf10-5b60f1768958">Follow this element →</span>
-          <pre class="kotlin" data-id="602c192f-96dc-46ca-880f-f2f178111f5b"><code data-trim="">
+          <h1 class="r-fit-text" data-id="48c762d7-6d87-4d34-b2a8-09f2e69b60ef" style="">One element, two layouts</h1>
+<span data-id="7cb150e2-48b7-44d4-bf70-d0a5ecf76b10">Follow this element →</span>
+          <pre class="kotlin" data-id="ca44529b-271f-404a-938a-d05815f43a52"><code data-trim="">
               <script type="text/template">val movingLabel = UuidGenerator.generateId()
 // Reuse the ID on adjacent slides:
 +regularText(id = movingLabel) { "Follow this element →" }</script>
             </code></pre>
-<span data-id="05685497-db6a-4829-adcd-800fb34a0473">Press Right. The next slide reuses the element ID; Reveal.js animates its position and size.</span></section>
+<span data-id="39a19b63-366d-48e3-80dc-3a30c139133b">Press Right. The next slide reuses the element ID; Reveal.js animates its position and size.</span></section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="51fc6ede-9aa6-4b65-be3a-77169d2c9dbd" style="">Auto-Animate connects the dots</h1>
-          <pre class="kotlin" data-id="4c6cc94f-38f0-44fd-a0a5-89e482300577"><code data-trim="">
+          <h1 class="r-fit-text" data-id="eb223fd8-98b1-446c-9057-167c6368fdbe" style="">Auto-Animate connects the dots</h1>
+          <pre class="kotlin" data-id="142df217-138f-4b99-8780-46d2289b0791"><code data-trim="">
               <script type="text/template">// Same element ID, new position and CSS.</script>
             </code></pre>
-<span data-id="e13986a2-aa39-4c66-bf10-5b60f1768958">Follow this element →</span><span data-id="3fc736cc-42f8-4a67-8770-87e7fad08903">Press Left to reverse the transition. Regular slides enable autoanimate by default; set autoanimate = false to opt out.</span></section>
+<span data-id="7cb150e2-48b7-44d4-bf70-d0a5ecf76b10">Follow this element →</span><span data-id="04f802a1-7335-45aa-b6fe-a554b0c486df">Press Left to reverse the transition. Regular slides enable autoanimate by default; set autoanimate = false to opt out.</span></section>
       </div>
     </div>
     <script>

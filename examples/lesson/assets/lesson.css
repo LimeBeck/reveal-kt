@@ -69,7 +69,7 @@
 .reveal li.current-fragment { border-color: #7954b6; background: #251e34; }
 .reveal .controls { color: #b89aff; }
 .reveal .progress { height: 3px; color: #9e76ef; background: #ffffff0c; }
-.reveal .slide-number { right: 16px; bottom: 12px; padding: 5px 9px; border-radius: 5px; background: #24202e; color: #c9bddb; font: 12px ui-monospace, monospace; }
+.reveal .slide-number { left: 16px; right: auto; bottom: 12px; padding: 5px 9px; border-radius: 5px; background: #24202e; color: #c9bddb; font: 12px ui-monospace, monospace; }
 @media print {
     .reveal-viewport { background: #111117; }
     .reveal li.current-fragment { border-color: #302b3e; background: #1b1824; }

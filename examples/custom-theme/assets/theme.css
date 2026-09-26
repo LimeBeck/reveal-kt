@@ -19,7 +19,7 @@
 .reveal a, .reveal .controls { color: var(--r-link-color); }
 .reveal pre { font-size: 0.65em; text-align: left; }
 .reveal img { max-width: 100%; }
-.reveal .slide-number { color: #e9f1ee; background: #102c35; }
+.reveal .slide-number { left: 16px; right: auto; color: #e9f1ee; background: #102c35; }
 
 .reveal .slides { text-align: left; }
 .reveal .slides > section { padding: 28px 48px; box-sizing: border-box; }
