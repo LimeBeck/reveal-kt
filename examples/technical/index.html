@@ -8,37 +8,37 @@
     <div class="reveal">
       <div class="slides">
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="7fc9fcfc-9a8f-42b5-92ea-9f3c20d3a465" style="">Reliable retries in Kotlin</h1>
-<span data-id="ba59ed56-9f24-4ab8-aa44-e5abe5ff5da4">A five-minute engineering talk: retry only what can safely happen twice.</span>
-          <aside class="notes" data-id="2bac0fea-36a1-4797-b22a-fb21173e9549">Ask the audience what happens when a payment request times out after reaching the server.</aside>
+          <h1 class="r-fit-text" data-id="5ed27a0f-1d3a-4ec4-9f4e-929a38408f0a" style="">Reliable retries in Kotlin</h1>
+<span data-id="9ba3c94b-5e67-4543-b866-3a33d73afa4c">A five-minute engineering talk: retry only what can safely happen twice.</span>
+          <aside class="notes" data-id="79ac417f-35cd-43d0-acfa-8b3e144504a0">Ask the audience what happens when a payment request times out after reaching the server.</aside>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="cecfa471-fe7f-4db2-8c54-86ee01201ca2" style="">The timeout is ambiguous</h1>
+          <h1 class="r-fit-text" data-id="b7b50f68-a738-42e7-bb33-a4da1fd43dcd" style="">The timeout is ambiguous</h1>
           <ul>
-            <li><span data-id="1b3dae60-0cea-4974-89d7-9f8196065397">The server may have completed the operation.</span></li>
-            <li class="fragment fade-up"><span data-id="dcfddea7-d3b6-4d12-802e-a6b14af7a69f">Repeating a write can duplicate its effect.</span></li>
-            <li class="fragment fade-up"><span data-id="ec1314be-6a79-4d4d-9716-94af911f069f">Use an idempotency key for retried writes.</span></li>
+            <li><span data-id="35926ff6-a66f-43a0-8202-391e8eac835c">The server may have completed the operation.</span></li>
+            <li class="fragment fade-up"><span data-id="b4a0696f-64f0-4cbd-ad3c-6a70ac0a82e3">Repeating a write can duplicate its effect.</span></li>
+            <li class="fragment fade-up"><span data-id="a3fa2e72-fa31-4085-b433-8fe581028fb8">Use an idempotency key for retried writes.</span></li>
           </ul>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="997af463-2663-4781-b293-7e473285e821" style="">Keep the policy explicit</h1>
-          <pre class="kotlin" data-id="67c9db5c-6ab7-4348-96db-4be25f099a52"><code data-trim="" data-line-numbers="1-6">
+          <h1 class="r-fit-text" data-id="b35c4c4a-bf57-4749-865d-2f088c98564b" style="">Keep the policy explicit</h1>
+          <pre class="kotlin" data-id="f7b118cd-a1a7-42ac-82c8-7926c65e98a6"><code data-trim="" data-line-numbers="1-6">
               <script type="text/template">fun shouldRetry(status: Int, attempt: Int): Boolean =
     attempt < 3 && status in setOf(429, 502, 503, 504)
 
 val retry = shouldRetry(status = 503, attempt = 1)
 println(retry) // true</script>
             </code></pre>
-          <aside class="notes" data-id="81da9007-70f7-464f-8463-58490777d99a">The example models the decision only. Production code also needs backoff, deadlines and idempotency.</aside>
+          <aside class="notes" data-id="6e32fb83-22d1-4bdc-9fd5-fd3ea558e454">The example models the decision only. Production code also needs backoff, deadlines and idempotency.</aside>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="9348ffe8-3ae3-4639-bb02-823613483d8e" style="">Takeaways</h1>
+          <h1 class="r-fit-text" data-id="b80d569c-efd3-499e-8db1-c4c00b290475" style="">Takeaways</h1>
           <ul>
-            <li><span data-id="dc0220bc-4f42-43a7-8b62-890980560c7b">Retry transient failures, not every exception.</span></li>
-            <li><span data-id="28336a99-431d-459d-b2a2-4354b51eb818">Bound attempts and total elapsed time.</span></li>
-            <li><span data-id="3ed4fe20-5287-48c5-a988-4f41fe2a4557">Measure exhausted retries and duplicate suppression.</span></li>
+            <li><span data-id="acd3c5d0-e32c-488a-a960-67048e8a8e6b">Retry transient failures, not every exception.</span></li>
+            <li><span data-id="6f4e8e11-be44-4c62-b014-d42e3ab1a759">Bound attempts and total elapsed time.</span></li>
+            <li><span data-id="3b1ccc8a-bd81-41fd-a5b7-7261b9828451">Measure exhausted retries and duplicate suppression.</span></li>
           </ul>
-<span data-id="9defcc06-1ce5-484e-97ba-1a09caea08e7">Discussion: which operations in your service are safe to retry?</span></section>
+<span data-id="8dc04e4b-5f58-41e3-aea5-40d502ee051e">Discussion: which operations in your service are safe to retry?</span></section>
       </div>
     </div>
     <script>

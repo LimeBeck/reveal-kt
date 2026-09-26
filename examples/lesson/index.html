@@ -8,38 +8,38 @@
     <div class="reveal">
       <div class="slides">
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="7fca06c6-1a27-42f3-88be-41d98a2306d6" style="">What does this print?</h1>
-          <pre class="kotlin" data-id="5cf9f7b5-5dc9-44a5-9689-976c4dca95cd"><code data-trim="">
+          <h1 class="r-fit-text" data-id="ef3f6135-8e8c-4c92-bf6b-8ba9dc19d83b" style="">What does this print?</h1>
+          <pre class="kotlin" data-id="886baf4b-5a7e-47f8-9267-66b41f829a65"><code data-trim="">
               <script type="text/template">val name: String? = null
 println(name?.length ?: 0)</script>
             </code></pre>
-<span data-id="2967e662-5de0-433e-86a1-b3dd62f7d31b">Think first. Advance one step at a time to explain your answer.</span>
-          <aside class="notes" data-id="09f4ebd1-8da5-4bf9-9c29-bef44a6fd25f">Give learners 20 seconds before moving to the explanation.</aside>
+<span data-id="2402e916-f812-4a3e-be55-5e8ceebb5d61">Predict the output. Then reveal the reasoning, one step at a time.</span>
+          <aside class="notes" data-id="cfefe990-d017-40f2-8962-4c32d438b7e1">Give learners 20 seconds before moving to the explanation.</aside>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="4546fdc8-5394-4537-9a00-482dd78d223f" style="">Follow the expression</h1>
+          <h1 class="r-fit-text" data-id="78429753-6c49-45fc-bbca-1ff9aa084ef5" style="">Follow the expression</h1>
           <ol>
-            <li><span data-id="2c30fda0-74c0-490b-a8d1-6b435ee290a0">name contains null.</span></li>
-            <li class="fragment fade-up"><span data-id="713fe799-18be-40ac-b4d9-06d173dc72d5">The safe call ?. skips length and produces null.</span></li>
-            <li class="fragment fade-up"><span data-id="342f9252-a723-4b37-bfda-83e321f8d57d">The Elvis operator ?: selects 0.</span></li>
-            <li class="fragment fade-up"><span data-id="f46e16af-4885-459a-b168-018aad27c84b">The program prints 0.</span></li>
+            <li><span data-id="764251bf-67b7-43c1-ba90-7d2d0f46d8ed">name contains null.</span></li>
+            <li class="fragment fade-up"><span data-id="34845b0b-a7bd-4e39-8cfd-93c714dd32cd">The safe call ?. skips length and produces null.</span></li>
+            <li class="fragment fade-up"><span data-id="eae18303-1e87-46c7-9e36-f80e221a847a">The Elvis operator ?: selects 0.</span></li>
+            <li class="fragment fade-up"><span data-id="d22d7860-ec54-45bb-84d4-da9f3f98aaff">The program prints 0.</span></li>
           </ol>
-          <aside class="notes" data-id="f405378d-1a25-4fe7-a886-d7291de24cd7">The first item is visible immediately; each subsequent item is a fragment.</aside>
+          <aside class="notes" data-id="3d31bb52-014f-40ab-9191-6598a2230f4b">The first item is visible immediately; each subsequent item is a fragment.</aside>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="330ae84f-2a94-444c-a7c9-582886bad159" style="">Try another input</h1>
-<span data-id="33fa0f40-311e-4ffb-b960-79bd74ec9bd7">Change null to Kotlin. Predict the output, then run the code.</span>
+          <h1 class="r-fit-text" data-id="be6398da-5c5f-43af-a5ab-e89028bdc251" style="">Try another input</h1>
+<span data-id="c637ad69-672b-4871-ad47-414a33f5ec8d">Replace null with &quot;Kotlin&quot;. What changes?</span>
           <ul>
-            <li><span data-id="e919d26e-f748-4dbc-842d-6a0e08e5aef1">Answer: 6.</span></li>
-            <li class="fragment fade-up"><span data-id="1ff528db-e716-453f-bcb6-e2bf15c4960e">The safe call now returns the string length.</span></li>
-            <li class="fragment fade-up"><span data-id="09b8027e-d9f3-4646-a550-2d63ac0eafac">The Elvis fallback is not evaluated.</span></li>
+            <li><span data-id="4c69ff35-5e15-4fcf-857f-ff5fd00157a3">Answer: 6.</span></li>
+            <li class="fragment fade-up"><span data-id="bb28cfac-5b3e-4778-a838-deb356344438">The safe call now returns the string length.</span></li>
+            <li class="fragment fade-up"><span data-id="46e1517b-079e-4156-ad4d-e9f0ca33a559">The Elvis fallback is not evaluated.</span></li>
           </ul>
-          <aside class="notes" data-id="ae75c4d1-5bac-4e57-a60f-e529bcbbb550">Ask learners to describe when a nullable value should be rejected instead of receiving a fallback.</aside>
+          <aside class="notes" data-id="3deb78a3-b414-44d5-becc-e45117cead8c">Ask learners to describe when a nullable value should be rejected instead of receiving a fallback.</aside>
         </section>
       </div>
     </div>
     <script>
-                    const configurationJson = {"controls":true,"progress":true,"history":false,"center":true,"touch":true,"autoAnimateDuration":0.5,"view":null,"theme":["Predefined","WHITE"],"additionalCssStyle":"","additionalCssStyleFromBuilder":"","controlsTutorial":true,"controlsLayout":"bottom-right","controlsBackArrows":"faded","slideNumber":["Enable",{}],"showSlideNumber":"all","hashOneBasedIndex":false,"hash":false,"respondToHashChanges":false,"jumpToSlide":false,"keyboard":true,"disableLayout":false,"overview":true,"loop":false,"rtl":false,"navigationMode":"default","shuffle":false,"fragments":true,"fragmentInURL":true,"help":true,"pause":true,"showNotes":false,"autoAnimate":true,"autoAnimateEasing":"ease","autoAnimateUnmatched":true,"autoSlide":0.0,"autoSlideStoppable":true,"defaultTiming":0,"mouseWheel":false,"previewLinks":false,"focusBodyOnPageVisibilityChange":true,"transition":"slide","transitionSpeed":"default","backgroundTransition":"slide","parallaxBackgroundImage":"","parallaxBackgroundSize":"","parallaxBackgroundRepeat":"","pdfSeparateFragments":false,"hideInactiveCursor":true}
+                    const configurationJson = {"controls":true,"progress":true,"history":false,"center":true,"touch":true,"autoAnimateDuration":0.5,"view":null,"theme":["Custom",{"cssLink":"assets/lesson.css"}],"additionalCssStyle":"","additionalCssStyleFromBuilder":"","controlsTutorial":true,"controlsLayout":"bottom-right","controlsBackArrows":"faded","slideNumber":["Custom",{"format":"c/t"}],"showSlideNumber":"all","hashOneBasedIndex":false,"hash":false,"respondToHashChanges":false,"jumpToSlide":false,"keyboard":true,"disableLayout":false,"overview":true,"loop":false,"rtl":false,"navigationMode":"default","shuffle":false,"fragments":true,"fragmentInURL":true,"help":true,"pause":true,"showNotes":false,"autoAnimate":true,"autoAnimateEasing":"ease","autoAnimateUnmatched":true,"autoSlide":0.0,"autoSlideStoppable":true,"defaultTiming":0,"mouseWheel":false,"previewLinks":false,"focusBodyOnPageVisibilityChange":true,"transition":"slide","transitionSpeed":"default","backgroundTransition":"slide","parallaxBackgroundImage":"","parallaxBackgroundSize":"","parallaxBackgroundRepeat":"","pdfSeparateFragments":false,"hideInactiveCursor":true}
                     </script>
     <script src="revealkt.js"></script>
   </body>
