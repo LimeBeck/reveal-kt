@@ -85,3 +85,9 @@
 /* Keep full DSL snippets within a single slide, including PDF print layout. */
 .reveal pre { font-size: 20px; line-height: 1.45; padding: 20px 24px; }
 .reveal pre::before { margin-bottom: 14px; }
+
+/* Highlight steps are absolute overlays; keep them inside the code card. */
+.reveal pre.code-wrapper { position: relative; padding: 0; }
+.reveal pre.code-wrapper::before { position: absolute; top: 20px; left: 24px; z-index: 1; }
+.reveal pre.code-wrapper > code { box-sizing: border-box; padding: 52px 24px 20px; background: #1c1927; border-radius: 14px; }
+.reveal .slide-number { left: 16px; right: auto; }
