@@ -4,8 +4,8 @@ import dev.limebeck.revealkt.dsl.slides.*
 
 title = "Kotlin null safety: predict, reveal, explain"
 configuration {
-    theme = RevealKt.Configuration.Theme.Predefined.WHITE
-    slideNumber = RevealKt.Configuration.SlideNumber.Enable
+    theme = RevealKt.Configuration.Theme.Custom("assets/lesson.css")
+    slideNumber = RevealKt.Configuration.SlideNumber.Custom("c/t")
     pdfSeparateFragments = false
 }
 slides {
@@ -17,7 +17,7 @@ slides {
             println(name?.length ?: 0)
             """.trimIndent()
         }
-        +regularText { "Think first. Advance one step at a time to explain your answer." }
+        +regularText { "Predict the output. Then reveal the reasoning, one step at a time." }
         +note { "Give learners 20 seconds before moving to the explanation." }
     }
     regularSlide {
@@ -27,7 +27,7 @@ slides {
     }
     regularSlide {
         +title { "Try another input" }
-        +regularText { "Change null to Kotlin. Predict the output, then run the code." }
+        +regularText { "Replace null with \"Kotlin\". What changes?" }
         +unorderedListOf("Answer: 6.", "The safe call now returns the string length.", "The Elvis fallback is not evaluated.", fragmented = true)
         +note { "Ask learners to describe when a nullable value should be rejected instead of receiving a fallback." }
     }

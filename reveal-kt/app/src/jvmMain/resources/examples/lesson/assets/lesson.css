@@ -1,0 +1,78 @@
+/* Self-contained lesson theme. Reveal.js still owns layout and fragment behavior. */
+:root {
+    color-scheme: dark;
+    --r-background-color: #111117;
+    --r-main-color: #eeedf5;
+    --r-heading-color: #f7f5ff;
+    --r-link-color: #b89aff;
+    --r-main-font: system-ui, sans-serif;
+    --r-main-font-size: 28px;
+}
+.reveal-viewport {
+    background: radial-gradient(ellipse at 15% 15%, #7f52ff18, transparent 65%), #111117;
+    color: var(--r-main-color);
+}
+.reveal { font-family: var(--r-main-font); font-size: var(--r-main-font-size); line-height: 1.5; }
+.reveal .slides { text-align: left; }
+.reveal .slides > section { padding: 36px 60px; box-sizing: border-box; }
+.reveal .slides > section::before {
+    display: block;
+    margin-bottom: 22px;
+    font: 600 14px/1.5 ui-monospace, monospace;
+    letter-spacing: 3px;
+    color: #ba9cf5;
+    content: "KOTLIN LAB / 01 · PREDICT";
+}
+.reveal .slides > section:nth-child(2)::before { content: "KOTLIN LAB / 02 · REVEAL"; }
+.reveal .slides > section:nth-child(3)::before { content: "KOTLIN LAB / 03 · TRY IT"; }
+.reveal h1 {
+    /* Keep predictable typography instead of stretching short titles with fit-text. */
+    font-size: 48px !important;
+    font-weight: 650;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    text-transform: none;
+    color: var(--r-heading-color);
+    margin: 0 0 28px;
+}
+.reveal section > span { display: block; color: #b0adbf; font-size: 24px; line-height: 1.6; }
+.reveal pre {
+    width: 100%;
+    margin: 0 0 28px;
+    padding: 26px 30px;
+    box-sizing: border-box;
+    border: 1px solid #443455;
+    border-radius: 14px;
+    background: #1c1927;
+    box-shadow: 0 16px 45px #0003;
+    font: 26px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace;
+    text-align: left;
+}
+.reveal pre::before { content: "NULL SAFETY · KOTLIN"; display: block; margin-bottom: 18px; font: 12px/1.5 ui-monospace, monospace; letter-spacing: 2px; color: #9b8aae; }
+.reveal pre code { padding: 0; background: transparent; color: #e6e1f1; line-height: inherit; max-height: none; }
+.reveal .hljs-keyword { color: #c5a3ff; }
+.reveal .hljs-literal, .reveal .hljs-number { color: #f2a3c2; }
+.reveal .hljs-string { color: #a7d9bb; }
+.reveal ol, .reveal ul { display: block; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.reveal section > span + ul { margin-top: 24px; }
+.reveal li {
+    position: relative;
+    counter-increment: step;
+    padding: 16px 22px 16px 64px;
+    margin: 10px 0;
+    border: 1px solid #302b3e;
+    border-radius: 10px;
+    background: #1b1824;
+    color: #e0dce9;
+    font-size: 24px;
+    line-height: 1.5;
+}
+.reveal li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 20px; top: 20px; color: #b79ae6; font: 14px/1.5 ui-monospace, monospace; }
+.reveal li.current-fragment { border-color: #7954b6; background: #251e34; }
+.reveal .controls { color: #b89aff; }
+.reveal .progress { height: 3px; color: #9e76ef; background: #ffffff0c; }
+.reveal .slide-number { right: 16px; bottom: 12px; padding: 5px 9px; border-radius: 5px; background: #24202e; color: #c9bddb; font: 12px ui-monospace, monospace; }
+@media print {
+    .reveal-viewport { background: #111117; }
+    .reveal li.current-fragment { border-color: #302b3e; background: #1b1824; }
+}
