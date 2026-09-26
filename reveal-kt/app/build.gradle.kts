@@ -90,6 +90,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation("org.apache.pdfbox:pdfbox:3.0.5")
+                implementation(libs.ktor.server.test.host)
             }
         }
 
@@ -168,4 +169,12 @@ tasks.named<Test>("jvmTest") {
     dependsOn(shadow)
     systemProperty("revealkt.cli.jar", shadow.archiveFile.get().asFile.absolutePath)
     maxHeapSize = "1g"
+}
+
+// The CLI supports the Java versions checked by `doctor` and CI; libraries keep the Java 11 target.
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+    compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+}
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(21)
 }

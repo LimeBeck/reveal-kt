@@ -1,7 +1,7 @@
 package dev.limebeck.revealkt.scripts
 
 import dev.limebeck.revealkt.dsl.RevealKtBuilder
-import dsl.AssetLoader
+import dev.limebeck.revealkt.dsl.AssetLoader
 import java.io.File
 import java.util.concurrent.CancellationException
 import kotlin.script.experimental.api.*
@@ -13,10 +13,16 @@ import kotlin.script.experimental.jvmhost.createJvmEvaluationConfigurationFromTe
 class RevealKtScriptLoader {
     private val scriptingHost = BasicJvmScriptingHost()
 
-    fun loadScript(scriptFile: File): LoadResult {
+    /**
+     * @param assetsDir directory that `loadAsset` reads from; it must match the directory served as `assets/`
+     */
+    fun loadScript(
+        scriptFile: File,
+        assetsDir: File = scriptFile.absoluteFile.normalize().parentFile.resolve("assets"),
+    ): LoadResult {
         val normalizedScript = scriptFile.absoluteFile.normalize()
         val result = try {
-            scriptingHost.evalFile(normalizedScript, normalizedScript.parentFile.resolve("assets").path)
+            scriptingHost.evalFile(normalizedScript, assetsDir.absoluteFile.normalize().path)
         } catch (error: Exception) {
             if (error is CancellationException) throw error
             return failure(normalizedScript, error)

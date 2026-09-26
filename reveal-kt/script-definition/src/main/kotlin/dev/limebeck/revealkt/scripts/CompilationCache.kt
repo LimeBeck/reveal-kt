@@ -6,11 +6,13 @@ import java.nio.ByteBuffer
 import java.security.MessageDigest
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
 import kotlin.script.experimental.api.SourceCode
+import kotlin.script.experimental.api.dependencies
+import kotlin.script.experimental.jvm.JvmDependency
 
 
 const val COMPILED_SCRIPTS_CACHE_DIR_ENV_VAR = "KOTLIN_REVEAL_KT_COMPILED_SCRIPTS_CACHE_DIR"
 const val COMPILED_SCRIPTS_CACHE_DIR_PROPERTY = "kotlin.reveal.kt.compiled.scripts.cache.dir"
-const val COMPILED_SCRIPTS_CACHE_VERSION = 1
+const val COMPILED_SCRIPTS_CACHE_VERSION = 2
 
 internal fun findCacheBaseDir(): File? {
     val cacheExtSetting = System.getProperty(COMPILED_SCRIPTS_CACHE_DIR_PROPERTY)
@@ -45,8 +47,18 @@ internal fun compiledScriptUniqueName(
             addToDigest(it.key.name)
             addToDigest(it.value.toString())
         }
+    // Classpath paths stay the same when RevealKt is upgraded in place (e.g. revealkt.jar),
+    // so the cache key also covers the content version of every dependency.
+    scriptCompilationConfiguration[ScriptCompilationConfiguration.dependencies].orEmpty()
+        .filterIsInstance<JvmDependency>()
+        .flatMap { it.classpath }
+        .flatMap { it.contentFiles() }
+        .forEach { addToDigest("${it.path}:${it.length()}:${it.lastModified()}") }
     return digestWrapper.digest().toHexString() + ".jar"
 }
+
+private fun File.contentFiles(): List<File> =
+    if (isDirectory) walk().filter { it.isFile }.sortedBy { it.path }.toList() else listOf(this)
 
 private fun ByteArray.toHexString(): String = joinToString("", transform = { "%02x".format(it) })
 

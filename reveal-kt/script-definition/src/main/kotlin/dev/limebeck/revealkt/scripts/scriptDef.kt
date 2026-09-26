@@ -2,7 +2,7 @@ package dev.limebeck.revealkt.scripts
 
 import dev.limebeck.revealkt.core.RevealKt
 import dev.limebeck.revealkt.dsl.RevealKtBuilder
-import dsl.AssetLoader
+import dev.limebeck.revealkt.dsl.AssetLoader
 import kotlinx.coroutines.runBlocking
 import kotlin.script.experimental.annotations.KotlinScript
 import kotlin.script.experimental.api.*

@@ -1,6 +1,5 @@
 package dev.limebeck.revealkt.dsl
 
-import core.elements.QrCode
 import dev.limebeck.revealkt.core.elements.*
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator

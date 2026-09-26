@@ -30,7 +30,8 @@ jobs:
         run: java -cp "reveal-kt/app/build/libs/*" com.microsoft.playwright.CLI install --with-deps chromium
       - name: Check JVM, JavaScript and packaged CLI scenarios
         run: ./gradlew build --console=plain
-      - uses: jbangdev/setup-jbang@main
+      # Pinned to a commit: a moving branch could change what runs with repository access.
+      - uses: jbangdev/setup-jbang@cc28889678db839e29433f42f9ff25f148b6d8de # main, 2026-09-26
       - name: Verify Maven publication with JBang
         run: bash scripts/check-jbang.sh
       - name: Upload test reports
@@ -109,17 +110,20 @@ jobs:
             ${{ runner.os }}-gradle
 
       - name: Import GPG Key
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
         run: |
-          echo '${{secrets.GPG_SIGNING_KEY}}' | base64 -d > publish_key.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="${{secrets.SECRET_PASSPHRASE}}" \
-            --output $GITHUB_WORKSPACE/release.gpg publish_key.gpg
+          printf '%s' "$GPG_SIGNING_KEY" | base64 -d > publish_key.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" \
+            --output "$GITHUB_WORKSPACE/release.gpg" publish_key.gpg
 
       - name: Publish to GitHub Packages
         run: |
           ./gradlew publishAllPublicationsToMainRepoRepository \
-            -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg \
-            -Psigning.password=${{ secrets.GPG_PASSWORD }} \
-            -Psigning.keyId=${{ secrets.GPG_KEY_ID }}
+            -Psigning.secretKeyRingFile="$GITHUB_WORKSPACE/release.gpg" \
+            -Psigning.password="$GPG_PASSWORD" \
+            -Psigning.keyId="$GPG_KEY_ID"
         env:
           REPO_USERNAME: ${{ github.actor }}
           REPO_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -149,19 +153,24 @@ jobs:
             ${{ runner.os }}-gradle
 
       - name: Import GPG Key
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
         run: |
-          echo '${{secrets.GPG_SIGNING_KEY}}' | base64 -d > publish_key.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="${{secrets.SECRET_PASSPHRASE}}" \
-            --output $GITHUB_WORKSPACE/release.gpg publish_key.gpg
+          printf '%s' "$GPG_SIGNING_KEY" | base64 -d > publish_key.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" \
+            --output "$GITHUB_WORKSPACE/release.gpg" publish_key.gpg
 
       - name: Publish to Maven Central
         run: |
           ./gradlew publishAndReleaseToMavenCentral \
-            -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/release.gpg \
-            -Psigning.password=${{ secrets.GPG_PASSWORD }} \
-            -Psigning.keyId=${{ secrets.GPG_KEY_ID }} \
-            -PmavenCentralUsername=${{ secrets.OSSRH_USERNAME }} \
-            -PmavenCentralPassword=${{ secrets.OSSRH_PASSWORD }}
+            -Psigning.secretKeyRingFile="$GITHUB_WORKSPACE/release.gpg" \
+            -Psigning.password="$GPG_PASSWORD" \
+            -Psigning.keyId="$GPG_KEY_ID" \
+            -PmavenCentralUsername="$OSSRH_USERNAME" \
+            -PmavenCentralPassword="$OSSRH_PASSWORD"
         env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}

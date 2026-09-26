@@ -24,9 +24,9 @@ import kotlin.io.path.pathString
 class RenderPdf : CliktCommand(name = "pdf") {
     override fun help(context: Context) = "Render pdf from presentation"
 
-    val port: Int by option("-p", "--port", help = "Port").int().default(8080)
-    val host: String by option("-h", "--host", help = "Host").default("localhost")
-    val basePath: Path? by option("-b", help = "Script dir").path()
+    val port: Int by option("-p", "--port", help = "Port; 0 selects a free port").int().default(0)
+    val host: String by option("--host", help = "Host").default("localhost")
+    val basePath: Path? by option("-b", "--base-path", help = "Resource directory containing assets; defaults to the script directory").path()
     val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
     val output: File by option("-o", "--output", help = "Output file")
         .file(canBeDir = false)
@@ -52,11 +52,11 @@ class RenderPdf : CliktCommand(name = "pdf") {
                 basePath = basePath?.toAbsolutePath()?.normalize()?.pathString ?: script.absoluteFile.normalize().parent,
                 script = script.absoluteFile.normalize()
             ),
-            background = false,
+            blocking = false,
             liveReload = false
-        ).use {
+        ).use { server ->
             runBlocking {
-                val outputData = renderer.render("http://$host:$port/?print-pdf")
+                val outputData = renderer.render("${server.url}/?print-pdf")
                 output.writeBytes(outputData)
             }
         }

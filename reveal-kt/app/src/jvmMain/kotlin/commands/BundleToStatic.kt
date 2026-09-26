@@ -32,6 +32,9 @@ class BundleToStatic : CliktCommand(name = "bundle") {
             canBeFile = false
         )
 
+    val basePath: Path? by option("--base-path", help = "Resource directory containing assets; defaults to the script directory")
+        .path(canBeFile = false)
+
     val script: File by argument(help = "Script file")
         .file(canBeDir = false, mustBeReadable = true)
 
@@ -49,7 +52,9 @@ class BundleToStatic : CliktCommand(name = "bundle") {
     @OptIn(ExperimentalPathApi::class)
     override fun run() {
         val scriptLoader = RevealKtScriptLoader()
-        when (val loadResult = scriptLoader.loadScript(script)) {
+        val assetsPath = (basePath ?: script.absoluteFile.normalize().parentFile.toPath())
+            .toAbsolutePath().normalize().resolve("assets")
+        when (val loadResult = scriptLoader.loadScript(script, assetsPath.toFile())) {
             is RevealKtScriptLoader.LoadResult.Success -> {
                 val result = renderLoadResult(loadResult)
                 val outputDir = (outputDir ?: Path("out")).createDirectories()
@@ -60,7 +65,6 @@ class BundleToStatic : CliktCommand(name = "bundle") {
                     resource.copyToRecursively(outputDir.resolve(resource.name), followLinks = false, overwrite = true)
                 }
 
-                val assetsPath = script.absoluteFile.normalize().parentFile.resolve("assets").toPath()
                 if (assetsPath.exists()) {
                     logger.debug { "<4a6f2742> Copy assets from $assetsPath to $outputDir" }
                     assetsPath.copyToRecursively(outputDir.resolve("assets"), followLinks = true, overwrite = true)

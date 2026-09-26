@@ -178,7 +178,7 @@ Read [assets, themes, numbering and export limits](presentation-reference.md) fo
 
 A `.reveal.kts` file is executable Kotlin code, not a passive document. `run`, `bundle` and `pdf` execute it with your user's permissions, including access to files and the network. `run` executes it again on relevant changes, including asset changes. Review scripts from other people before running them, and keep side effects out of presentation scripts. There is no script sandbox. `doctor` only inspects paths and the environment; it does not compile or execute the script.
 
-Preview listens on all interfaces by default; `--host 127.0.0.1` in this guide restricts it to your computer. The preview server has no authentication and is intended for development. Publish the static output when sharing the presentation.
+Preview listens only on `localhost` by default; pass `--host 0.0.0.0` to open it to other devices on your network. The preview server has no authentication and is intended for development. Publish the static output when sharing the presentation.
 
 ## How this guide is checked
 
