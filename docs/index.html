@@ -89,28 +89,28 @@ jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.1.1</cod
     <section id="examples">
       <div class="section-heading"><div><div class="eyebrow">02 / INCLUDED IN THE CLI</div><h2>Start with a working example</h2></div><span class="tag">3 complete Kotlin scripts</span></div>
       <p class="section-intro">Explore real presentations compiled from the bundled Kotlin scripts. Use the slide controls below, or open a presentation in its own tab.</p>
-      <noscript><p>Run <code>revealkt init RetryTalk --example technical</code>, <code>revealkt init NullSafety --example lesson</code>, or <code>revealkt init BrandDeck --example custom-theme</code>. <a href="https://github.com/LimeBeck/reveal-kt/tree/master/reveal-kt/app/src/jvmMain/resources/examples">Browse all example sources on GitHub ↗</a></p></noscript>
+      <noscript><p>Run <code>revealkt init DslTour --example technical</code>, <code>revealkt init MotionLab --example lesson</code>, or <code>revealkt init ThemeStudio --example custom-theme</code>. <a href="https://github.com/LimeBeck/reveal-kt/tree/master/reveal-kt/app/src/jvmMain/resources/examples">Browse all example sources on GitHub ↗</a></p></noscript>
       <div class="example-tabs" role="tablist" aria-label="Example scripts">
-        <button role="tab" id="tab-technical" aria-selected="true" aria-controls="example-panel" data-example="technical">Technical talk</button>
-        <button role="tab" id="tab-lesson" aria-selected="false" aria-controls="example-panel" tabindex="-1" data-example="lesson">Interactive lesson</button>
-        <button role="tab" id="tab-custom-theme" aria-selected="false" aria-controls="example-panel" tabindex="-1" data-example="custom-theme">Custom theme</button>
+        <button role="tab" id="tab-technical" aria-selected="true" aria-controls="example-panel" data-example="technical">Kotlin DSL &amp; code</button>
+        <button role="tab" id="tab-lesson" aria-selected="false" aria-controls="example-panel" tabindex="-1" data-example="lesson">Navigation &amp; motion</button>
+        <button role="tab" id="tab-custom-theme" aria-selected="false" aria-controls="example-panel" tabindex="-1" data-example="custom-theme">Themes &amp; assets</button>
       </div>
       <div id="example-panel" role="tabpanel" aria-labelledby="tab-technical">
         <div class="example-caption"><p id="example-description"></p><a id="example-source-link" href="https://github.com/LimeBeck/reveal-kt/tree/master/reveal-kt/app/src/jvmMain/resources/examples/technical">Source &amp; assets ↗</a></div>
         <div class="example-deck">
           <div class="panel-top"><span>RENDERED WITH REVEALKT · REVEAL.JS</span><a id="example-open" href="examples/technical/index.html" target="_blank" rel="noopener">Open presentation ↗</a></div>
-          <iframe id="example-frame" src="examples/technical/index.html" title="Technical talk — RevealKt presentation" loading="lazy" allowfullscreen></iframe>
+          <iframe id="example-frame" src="examples/technical/index.html" title="Kotlin DSL &amp; code — RevealKt presentation" loading="lazy" allowfullscreen></iframe>
         </div>
         <p class="deck-hint">Click inside the presentation to use arrow keys. Press Esc for the slide overview.</p>
         <details class="example-code-details"><summary>View Kotlin source</summary>
         <div class="example-source">
-          <div class="panel-top"><span id="source-name">RetryTalk.reveal.kts</span><button class="copy" id="copy-example" aria-label="Copy example script">Copy</button></div>
+          <div class="panel-top"><span id="source-name">DslTour.reveal.kts</span><button class="copy" id="copy-example" aria-label="Copy example script">Copy</button></div>
           <pre tabindex="0" aria-label="Complete example Kotlin script"><code id="example-code"></code></pre>
         </div>
         </details>
-        <div class="example-run"><h3>Run this presentation</h3><p>Run from your projects directory. The first command creates the script and all required assets.</p></div>
-        <div class="code-block"><button class="copy" aria-label="Copy example commands">Copy</button><pre><code id="example-command">revealkt init RetryTalk --example technical
-revealkt run RetryTalk/presentation/RetryTalk.reveal.kts --host 127.0.0.1</code></pre></div>
+        <div class="example-run"><h3>Run this presentation</h3><p>These demos track the current source. Use a CLI built from master to get the same slides; released versions may contain earlier examples. The first command creates the script and all assets.</p></div>
+        <div class="code-block"><button class="copy" aria-label="Copy example commands">Copy</button><pre><code id="example-command">revealkt init DslTour --example technical
+revealkt run DslTour/presentation/DslTour.reveal.kts --host 127.0.0.1</code></pre></div>
       </div>
     </section>
     <section id="commands">
@@ -134,7 +134,7 @@ revealkt pdf Talk.reveal.kts --port 8081 -o Talk.pdf</code></pre></div></article
         <article><h3>Keep assets beside your script</h3><p>Place images and CSS in <code>assets/</code>. The image DSL adds this prefix for you.</p><div class="file-tree"><span>presentation/</span><br>├── Talk.reveal.kts<br>└── assets/<br>&nbsp;&nbsp;&nbsp; ├── logo.svg<br>&nbsp;&nbsp;&nbsp; └── theme.css</div><div class="code-block"><button class="copy" aria-label="Copy image snippet">Copy</button><pre><code>// Inside regularSlide
 +img(src = "logo.svg") { width = 320 }</code></pre></div></article>
       </div>
-      <details><summary>How do I use a custom CSS theme?</summary><p>Set <code>theme = RevealKt.Configuration.Theme.Custom("assets/theme.css")</code> inside <code>configuration</code>. A custom theme replaces the built-in theme; style <code>.reveal-viewport</code>, <code>.reveal</code>, and headings. URLs inside CSS resolve relative to the CSS file. Start with a complete template: <code>revealkt init BrandDeck --example custom-theme</code>.</p></details>
+      <details><summary>How do I use a custom CSS theme?</summary><p>Set <code>theme = RevealKt.Configuration.Theme.Custom("assets/theme.css")</code> inside <code>configuration</code>. A custom theme replaces the built-in theme; style <code>.reveal-viewport</code>, <code>.reveal</code>, and headings. URLs inside CSS resolve relative to the CSS file. Start with a complete template: <code>revealkt init ThemeStudio --example custom-theme</code>.</p></details>
       <details><summary>How do incremental list items work?</summary><p><code>unorderedListOf</code> and <code>orderedListOf</code> reveal subsequent items as fragments by default. The first item is visible immediately. Pass <code>fragmented = false</code> for a static list. Set <code>pdfSeparateFragments = false</code> to avoid extra PDF pages for fragment steps.</p></details>
     </section>
     <section id="faq">

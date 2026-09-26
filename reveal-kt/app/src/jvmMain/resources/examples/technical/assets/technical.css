@@ -19,7 +19,7 @@
     display: block; margin-bottom: 22px;
     font: 600 14px/1.5 ui-monospace, monospace;
     letter-spacing: 3px; color: #ba9cf5;
-    content: "REVEAL.JS / NAVIGATION & MOTION";
+    content: "REVEALKT / KOTLIN DSL & CODE";
 }
 .reveal .slides > section.stack { padding: 0; }
 .reveal .slides > section.stack > section { padding: 36px 60px; box-sizing: border-box; }
@@ -81,4 +81,7 @@
 .reveal .container > div { flex: 1; min-width: 0; }
 .reveal .container pre { font-size: 17px; padding: 20px; }
 .reveal h2 { font-size: 28px; color: #c5a3ff; margin: 0 0 18px; }
-.reveal .slides > section:nth-child(5) > span:first-of-type { font-size: 34px; color: #c5a3ff; text-align: right; }
+
+/* Keep full DSL snippets within a single slide, including PDF print layout. */
+.reveal pre { font-size: 20px; line-height: 1.45; padding: 20px 24px; }
+.reveal pre::before { margin-bottom: 14px; }

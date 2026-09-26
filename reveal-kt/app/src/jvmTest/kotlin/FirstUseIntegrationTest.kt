@@ -47,13 +47,22 @@ class FirstUseIntegrationTest {
 
     @Test
     fun `guide and all shipped examples work with only a copied CLI jar`() {
-        val examples = mapOf("starter" to 2, "technical" to 4, "lesson" to 3, "custom-theme" to 3)
+        val examples = mapOf("starter" to 2, "technical" to 6, "lesson" to 6, "custom-theme" to 4)
         Playwright.create(Playwright.CreateOptions().setEnv(mapOf("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD" to "1"))).use { playwright ->
             playwright.chromium().launch().use { browser ->
                 for ((example, pages) in examples) {
                     val project = "Deck-$example"
                     cli("init", project, "--example", example, "--dirname", "Project $example")
                     val script = "Project $example/presentation/$project.reveal.kts"
+                    val themeFile = when (example) {
+                        "technical" -> "technical.css"
+                        "lesson" -> "lesson.css"
+                        "custom-theme" -> "theme.css"
+                        else -> null
+                    }
+                    if (themeFile != null) {
+                        assertTrue(root.resolve("Project $example/presentation/assets/$themeFile").exists())
+                    }
                     assertContains(cli("doctor", script, "--output-dir", "Export $example"), "Environment ready")
                     assertFalse(root.resolve("Export $example").exists(), "Doctor should not create the output directory")
                     cli("bundle", script, "--output-dir", "Export $example")
@@ -63,19 +72,34 @@ class FirstUseIntegrationTest {
                         page.onPageError { error(it) }
                         page.navigate(root.resolve("Export $example/index.html").toUri().toString())
                         page.waitForFunction("() => window.revealKtReady === true")
-                        assertEquals(pages, page.locator(".slides > section").count())
+                        assertEquals(pages, page.locator(".slides section:not(.stack)").count())
                         assertTrue(remoteRequests.isEmpty(), "Example requested remote resources: $remoteRequests")
                         when (example) {
-                            "technical" -> assertTrue(page.locator("pre code .hljs-keyword").count() > 0)
+                            "technical" -> {
+                                assertTrue(page.locator("pre code .hljs-keyword").count() > 0)
+                                page.evaluate("() => window.revealKtDeck.slide(1)")
+                                page.evaluate("() => window.revealKtDeck.nextFragment()")
+                                assertTrue(page.locator("section.present pre .fragment.visible").count() > 0)
+                                assertEquals(2, page.locator(".slides > section:nth-child(3) .container > div").count())
+                                assertTrue(page.locator("aside.notes").count() > 0)
+                            }
                             "lesson" -> {
                                 page.evaluate("() => window.revealKtDeck.slide(1)")
                                 assertEquals(0, page.locator("section.present .fragment.visible").count())
                                 page.evaluate("() => window.revealKtDeck.nextFragment()")
                                 assertEquals(1, page.locator("section.present .fragment.visible").count())
+                                page.evaluate("() => window.revealKtDeck.slide(2, 1)")
+                                assertContains(page.locator("section.present:not(.stack)").innerText(), "You are inside the stack")
+                                assertEquals(2, page.locator(".slides > section.stack > section").count())
+                                assertEquals(
+                                    page.locator(".slides > section:nth-child(4) > span").first().getAttribute("data-id"),
+                                    page.locator(".slides > section:nth-child(5) > span").first().getAttribute("data-id")
+                                )
                             }
                             "custom-theme" -> {
                                 assertEquals("rgb(16, 44, 53)", page.evaluate("() => getComputedStyle(document.body).backgroundColor"))
                                 assertEquals(true, page.evaluate("() => document.images[0].naturalWidth > 0"))
+                                assertEquals(1, page.locator("img[src^='data:image/png;base64']").count())
                             }
                         }
                     } finally {

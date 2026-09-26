@@ -20,3 +20,17 @@
 .reveal pre { font-size: 0.65em; text-align: left; }
 .reveal img { max-width: 100%; }
 .reveal .slide-number { color: #e9f1ee; background: #102c35; }
+
+.reveal .slides { text-align: left; }
+.reveal .slides > section { padding: 28px 48px; box-sizing: border-box; }
+.reveal h1 { font-size: 44px !important; letter-spacing: -1px; }
+.reveal section > span { display: block; font-size: 24px; line-height: 1.5; margin: 18px 0; }
+.reveal pre { width: 100%; margin: 22px 0; box-shadow: none; }
+.reveal pre code { padding: 20px; border: 1px solid #36606b; border-radius: 10px; background: #0a2028; font-size: 20px; }
+.reveal .container { display: flex; align-items: center; gap: 28px; }
+.reveal .container > div { flex: 1; min-width: 0; font-size: 24px; }
+.reveal .container pre code { white-space: pre-wrap; }
+.reveal img { display: block; margin: 22px auto; }
+.reveal ul { font-size: 24px; }
+/* Keep a light quiet zone around the generated QR for reliable scanning. */
+.reveal img[src^="data:image/png"] { background: white; padding: 18px; border-radius: 12px; }
