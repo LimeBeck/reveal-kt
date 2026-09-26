@@ -1,48 +1,88 @@
 <!DOCTYPE html><html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <meta name="title" content="Reliable retries in Kotlin"/>
-    <title>Reliable retries in Kotlin</title>
+    <meta name="title" content="RevealKt: Kotlin DSL and code"/>
+    <title>RevealKt: Kotlin DSL and code</title>
   </head>
   <body>
     <div class="reveal">
       <div class="slides">
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="5ed27a0f-1d3a-4ec4-9f4e-929a38408f0a" style="">Reliable retries in Kotlin</h1>
-<span data-id="9ba3c94b-5e67-4543-b866-3a33d73afa4c">A five-minute engineering talk: retry only what can safely happen twice.</span>
-          <aside class="notes" data-id="79ac417f-35cd-43d0-acfa-8b3e144504a0">Ask the audience what happens when a payment request times out after reaching the server.</aside>
-        </section>
-        <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="b7b50f68-a738-42e7-bb33-a4da1fd43dcd" style="">The timeout is ambiguous</h1>
-          <ul>
-            <li><span data-id="35926ff6-a66f-43a0-8202-391e8eac835c">The server may have completed the operation.</span></li>
-            <li class="fragment fade-up"><span data-id="b4a0696f-64f0-4cbd-ad3c-6a70ac0a82e3">Repeating a write can duplicate its effect.</span></li>
-            <li class="fragment fade-up"><span data-id="a3fa2e72-fa31-4085-b433-8fe581028fb8">Use an idempotency key for retried writes.</span></li>
-          </ul>
-        </section>
-        <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="b35c4c4a-bf57-4749-865d-2f088c98564b" style="">Keep the policy explicit</h1>
-          <pre class="kotlin" data-id="f7b118cd-a1a7-42ac-82c8-7926c65e98a6"><code data-trim="" data-line-numbers="1-6">
-              <script type="text/template">fun shouldRetry(status: Int, attempt: Int): Boolean =
-    attempt < 3 && status in setOf(429, 502, 503, 504)
-
-val retry = shouldRetry(status = 503, attempt = 1)
-println(retry) // true</script>
+          <h1 class="r-fit-text" data-id="8b971d57-2a75-4bae-a39a-ea6835913a73" style="">A presentation is Kotlin</h1>
+          <pre class="kotlin" data-id="9c6f9561-1e00-45d4-aae7-bfd1e7492f3c"><code data-trim="">
+              <script type="text/template">slides {
+    regularSlide {
+        +title { "Hello, Kotlin" }
+        +regularText { "A real Reveal.js slide." }
+    }
+}</script>
             </code></pre>
-          <aside class="notes" data-id="6e32fb83-22d1-4bdc-9fd5-fd3ea558e454">The example models the decision only. Production code also needs backoff, deadlines and idempotency.</aside>
+<span data-id="c26aec36-e131-452a-a35c-425c2fee173c">RevealKt builds the HTML. Reveal.js handles navigation, layout and interaction. Press Right to explore.</span></section>
+        <section data-auto-animate="">
+          <h1 class="r-fit-text" data-id="53354b61-d157-41ad-ad16-24b30943dcb9" style="">Walk through the code</h1>
+          <pre class="kotlin" data-id="4bc1daf5-87c3-4563-9834-1e6fe17706a6"><code data-trim="" data-line-numbers="1|2|3">
+              <script type="text/template">val name: String? = null
+val length = name?.length ?: 0
+println(length)</script>
+            </code></pre>
+<span data-id="83ebb669-a0b9-49e6-b973-461ae8294263">Press Right twice: the highlighted line advances before the next slide. DSL: code(lang = &quot;kotlin&quot;, lines = &quot;1|2|3&quot;).</span></section>
+        <section data-auto-animate="">
+          <h1 class="r-fit-text" data-id="47b233c5-ef24-417b-a0d5-e25d2373b3f7" style="">Compose a two-column layout</h1>
+          <div data-id="048d7ebd-9988-4d5c-90fe-1073496c6d18" class="container">
+            <div class="col" data-id="692a33bd-e45d-44d3-97a0-fce761fe5a4c">
+              <h2 class="" data-id="de4a85a2-1fcd-4c4e-ac40-cca89b318ef7" style="">The DSL</h2>
+              <pre class="kotlin" data-id="7df0720e-53dc-4f58-aada-d6bd34f4d4d2"><code data-trim="">
+                  <script type="text/template">+row {
+    column {
+        +regularText { "Left" }
+    }
+    column {
+        +regularText { "Right" }
+    }
+}</script>
+                </code></pre>
+            </div>
+            <div class="col" data-id="61bc1b6d-d986-435a-a523-0224dda40e3b">
+              <h2 class="" data-id="751b0e03-d29f-4cd3-b042-939f0ff7fbff" style="">The result</h2>
+<span data-id="45f8c3f9-fb8f-4fce-957d-537f43bd7812">These are actual row and column elements. Put text, code or images side by side.</span></div>
+          </div>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="b80d569c-efd3-499e-8db1-c4c00b290475" style="">Takeaways</h1>
-          <ul>
-            <li><span data-id="acd3c5d0-e32c-488a-a960-67048e8a8e6b">Retry transient failures, not every exception.</span></li>
-            <li><span data-id="6f4e8e11-be44-4c62-b014-d42e3ab1a759">Bound attempts and total elapsed time.</span></li>
-            <li><span data-id="3b1ccc8a-bd81-41fd-a5b7-7261b9828451">Measure exhausted retries and duplicate suppression.</span></li>
-          </ul>
-<span data-id="8dc04e4b-5f58-41e3-aea5-40d502ee051e">Discussion: which operations in your service are safe to retry?</span></section>
+          <h1 class="r-fit-text" data-id="97afb4ab-d565-4276-8095-1d9adfce247f" style="">1. Functions</h1>
+<span data-id="ddbc9d9a-7b26-49c5-b520-276af2334a21">Extract repeated content into reusable Kotlin functions.</span>
+          <pre class="kotlin" data-id="0117805f-f2fb-4b30-9ae0-77827e5ee72f"><code data-trim="">
+              <script type="text/template">topics.forEach { topic ->
+    regularSlide {
+        +title { topic.heading }
+        +regularText { topic.explanation }
+    }
+}</script>
+            </code></pre>
+<span data-id="1ca0e5ea-1735-45f0-a789-a018763ae089">This slide and its neighbor come from the same loop in the source. Open View Kotlin source on the documentation page.</span></section>
+        <section data-auto-animate="">
+          <h1 class="r-fit-text" data-id="148d3655-a75f-4ab7-8c36-98199746b4ad" style="">2. Data</h1>
+<span data-id="341c470a-4d9a-4d86-b306-61858bf3eb7a">Generate slides from lists, models or calculated values.</span>
+          <pre class="kotlin" data-id="af149c1a-c9c7-4c61-82b9-521da1785119"><code data-trim="">
+              <script type="text/template">topics.forEach { topic ->
+    regularSlide {
+        +title { topic.heading }
+        +regularText { topic.explanation }
+    }
+}</script>
+            </code></pre>
+<span data-id="d9794ff8-7c12-4966-adb3-d9588c46dd6c">This slide and its neighbor come from the same loop in the source. Open View Kotlin source on the documentation page.</span></section>
+        <section data-auto-animate="">
+          <h1 class="r-fit-text" data-id="6b09de0b-1910-463a-bf01-ea1d875b48e4" style="">Notes for the presenter</h1>
+          <pre class="kotlin" data-id="255e579c-21d1-4daf-85b7-8dff3dcb67e9"><code data-trim="">
+              <script type="text/template">+note { "Pause here and ask the audience a question." }</script>
+            </code></pre>
+<span data-id="3c2ab482-60bc-4aeb-b76c-ea72bffdfa25">Open this presentation in its own tab, then press S for speaker view. Allow the popup to see the note and presentation timer.</span>
+          <aside class="notes" data-id="19db3666-281e-4ae3-b2ce-6fc4918652de">You found the speaker note! Ask: which parts of your next presentation could be generated from Kotlin data?</aside>
+        </section>
       </div>
     </div>
     <script>
-                    const configurationJson = {"controls":true,"progress":true,"history":false,"center":true,"touch":true,"autoAnimateDuration":0.5,"view":null,"theme":["Predefined","BLACK"],"additionalCssStyle":"","additionalCssStyleFromBuilder":"","controlsTutorial":true,"controlsLayout":"bottom-right","controlsBackArrows":"faded","slideNumber":["Custom",{"format":"c/t"}],"showSlideNumber":"all","hashOneBasedIndex":false,"hash":false,"respondToHashChanges":false,"jumpToSlide":false,"keyboard":true,"disableLayout":false,"overview":true,"loop":false,"rtl":false,"navigationMode":"default","shuffle":false,"fragments":true,"fragmentInURL":true,"help":true,"pause":true,"showNotes":false,"autoAnimate":true,"autoAnimateEasing":"ease","autoAnimateUnmatched":true,"autoSlide":0.0,"autoSlideStoppable":true,"defaultTiming":0,"mouseWheel":false,"previewLinks":false,"focusBodyOnPageVisibilityChange":true,"transition":"slide","transitionSpeed":"default","backgroundTransition":"slide","parallaxBackgroundImage":"","parallaxBackgroundSize":"","parallaxBackgroundRepeat":"","pdfSeparateFragments":false,"hideInactiveCursor":true}
+                    const configurationJson = {"controls":true,"progress":true,"history":false,"center":true,"touch":true,"autoAnimateDuration":0.5,"view":null,"theme":["Custom",{"cssLink":"assets/technical.css"}],"additionalCssStyle":"","additionalCssStyleFromBuilder":"","controlsTutorial":true,"controlsLayout":"bottom-right","controlsBackArrows":"faded","slideNumber":["Custom",{"format":"c/t"}],"showSlideNumber":"all","hashOneBasedIndex":false,"hash":false,"respondToHashChanges":false,"jumpToSlide":false,"keyboard":true,"disableLayout":false,"overview":true,"loop":false,"rtl":false,"navigationMode":"default","shuffle":false,"fragments":true,"fragmentInURL":true,"help":true,"pause":true,"showNotes":false,"autoAnimate":true,"autoAnimateEasing":"ease","autoAnimateUnmatched":true,"autoSlide":0.0,"autoSlideStoppable":true,"defaultTiming":0,"mouseWheel":false,"previewLinks":false,"focusBodyOnPageVisibilityChange":true,"transition":"slide","transitionSpeed":"default","backgroundTransition":"slide","parallaxBackgroundImage":"","parallaxBackgroundSize":"","parallaxBackgroundRepeat":"","pdfSeparateFragments":false,"hideInactiveCursor":true}
                     </script>
     <script src="revealkt.js"></script>
   </body>

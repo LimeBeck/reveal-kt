@@ -1,41 +1,68 @@
 <!DOCTYPE html><html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <meta name="title" content="Kotlin null safety: predict, reveal, explain"/>
-    <title>Kotlin null safety: predict, reveal, explain</title>
+    <meta name="title" content="RevealKt: navigation and motion"/>
+    <title>RevealKt: navigation and motion</title>
   </head>
   <body>
     <div class="reveal">
       <div class="slides">
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="ef3f6135-8e8c-4c92-bf6b-8ba9dc19d83b" style="">What does this print?</h1>
-          <pre class="kotlin" data-id="886baf4b-5a7e-47f8-9267-66b41f829a65"><code data-trim="">
-              <script type="text/template">val name: String? = null
-println(name?.length ?: 0)</script>
-            </code></pre>
-<span data-id="2402e916-f812-4a3e-be55-5e8ceebb5d61">Predict the output. Then reveal the reasoning, one step at a time.</span>
-          <aside class="notes" data-id="cfefe990-d017-40f2-8962-4c32d438b7e1">Give learners 20 seconds before moving to the explanation.</aside>
-        </section>
-        <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="78429753-6c49-45fc-bbca-1ff9aa084ef5" style="">Follow the expression</h1>
-          <ol>
-            <li><span data-id="764251bf-67b7-43c1-ba90-7d2d0f46d8ed">name contains null.</span></li>
-            <li class="fragment fade-up"><span data-id="34845b0b-a7bd-4e39-8cfd-93c714dd32cd">The safe call ?. skips length and produces null.</span></li>
-            <li class="fragment fade-up"><span data-id="eae18303-1e87-46c7-9e36-f80e221a847a">The Elvis operator ?: selects 0.</span></li>
-            <li class="fragment fade-up"><span data-id="d22d7860-ec54-45bb-84d4-da9f3f98aaff">The program prints 0.</span></li>
-          </ol>
-          <aside class="notes" data-id="3d31bb52-014f-40ab-9191-6598a2230f4b">The first item is visible immediately; each subsequent item is a fragment.</aside>
-        </section>
-        <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="be6398da-5c5f-43af-a5ab-e89028bdc251" style="">Try another input</h1>
-<span data-id="c637ad69-672b-4871-ad47-414a33f5ec8d">Replace null with &quot;Kotlin&quot;. What changes?</span>
+          <h1 class="r-fit-text" data-id="08401c92-50e0-4026-8af1-d2d68e79da27" style="">Let the audience set the pace</h1>
+<span data-id="930e57be-e419-41f3-9e28-500d758b7ca1">Try fragments, vertical navigation and Auto-Animate. These are Reveal.js features driven by the Kotlin DSL.</span>
           <ul>
-            <li><span data-id="4c69ff35-5e15-4fcf-857f-ff5fd00157a3">Answer: 6.</span></li>
-            <li class="fragment fade-up"><span data-id="bb28cfac-5b3e-4778-a838-deb356344438">The safe call now returns the string length.</span></li>
-            <li class="fragment fade-up"><span data-id="46e1517b-079e-4156-ad4d-e9f0ca33a559">The Elvis fallback is not evaluated.</span></li>
+            <li><span data-id="294d0620-59a3-4e90-98a2-09d9635d8bc9">Right / Space: advance</span></li>
+            <li><span data-id="5f35f1a9-51f3-4c78-935f-e6179fc391b0">Down: explore a vertical stack</span></li>
+            <li><span data-id="2f1f6baa-031c-4daa-8435-3a8d1abcaff6">Esc: open the slide overview</span></li>
           </ul>
-          <aside class="notes" data-id="3deb78a3-b414-44d5-becc-e45117cead8c">Ask learners to describe when a nullable value should be rejected instead of receiving a fallback.</aside>
         </section>
+        <section data-auto-animate="">
+          <h1 class="r-fit-text" data-id="36357ef2-ee8b-462b-9f55-decd68bf47f9" style="">Reveal one idea at a time</h1>
+          <ol>
+            <li><span data-id="6e33d206-ca0c-4279-903d-f137718fc321">The first item is visible immediately.</span></li>
+            <li class="fragment fade-up"><span data-id="645886ca-2dae-4149-b498-d006924a4366">Press Right: Reveal.js reveals this fragment.</span></li>
+            <li class="fragment fade-up"><span data-id="0b22b160-26cb-4647-91de-6beda26105ba">Press Right again: one more idea, on the same slide.</span></li>
+          </ol>
+          <pre class="kotlin" data-id="c7aa3268-6197-4658-afd7-ee28225715bd"><code data-trim="">
+              <script type="text/template">+orderedListOf(points, fragmented = true)</script>
+            </code></pre>
+          <aside class="notes" data-id="259922d6-9782-415f-ab6b-de388afb3a55">Use Left to reverse a fragment. pdfSeparateFragments = false combines all steps on one PDF page.</aside>
+        </section>
+        <section>
+          <section data-auto-animate="">
+            <h1 class="r-fit-text" data-id="538a722e-38f9-4796-9272-6a202e785990" style="">Go deeper, not further</h1>
+<span data-id="e0022199-ace5-40da-a1b9-49009479f669">This slide begins a vertical stack. Press Down for a detail slide, or Right to skip to the next topic.</span>
+            <pre class="kotlin" data-id="07b6444c-ec44-4703-82ff-a999d46fd4ba"><code data-trim="">
+                <script type="text/template">verticalSlide {
+    regularSlide { /* overview */ }
+    regularSlide { /* details */ }
+}</script>
+              </code></pre>
+          </section>
+          <section data-auto-animate="">
+            <h1 class="r-fit-text" data-id="92351b70-6667-4847-89d9-3b80cef36a0f" style="">You are inside the stack</h1>
+<span data-id="e73c116c-7dc5-451e-a2cf-33ee82199061">Press Up to return. Press Esc to see the two-dimensional slide map, then Esc again to resume.</span>
+            <pre class="kotlin" data-id="35916739-1b99-4993-9d92-68ce37dcce73"><code data-trim="">
+                <script type="text/template">configuration { overview = true }</script>
+              </code></pre>
+            <aside class="notes" data-id="c736edc1-7a8a-417e-a745-fbf55f1cbd3d">Vertical slides let a presenter keep optional details underneath a main topic.</aside>
+          </section>
+        </section>
+        <section data-auto-animate="">
+          <h1 class="r-fit-text" data-id="d17e3f53-4c2b-4624-92f2-e906f9ed92d9" style="">One element, two layouts</h1>
+<span data-id="e13986a2-aa39-4c66-bf10-5b60f1768958">Follow this element →</span>
+          <pre class="kotlin" data-id="602c192f-96dc-46ca-880f-f2f178111f5b"><code data-trim="">
+              <script type="text/template">val movingLabel = UuidGenerator.generateId()
+// Reuse the ID on adjacent slides:
++regularText(id = movingLabel) { "Follow this element →" }</script>
+            </code></pre>
+<span data-id="05685497-db6a-4829-adcd-800fb34a0473">Press Right. The next slide reuses the element ID; Reveal.js animates its position and size.</span></section>
+        <section data-auto-animate="">
+          <h1 class="r-fit-text" data-id="51fc6ede-9aa6-4b65-be3a-77169d2c9dbd" style="">Auto-Animate connects the dots</h1>
+          <pre class="kotlin" data-id="4c6cc94f-38f0-44fd-a0a5-89e482300577"><code data-trim="">
+              <script type="text/template">// Same element ID, new position and CSS.</script>
+            </code></pre>
+<span data-id="e13986a2-aa39-4c66-bf10-5b60f1768958">Follow this element →</span><span data-id="3fc736cc-42f8-4a67-8770-87e7fad08903">Press Left to reverse the transition. Regular slides enable autoanimate by default; set autoanimate = false to opt out.</span></section>
       </div>
     </div>
     <script>
