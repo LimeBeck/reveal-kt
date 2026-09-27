@@ -61,6 +61,46 @@ jobs:
           path: reveal-kt/app/build/libs/revealkt.jar
           if-no-files-found: error
 
+  publish-site:
+    name: Publish documentation site
+    # The site documents master, so every verified master push republishes it.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: publish-site
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: documentation-site
+          path: site
+      - name: Check site scripts
+        run: |
+          node --check site/assets/site.js
+          node --check site/assets/examples.js
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: pages
+      - name: Push the site to gh-pages
+        working-directory: pages
+        run: |
+          # Replace only the generated website; keep unrelated branch files (as scripts/publish-site.sh does).
+          rm -rf assets examples
+          cp -R ../site/. .
+          git add --all -- index.html .nojekyll assets examples
+          if git diff --cached --quiet; then
+            echo "gh-pages already contains this site."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet -m "Publish RevealKt documentation website from ${GITHUB_SHA::7}"
+          git push origin HEAD:gh-pages
+
   release:
     permissions:
       contents: write
