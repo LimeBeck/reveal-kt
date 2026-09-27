@@ -8,31 +8,31 @@
     <div class="reveal">
       <div class="slides">
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="7355ba66-bb55-443a-8eee-cbe9c41d0c73" style="">Let the audience set the pace</h1>
-<span data-id="e167ef66-6304-41bb-b7c7-f7c091667b60">Try fragments, vertical navigation and Auto-Animate. These are Reveal.js features driven by the Kotlin DSL.</span>
+          <h1 class="r-fit-text" data-id="91aaf6c1-daee-49fb-bb1b-de6b520a7a8a">Let the audience set the pace</h1>
+<span data-id="69ceffb3-07fc-4ebd-8ac8-8e7854b7677b">Try fragments, vertical navigation and Auto-Animate. These are Reveal.js features driven by the Kotlin DSL.</span>
           <ul>
-            <li><span data-id="fbe3df56-6a4c-4b07-8c5e-804da0d28bd0">Right / Space: advance</span></li>
-            <li><span data-id="11d292f8-d7ae-4c0c-b9c7-8353020686e6">Down: explore a vertical stack</span></li>
-            <li><span data-id="e391f4ea-c856-4881-9560-f4cc4ad7f0d8">Esc: open the slide overview</span></li>
+            <li><span data-id="79fd283d-1ad3-4aa2-aa1b-5e69eb0e6b7e">Right / Space: advance</span></li>
+            <li><span data-id="142c5327-c703-4428-8c28-44b901f378d5">Down: explore a vertical stack</span></li>
+            <li><span data-id="7d181a14-639d-4c68-bf32-5bae2c0dc87d">Esc: open the slide overview</span></li>
           </ul>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="e78c9898-2773-46aa-b708-b4ad6e6f49eb" style="">Reveal one idea at a time</h1>
+          <h1 class="r-fit-text" data-id="15d4ff87-f94f-4503-8758-d00ed19dd9f2">Reveal one idea at a time</h1>
           <ol>
-            <li><span data-id="96680d2d-09c6-4ef0-be22-3f0d33f9956d">The first item is visible immediately.</span></li>
-            <li class="fragment fade-up"><span data-id="09b91b6b-7467-41e3-b6ae-ea18e9b5a90e">Press Right: Reveal.js reveals this fragment.</span></li>
-            <li class="fragment fade-up"><span data-id="53620f43-dbc8-433a-907a-05973d305ed5">Press Right again: one more idea, on the same slide.</span></li>
+            <li><span data-id="d3f8e455-9662-46c4-a049-624860ad7bdf">The first item is visible immediately.</span></li>
+            <li class="fragment fade-up"><span data-id="9dde309c-0c46-4573-a3cd-f9ea8c26a175">Press Right: Reveal.js reveals this fragment.</span></li>
+            <li class="fragment fade-up"><span data-id="91d92dd8-f120-4a40-a79b-493020269b2a">Press Right again: one more idea, on the same slide.</span></li>
           </ol>
-          <pre class="kotlin" data-id="99d6a1be-12f4-45ac-866b-135b6487675c"><code data-trim="">
+          <pre class="kotlin" data-id="27214c17-372c-41ea-87fd-2323fd8faaa1"><code data-trim="">
               <script type="text/template">+orderedListOf(points, fragmented = true)</script>
             </code></pre>
-          <aside class="notes" data-id="00f3f9f5-4fa6-4760-873b-617b57201d3a">Use Left to reverse a fragment. pdfSeparateFragments = false combines all steps on one PDF page.</aside>
+          <aside class="notes" data-id="3ff1a6ac-23d1-4083-ae0e-1b54add63428">Use Left to reverse a fragment. pdfSeparateFragments = false combines all steps on one PDF page.</aside>
         </section>
         <section>
           <section data-auto-animate="">
-            <h1 class="r-fit-text" data-id="d55810e3-8c3a-467c-ae7c-6b65f78414dc" style="">Go deeper, not further</h1>
-<span data-id="cf932ff3-8449-4b60-8e3f-919129e5a289">This slide begins a vertical stack. Press Down for a detail slide, or Right to skip to the next topic.</span>
-            <pre class="kotlin" data-id="2f079131-4ff0-4b25-84be-ff715a7253a3"><code data-trim="">
+            <h1 class="r-fit-text" data-id="4b9802fd-0f88-47ea-91bf-47f99b1ea12a">Go deeper, not further</h1>
+<span data-id="a6c0b85c-6802-4b21-bab2-c37d806c4b8e">This slide begins a vertical stack. Press Down for a detail slide, or Right to skip to the next topic.</span>
+            <pre class="kotlin" data-id="12c1bb3f-7258-4f0c-af1d-5bb6cb2d2272"><code data-trim="">
                 <script type="text/template">verticalSlide {
     regularSlide { /* overview */ }
     regularSlide { /* details */ }
@@ -40,33 +40,33 @@
               </code></pre>
           </section>
           <section data-auto-animate="">
-            <h1 class="r-fit-text" data-id="616c93f1-081b-4ea5-a967-5b190b493393" style="">You are inside the stack</h1>
-<span data-id="5c2544b9-a37e-405f-94e9-5a6bd58f902f">Press Up to return. Press Esc to see the two-dimensional slide map, then Esc again to resume.</span>
-            <pre class="kotlin" data-id="32cc5a1a-bba8-4cdf-8e09-b20c4d1144b1"><code data-trim="">
+            <h1 class="r-fit-text" data-id="66246d67-7155-480a-bb17-1131956de2cb">You are inside the stack</h1>
+<span data-id="38e8001d-0e5a-47a6-96ea-c7e27301934d">Press Up to return. Press Esc to see the two-dimensional slide map, then Esc again to resume.</span>
+            <pre class="kotlin" data-id="6d1f04bb-d495-420e-a9b1-2db6da4599e0"><code data-trim="">
                 <script type="text/template">configuration { overview = true }</script>
               </code></pre>
-            <aside class="notes" data-id="87250765-47cb-4ff0-a152-a0b51e7ad056">Vertical slides let a presenter keep optional details underneath a main topic.</aside>
+            <aside class="notes" data-id="c948f8da-9351-4536-b701-91003250666a">Vertical slides let a presenter keep optional details underneath a main topic.</aside>
           </section>
         </section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="5344a638-e37a-4e05-a433-5378617424c5" style="">One element, two layouts</h1>
-<span data-id="82bf822a-0b59-4089-a0f3-c9f0fad38b4d">Follow this element →</span>
-          <pre class="kotlin" data-id="9c928fc7-a1ec-4539-933d-cc9bb6f6c4a7"><code data-trim="">
+          <h1 class="r-fit-text" data-id="bb8a8520-749b-428b-9e22-785979c78589">One element, two layouts</h1>
+<span data-id="3abb75c5-6552-4ac5-bd91-969e39ee71c7">Follow this element →</span>
+          <pre class="kotlin" data-id="3aa381c6-3dd8-45a1-9d65-f102c6da7f7a"><code data-trim="">
               <script type="text/template">val movingLabel = UuidGenerator.generateId()
 // Reuse the ID on adjacent slides:
 +regularText(id = movingLabel) { "Follow this element →" }</script>
             </code></pre>
-<span data-id="a29e2aaf-4228-405d-98e4-30456b308e24">Press Right. The next slide reuses the element ID; Reveal.js animates its position and size.</span></section>
+<span data-id="a7a41a7b-7381-4406-a1cf-f6049c21509a">Press Right. The next slide reuses the element ID; Reveal.js animates its position and size.</span></section>
         <section data-auto-animate="">
-          <h1 class="r-fit-text" data-id="8841563a-19e4-4b6d-b9d7-38691efba123" style="">Auto-Animate connects the dots</h1>
-          <pre class="kotlin" data-id="3d55b186-1d51-4fa3-b5d5-e24aaee50521"><code data-trim="">
+          <h1 class="r-fit-text" data-id="3c760c48-896c-42eb-8b9b-ebb9e346654f">Auto-Animate connects the dots</h1>
+          <pre class="kotlin" data-id="e8524d3c-e295-47b6-ae15-cb63e5b56244"><code data-trim="">
               <script type="text/template">// Same element ID, new position and CSS.</script>
             </code></pre>
-<span data-id="82bf822a-0b59-4089-a0f3-c9f0fad38b4d">Follow this element →</span><span data-id="4137bb9e-8b62-4792-94da-91a841d0189f">Press Left to reverse the transition. Regular slides enable autoanimate by default; set autoanimate = false to opt out.</span></section>
+<span data-id="3abb75c5-6552-4ac5-bd91-969e39ee71c7">Follow this element →</span><span data-id="b350ec1b-2a9f-4a92-b9a7-1d1eeb8dbd8b">Press Left to reverse the transition. Regular slides enable autoanimate by default; set autoanimate = false to opt out.</span></section>
       </div>
     </div>
     <script>
-                    const configurationJson = {"controls":true,"progress":true,"history":false,"center":true,"touch":true,"autoAnimateDuration":0.5,"view":null,"theme":["Custom",{"cssLink":"assets/lesson.css"}],"additionalCssStyle":"","additionalCssStyleFromBuilder":"","controlsTutorial":true,"controlsLayout":"bottom-right","controlsBackArrows":"faded","slideNumber":["Custom",{"format":"c/t"}],"showSlideNumber":"all","hashOneBasedIndex":false,"hash":false,"respondToHashChanges":false,"jumpToSlide":false,"keyboard":true,"disableLayout":false,"overview":true,"loop":false,"rtl":false,"navigationMode":"default","shuffle":false,"fragments":true,"fragmentInURL":true,"help":true,"pause":true,"showNotes":false,"autoAnimate":true,"autoAnimateEasing":"ease","autoAnimateUnmatched":true,"autoSlide":0.0,"autoSlideStoppable":true,"defaultTiming":0,"mouseWheel":false,"previewLinks":false,"focusBodyOnPageVisibilityChange":true,"transition":"slide","transitionSpeed":"default","backgroundTransition":"slide","parallaxBackgroundImage":"","parallaxBackgroundSize":"","parallaxBackgroundRepeat":"","pdfSeparateFragments":false,"hideInactiveCursor":true}
+                    const configurationJson = {"controls":true,"progress":true,"history":false,"center":true,"touch":true,"autoAnimateDuration":0.5,"view":null,"theme":["Custom",{"cssLink":"assets/lesson.css"}],"additionalCssStyle":"","additionalCssStyleFromBuilder":"","controlsTutorial":true,"controlsLayout":"bottom-right","controlsBackArrows":"faded","slideNumber":["Custom",{"format":"c/t"}],"showSlideNumber":"all","hashOneBasedIndex":false,"hash":false,"respondToHashChanges":false,"jumpToSlide":false,"keyboard":true,"disableLayout":false,"overview":true,"loop":false,"rtl":false,"navigationMode":"default","shuffle":false,"fragments":true,"fragmentInURL":true,"help":true,"pause":true,"showNotes":false,"showHiddenSlides":false,"autoAnimate":true,"autoAnimateEasing":"ease","autoAnimateUnmatched":true,"autoSlide":0.0,"autoSlideStoppable":true,"defaultTiming":0,"mouseWheel":false,"previewLinks":false,"focusBodyOnPageVisibilityChange":true,"transition":"slide","transitionSpeed":"default","backgroundTransition":"slide","parallaxBackgroundImage":"","parallaxBackgroundSize":"","parallaxBackgroundRepeat":"","pdfSeparateFragments":false,"hideInactiveCursor":true}
                     </script>
     <script src="revealkt.js"></script>
   </body>
