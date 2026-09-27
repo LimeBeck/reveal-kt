@@ -7,8 +7,8 @@ import kotlin.io.path.*
 
 enum class PresentationExample(val option: String, val assets: List<String>) {
     STARTER("starter", listOf("image.png")),
-    TECHNICAL("technical", emptyList()),
-    LESSON("lesson", emptyList()),
+    TECHNICAL("technical", listOf("technical.css")),
+    LESSON("lesson", listOf("lesson.css")),
     CUSTOM_THEME("custom-theme", listOf("theme.css", "pipeline.svg")),
 }
 

@@ -157,9 +157,9 @@ revealkt init NullSafety --example lesson
 revealkt init BrandDeck --example custom-theme
 ```
 
-- **RetryTalk:** a four-slide technical talk with Kotlin code, highlighting, takeaways and speaker notes.
-- **NullSafety:** a three-slide lesson with incremental fragments and an exercise. Advance through the list items; PDF combines the fragments onto their slide.
-- **BrandDeck:** a three-slide presentation with a self-contained CSS theme and an SVG pipeline diagram. Edit `presentation/assets/theme.css` while preview is running.
+- **RetryTalk:** six slides demonstrating the Kotlin DSL, stepped code highlighting, two-column layouts, slides generated from data, and speaker notes. Advance through the highlighted lines; open the deck in its own tab and press S to see the notes.
+- **NullSafety:** six slides demonstrating fragments, a vertical stack, overview, and Auto-Animate. Press Down at the vertical stack, Esc for the map, and Right/Left on the final pair to animate the shared element. PDF combines fragments onto their slide.
+- **BrandDeck:** four slides demonstrating a complete CSS theme, an SVG asset, a generated QR code, and the HTML/PDF export workflow. Scan the QR code to open the documentation.
 
 For example:
 
