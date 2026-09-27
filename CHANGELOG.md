@@ -1,3 +1,9 @@
+# Unreleased
+
+## Build
+
+- CI publishes the documentation site to `gh-pages` after every verified push to `master`, so the site no longer waits for a manual `scripts/publish-site.sh` run.
+
 # 1.2.0
 
 ## Fixes

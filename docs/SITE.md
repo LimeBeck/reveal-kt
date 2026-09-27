@@ -28,7 +28,12 @@ The public site is hosted at <https://limebeck.github.io/reveal-kt/>.
 GitHub Pages uses **Deploy from a branch → gh-pages → / (root)**.
 The `.nojekyll` file keeps the site static.
 
-To publish this checkout's current website (including uncommitted site edits):
+CI publishes the site automatically: after every push to `master` passes the
+checks, the `publish-site` job copies the verified `documentation-site` artifact
+into `gh-pages`. It replaces only the generated files and pushes normally,
+without force-pushing.
+
+To publish this checkout's current website by hand (including uncommitted site edits):
 
 ```sh
 bash scripts/publish-site.sh
@@ -40,7 +45,7 @@ JavaScript syntax, then copies the generated website into a temporary checkout
 of `gh-pages`. It commits and
 pushes normally, without force-pushing or changing your current branch. The
 source files stay in `docs/`; GitHub Pages builds the published branch after the
-push. Changes to `master` alone do not publish the site: run the command above.
+push.
 
 For a new fork, enable Pages once in **Settings → Pages** after the first push,
 selecting `gh-pages` and `/ (root)`. Relative asset URLs also support repository
