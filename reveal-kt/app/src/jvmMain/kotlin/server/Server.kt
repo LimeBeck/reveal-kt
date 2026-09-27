@@ -2,7 +2,6 @@ package dev.limebeck.application.server
 
 import com.github.ajalt.clikt.core.CliktError
 import dev.limebeck.application.debug
-import dev.limebeck.application.filesWatcher.UpdatedFile
 import dev.limebeck.application.filesWatcher.watchFilesRecursive
 import dev.limebeck.application.info
 import dev.limebeck.application.printToConsole
@@ -26,7 +25,7 @@ import java.awt.Desktop
 import java.io.Closeable
 import java.io.File
 import java.net.URI
-import java.nio.file.StandardWatchEventKinds.OVERFLOW
+import java.util.concurrent.CountDownLatch
 import kotlin.io.path.Path
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
@@ -40,16 +39,43 @@ data class Config(
 )
 
 data class ServerConfig(
-    val host: String = "0.0.0.0",
+    val host: String = "localhost",
+    /** 0 selects a free port. */
     val port: Int = 8080,
 )
+
+/** A started preview server; [url] carries the port actually bound. */
+class RunningServer internal constructor(val url: String, private val stop: () -> Unit) : Closeable {
+    override fun close() = stop()
+}
+
+/** Wildcard addresses accept connections but cannot be opened in a browser. */
+internal fun browserHost(host: String): String = when (host) {
+    "0.0.0.0", "::", "[::]", "0:0:0:0:0:0:0:0" -> "localhost"
+    else -> if (':' in host && !host.startsWith("[")) "[$host]" else host
+}
+
+internal fun Application.installErrorPages() {
+    install(StatusPages) {
+        exception<NotFoundException> { call, cause ->
+            logger.error("<2f75b6c6> Page not found", cause)
+            call.respondText(cause.asHtml(), ContentType.Text.Html, status = HttpStatusCode.NotFound)
+        }
+
+        exception<Throwable> { call, cause ->
+            if (cause !is CancellationException)
+                logger.error("<2c1b0315> Internal error", cause)
+            call.respondText(cause.asHtml(), ContentType.Text.Html, status = HttpStatusCode.InternalServerError)
+        }
+    }
+}
 
 val logger = LoggerFactory.getLogger("ServerLogger")
 
 private data class RenderedPage(val revision: Long, val html: String, val error: String? = null)
 
-private fun loadPage(script: File, loader: RevealKtScriptLoader): Result<String> = try {
-    when (val result = loader.loadScript(script)) {
+private fun loadPage(script: File, assets: File, loader: RevealKtScriptLoader): Result<String> = try {
+    when (val result = loader.loadScript(script, assets)) {
         is RevealKtScriptLoader.LoadResult.Success -> Result.success(renderLoadResult(result))
         is RevealKtScriptLoader.LoadResult.Error -> Result.failure(IllegalArgumentException(result.formatDiagnostics(script)))
     }
@@ -59,7 +85,12 @@ private fun loadPage(script: File, loader: RevealKtScriptLoader): Result<String>
 }
 
 @OptIn(FlowPreview::class)
-fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = true): Closeable {
+fun runServer(
+    config: Config,
+    blocking: Boolean = true,
+    liveReload: Boolean = true,
+    openBrowser: Boolean = blocking,
+): RunningServer {
     println("Starting application...")
     val startTime = TimeSource.Monotonic.markNow()
 
@@ -70,14 +101,14 @@ fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = 
     val scriptLoader = RevealKtScriptLoader()
 
     val firstLoadResult = measureTimedValue {
-        loadPage(config.script, scriptLoader).getOrElse { throw CliktError(it.message.orEmpty()) }
+        loadPage(config.script, assetsPath.toFile(), scriptLoader).getOrElse { throw CliktError(it.message.orEmpty()) }
     }
 
     logger.info { "First render took ${firstLoadResult.duration}" }
 
     val serverJob = SupervisorJob()
     val coroutineScope = CoroutineScope(serverJob + Dispatchers.IO)
-    val updatedFilesStateFlow = MutableStateFlow<List<UpdatedFile>?>(null)
+    val reloadRequests = ReloadRequests(scriptPath, assetsPath)
     val renderedTemplateStateFlow = MutableStateFlow(RenderedPage(revision = 0, html = firstLoadResult.value))
 
     if (liveReload) {
@@ -87,24 +118,17 @@ fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = 
         }
         watchRoots.forEach { root ->
             coroutineScope.launch {
-                watchFilesRecursive(root) { updatedFilesStateFlow.emit(it) }
+                watchFilesRecursive(root) { reloadRequests.offer(it) }
             }
         }
     }
 
     coroutineScope.launch {
-        updatedFilesStateFlow
-            .filterNotNull()
-            .filter { events ->
-                events.any { event ->
-                    val changed = Path(event.path)
-                    event.type == OVERFLOW || changed == scriptPath || changed.startsWith(assetsPath)
-                }
-            }
+        reloadRequests.signals
             .debounce(500.milliseconds)
             .collect {
                 val result = measureTimedValue {
-                    loadPage(config.script, scriptLoader)
+                    loadPage(config.script, assetsPath.toFile(), scriptLoader)
                 }
                 logger.info { "<00596867> Render time: ${result.duration}" }
                 result.value.fold(
@@ -128,18 +152,7 @@ fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = 
             port = config.server.port
         }
     }) {
-        install(StatusPages) {
-            exception<NotFoundException> { call, cause ->
-                logger.error("<2f75b6c6> Page not found", cause)
-                call.respondText(cause.asHtml(), ContentType.Text.Html, status = HttpStatusCode.NotFound)
-            }
-
-            exception<Throwable> { call, cause ->
-                if (cause !is CancellationException)
-                    logger.error("<2c1b0315> Internal error", cause)
-                call.respondText(cause.asHtml(), ContentType.Text.Html)
-            }
-        }
+        installErrorPages()
 
         routing {
             staticFiles("assets/", assetsPath.toFile()) {
@@ -176,43 +189,52 @@ fun runServer(config: Config, background: Boolean = true, liveReload: Boolean = 
             }
         }
 
-        monitor.subscribe(ApplicationStarted) {
-            val url = "http://${config.server.host}:${config.server.port}"
-
-            """
-                RevealKt started at $url
-                Start duration: ${startTime.elapsedNow()}
-                Application version: ${RevealkConfig.version}
-            """.trimIndent().printToConsole(minRowLength = 60)
-
-            runCatching {
-                if (Desktop.isDesktopSupported() && background) {
-                    val desktop = Desktop.getDesktop()
-                    desktop.browse(URI.create(url))
-                }
-            }
-        }
         monitor.subscribe(ApplicationStopped) { coroutineScope.cancel() }
     }
+    val stopped = CountDownLatch(1)
     val handle = Closeable {
         try {
             server.stop(100, 1000)
         } finally {
             runBlocking { serverJob.cancelAndJoin() }
+            stopped.countDown()
         }
     }
     val shutdownHook = Thread { handle.close() }
     val runtime = Runtime.getRuntime()
     runtime.addShutdownHook(shutdownHook)
-    try {
-        server.start(wait = background)
+    val url = try {
+        server.start(wait = false)
+        val port = runBlocking { server.engine.resolvedConnectors().first().port }
+        "http://${browserHost(config.server.host)}:$port"
     } catch (error: Throwable) {
         handle.close()
         runtime.removeShutdownHook(shutdownHook)
         throw error
     }
-    return Closeable {
+
+    """
+        RevealKt started at $url
+        Start duration: ${startTime.elapsedNow()}
+        Application version: ${RevealkConfig.version}
+    """.trimIndent().printToConsole(minRowLength = 60)
+
+    if (openBrowser) {
+        runCatching {
+            if (Desktop.isDesktopSupported()) Desktop.getDesktop().browse(URI.create(url))
+        }
+    }
+
+    if (blocking) {
+        // Returns once the shutdown hook has stopped the server.
+        stopped.await()
+    }
+    return RunningServer(url) {
         handle.close()
-        runtime.removeShutdownHook(shutdownHook)
+        try {
+            runtime.removeShutdownHook(shutdownHook)
+        } catch (_: IllegalStateException) {
+            // The JVM is already shutting down and runs the hook itself.
+        }
     }
 }

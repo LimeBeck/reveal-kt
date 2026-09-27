@@ -5,7 +5,7 @@ import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.span
-import utils.s
+import dev.limebeck.revealkt.utils.s
 
 
 data class RegularText(override val id: ID = UuidGenerator.generateId(), val text: String) : RevealKtElement {

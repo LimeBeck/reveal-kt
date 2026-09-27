@@ -1,3 +1,30 @@
+# 1.2.0
+
+## Fixes
+
+- `additionalCss {}` no longer mutates the shared default configuration, so CSS is not duplicated across live reloads or presentations.
+- `code` snippets containing `</script>` or `<!--` no longer break the generated page.
+- `BooleanAttributeDelegate` reads back the value it writes.
+- The script compilation cache key includes the content of classpath entries, so an in-place CLI upgrade (for example a replaced `revealkt.jar`) cannot reuse scripts compiled against the old API.
+- `run`, `pdf` and `bundle` use the same `--base-path` assets directory for serving/copying and for `loadAsset`. `bundle` gains `--base-path`; `pdf` gains the long `--base-path` name for `-b`.
+- Internal server errors return HTTP 500, and error pages escape messages and stack traces.
+- A change to an unrelated file can no longer swallow a pending script or asset change during live reload.
+- `showHiddenSlides` reaches Reveal.js.
+- `Code { ... }` trims by default, like `code(...)` and the primary constructor. Elements without extra styles no longer render an empty `style` attribute. QR codes get a default id and a well-formed data URI.
+
+## Behavior changes
+
+- `run` listens on `localhost` by default. Pass `--host 0.0.0.0` to allow access from other devices. The printed and opened URL uses `localhost` for wildcard hosts.
+- `pdf` uses a free port by default (`--port 0`), so it does not collide with a running preview. `pdf -h` shows help; the host option is `--host` only.
+- `QrCode`, `AssetLoader` and `s {}` moved to `dev.limebeck.revealkt.*` packages, so scripts can use `QrCode` without an import. The old `core.elements`, `dsl` and `utils` names remain as deprecated aliases.
+- The CLI module targets Java 21, matching the version `doctor` requires. Libraries still target Java 11.
+
+## Build
+
+- npm packages no longer run install scripts during the build.
+- CI pins `setup-jbang` to a commit and passes publishing secrets through environment variables.
+- Installation docs, the JBang catalog and the example use 1.2.0 and the `revealkt.jar` release asset name.
+
 # 1.1.1
 
 ## CLI distribution

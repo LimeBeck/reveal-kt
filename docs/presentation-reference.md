@@ -15,7 +15,7 @@ Use `img(src = "images/chart.png")`; the image DSL adds `assets/`. For `loadAsse
 
 Custom CSS links are already URLs: use `Theme.Custom("assets/theme.css")`, including the `assets/` prefix. URLs inside CSS resolve relative to the CSS file, so `url("images/chart.png")` in `assets/theme.css` points to `assets/images/chart.png`.
 
-`run --base-path DIR` and `pdf -b DIR` change the directory whose `assets/` the server exposes. They do not change the script file or `loadAsset` resolution. `bundle` always copies assets beside the script. Keep the default layout when the same presentation needs all three output modes.
+`run --base-path DIR`, `pdf --base-path DIR` and `bundle --base-path DIR` use `DIR/assets` instead of the `assets/` directory beside the script. The same directory is served or copied as `assets/` and read by `loadAsset`, so all three output modes see the same files.
 
 ## Themes
 

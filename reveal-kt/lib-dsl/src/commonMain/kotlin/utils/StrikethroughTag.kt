@@ -1,4 +1,4 @@
-package utils
+package dev.limebeck.revealkt.utils
 
 import kotlinx.html.*
 

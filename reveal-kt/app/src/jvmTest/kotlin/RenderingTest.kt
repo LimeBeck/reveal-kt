@@ -47,6 +47,7 @@ class RenderingTest {
                 theme = RevealKt.Configuration.Theme.Custom("assets/theme with spaces.css")
                 slideNumber = RevealKt.Configuration.SlideNumber.Custom("h.v")
                 autoSlide = -1.0
+                showHiddenSlides = true
             }
         }.build()
         val dto = ConfigurationDto(built.configuration)
@@ -57,6 +58,7 @@ class RenderingTest {
         assertEquals(ConfigurationDto.Theme.Custom("assets/theme with spaces.css"), decoded.theme)
         assertEquals(ConfigurationDto.SlideNumber.Custom("h.v"), decoded.slideNumber)
         assertEquals(-1.0, decoded.autoSlide)
+        assertTrue(decoded.showHiddenSlides)
         for (theme in RevealKt.Configuration.Theme.Predefined.entries) {
             assertEquals(theme.name, ConfigurationDto.Theme.Predefined.of(theme).name)
         }

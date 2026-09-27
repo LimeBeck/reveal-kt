@@ -67,7 +67,9 @@ abstract class AttributedElement(
             addAttribute("data-id", id.id)
             classes = classes + elementClasses
             attributes.putAll(elementAttributes)
-            style = extraStyles.map { "${it.key}:${it.value}" }.joinToString("; ")
+            if (extraStyles.isNotEmpty()) {
+                style = extraStyles.map { "${it.key}:${it.value}" }.joinToString("; ")
+            }
         }
     }
 }
@@ -91,7 +93,7 @@ class BooleanAttributeDelegate(
     val attributeName: String? = null,
 ) {
     operator fun getValue(thisRef: AttributedElement, property: KProperty<*>): Boolean {
-        return thisRef.elementAttributes.containsValue(attributeName ?: property.name)
+        return thisRef.elementAttributes.containsKey(attributeName ?: property.name)
     }
 
     operator fun setValue(thisRef: AttributedElement, property: KProperty<*>, value: Boolean) {
@@ -102,49 +104,3 @@ class BooleanAttributeDelegate(
     }
 }
 
-//
-//interface FragmentedElement {
-//    val fragmented: Boolean
-//}
-//
-//class FragmentedElementMixin(
-//    override val elementAttributes: MutableMap<String, String>,
-//    override val elementClasses: MutableSet<String>,
-//) : RevealKtHtmlBaseElement(), FragmentedElement {
-//    override var fragmented: Boolean = false
-//
-//    init {
-//        conditionalClass("fragment", ::fragmented)
-//    }
-//}
-//
-//abstract class RevealKtHtmlBaseElement : RevealKtElement, AttributedElement {
-//    override val elementAttributes: MutableMap<String, String> = mutableMapOf()
-//    override val elementClasses: MutableSet<String> = mutableSetOf()
-//
-//    protected abstract fun HtmlBlockTag.htmlElementProvider(block: HtmlBlockTag.() -> Unit)
-//
-//    protected fun HtmlBlockTag.renderAttributes() {
-//        addAttribute("data-id", id.id)
-//        classes = classes + elementClasses
-//        attributes.putAll(elementAttributes)
-//    }
-//
-//    override fun render(tag: HtmlBlockTag): Unit = with(tag) {
-//        htmlElementProvider {
-//            renderAttributes()
-//        }
-//    }
-//}
-//
-//class Title(
-//    override val id: ID,
-//    val title: String,
-//) : RevealKtHtmlBaseElement(), FragmentedElement by FragmentedElementMixin(elementAttributes) {
-//    override fun HtmlBlockTag.htmlElementProvider(block: HtmlBlockTag.() -> Unit) {
-//        h2 {
-//            block()
-//            +title
-//        }
-//    }
-//}

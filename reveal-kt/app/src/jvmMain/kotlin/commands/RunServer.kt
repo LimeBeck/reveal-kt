@@ -21,8 +21,8 @@ class RunServer : CliktCommand(name = "run") {
     override fun help(context: Context) = "Serve presentation with live-reload"
 
     val port: Int by option(help = "Port").int().default(8080)
-    val host: String by option(help = "Host").default("0.0.0.0")
-    val basePath: Path? by option(help = "Script dir").path()
+    val host: String by option(help = "Host; use 0.0.0.0 to allow access from other devices").default("localhost")
+    val basePath: Path? by option(help = "Resource directory containing assets; defaults to the script directory").path()
     val script: File by argument(help = "Script file").file(canBeDir = false, mustBeReadable = true)
 
     init {

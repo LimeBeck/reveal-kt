@@ -1,4 +1,4 @@
-package dsl
+package dev.limebeck.revealkt.dsl
 
 import kotlin.io.path.Path
 import kotlin.io.path.readBytes

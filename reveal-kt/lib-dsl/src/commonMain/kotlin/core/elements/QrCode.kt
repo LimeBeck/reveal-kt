@@ -1,18 +1,18 @@
-package core.elements
+package dev.limebeck.revealkt.core.elements
 
 import dev.limebeck.revealkt.core.RevealKtElement
 import dev.limebeck.revealkt.utils.ID
+import dev.limebeck.revealkt.utils.UuidGenerator
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.classes
 import kotlinx.html.img
 import qrcode.QRCodeBuilder
 import qrcode.color.Colors
-import qrcode.render.QRCodeGraphicsFactory
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 data class QrCode(
-    override val id: ID,
+    override val id: ID = UuidGenerator.generateId(),
     val value: String,
     val configuration: Configuration = Configuration(),
 ) : RevealKtElement {
@@ -41,7 +41,7 @@ data class QrCode(
                 classes = classes + "r-stretch"
             }
 
-            src = "data:image/png;base64, " + Base64.encode(qrCode.renderToBytes())
+            src = "data:image/png;base64," + Base64.encode(qrCode.renderToBytes())
             configuration.height?.let {
                 height = it.toString()
             }

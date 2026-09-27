@@ -36,7 +36,8 @@ class RevealKtBuilder(
     }
 
     class ConfigurationBuilder {
-        internal val lens = RevealKt.defaultConfiguration.asLensProvider()
+        // A new Configuration owns a new CssBuilder; the shared default must never be mutated.
+        internal val lens = Configuration().asLensProvider()
 
         /**
          * Display presentation control arrows
@@ -182,10 +183,9 @@ class RevealKtBuilder(
 
         /**
          *  Can be used to initialize reveal.js in one of the following views:
-         *  - `VIEW`: Regular view
-         * 	- `PRINT`:   Render the presentation so that it can be printed to PDF
-         * 	- `SCROLL`:  Show the presentation as a tall scrollable page with scroll
-         * 	           triggered animations
+         *  - `REGULAR`: Regular slide view
+         *  - `SCROLL`:  Show the presentation as a tall scrollable page with scroll
+         *               triggered animations
          */
         var view by lens(Configuration.appearance.view)
         var theme by lens(Configuration.appearance.theme)
