@@ -1,4 +1,4 @@
-# Unreleased
+# 1.2.0
 
 ## Fixes
 
@@ -23,6 +23,7 @@
 
 - npm packages no longer run install scripts during the build.
 - CI pins `setup-jbang` to a commit and passes publishing secrets through environment variables.
+- Installation docs, the JBang catalog and the example use 1.2.0 and the `revealkt.jar` release asset name.
 
 # 1.1.1
 
