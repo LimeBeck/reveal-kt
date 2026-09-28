@@ -1,12 +1,12 @@
 # From a Kotlin script to HTML and PDF
 
-This guide describes RevealKt 1.2.0. You need Linux x86-64 and Java 21 or 25. Chromium is needed for PDF export; you can write slides, preview them and bundle HTML before installing it. The CLI includes the Kotlin compiler, DSL, Reveal.js and example resources. Node.js, Gradle and Maven are not required to run the downloaded JAR.
+This guide describes RevealKt 1.3.0. You need Linux x86-64 and Java 21 or 25. Chromium is needed for PDF export; you can write slides, preview them and bundle HTML before installing it. The CLI includes the Kotlin compiler, DSL, Reveal.js and example resources. Node.js, Gradle and Maven are not required to run the downloaded JAR.
 
 ## 1. Install the CLI
 
 Run `java -version` and check that the selected runtime is Java 21 or 25. Set `JAVA_HOME` and `PATH` to your JDK if necessary.
 
-Download **`revealkt.jar`** from [GitHub Releases](https://github.com/LimeBeck/reveal-kt/releases/tag/v1.2.0). This is the self-contained CLI; the smaller `app-jvm`, sources and javadoc JARs are not the CLI. Put it in a permanent directory, for example `$HOME/Applications/revealkt/`.
+Download **`revealkt.jar`** from [GitHub Releases](https://github.com/LimeBeck/reveal-kt/releases/tag/v1.3.0). This is the self-contained CLI; the smaller `app-jvm`, sources and javadoc JARs are not the CLI. Put it in a permanent directory, for example `$HOME/Applications/revealkt/`.
 
 To build from source instead, run `./gradlew :reveal-kt:app:shadowJar` and copy `reveal-kt/app/build/libs/revealkt.jar` out of the checkout. Subsequent commands only need that JAR.
 
@@ -23,19 +23,19 @@ Builds produce the standalone `revealkt.jar` for GitHub Releases. This standalon
 
 ### Run with JBang
 
-Alternatively, [install JBang](https://www.jbang.dev/download/) and use it to launch the CLI. Run version 1.2.0 from Maven Central:
+Alternatively, [install JBang](https://www.jbang.dev/download/) and use it to launch the CLI. Run version 1.3.0 from Maven Central:
 
 ```sh
-jbang run --java 21 dev.limebeck:revealkt-cli:1.2.0 --help
-jbang run --java 21 dev.limebeck:revealkt-cli:1.2.0 init Demo
-jbang run --java 21 dev.limebeck:revealkt-cli:1.2.0 run Demo/presentation/Demo.reveal.kts --host 127.0.0.1
+jbang run --java 21 dev.limebeck:revealkt-cli:1.3.0 --help
+jbang run --java 21 dev.limebeck:revealkt-cli:1.3.0 init Demo
+jbang run --java 21 dev.limebeck:revealkt-cli:1.3.0 run Demo/presentation/Demo.reveal.kts --host 127.0.0.1
 ```
 
 To install the `revealkt` command for the rest of this guide, use [JBang app installation](https://www.jbang.dev/documentation/jbang/latest/app-installation.html):
 
 ```sh
 jbang app setup
-jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.2.0
+jbang app install --java 21 --name revealkt dev.limebeck:revealkt-cli:1.3.0
 ```
 
 Follow any shell/PATH instructions from `jbang app setup`. If you already defined the `revealkt` shell function above, remove it with `unset -f revealkt` to use the installed command.
@@ -130,6 +130,8 @@ revealkt bundle presentation/Demo.reveal.kts --output-dir "out html"
 ```
 
 Open `out html/index.html` in a browser, or publish the entire `out html` directory to a static host. Keep `revealkt.js`, its accompanying resources and `assets/` together. Static exports do not contain a live reload connection or the development error panel.
+
+To share one file instead, for example by email, add `--single-file`. The command writes `out html/Demo.html` with the runtime and assets embedded; it opens without a server. See [export limits](presentation-reference.md#export-limits) for what still needs the network.
 
 Run the same command again to refresh HTML and assets. Removed source assets remain in an existing output directory, and unrelated files are preserved. Use a new directory when you need an export containing only current files.
 

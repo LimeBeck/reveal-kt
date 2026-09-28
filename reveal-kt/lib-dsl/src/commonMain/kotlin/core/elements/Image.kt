@@ -3,6 +3,7 @@ package dev.limebeck.revealkt.core.elements
 import dev.limebeck.revealkt.core.RevealKtElement
 import dev.limebeck.revealkt.utils.ID
 import dev.limebeck.revealkt.utils.UuidGenerator
+import dev.limebeck.revealkt.utils.assetUrl
 import kotlinx.html.HtmlBlockTag
 import kotlinx.html.classes
 import kotlinx.html.img
@@ -27,7 +28,7 @@ data class Image(
                 classes = classes + "r-stretch"
             }
 
-            src = "assets/$path"
+            src = assetUrl(path)
             configuration.height?.let {
                 height = it.toString()
             }

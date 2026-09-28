@@ -17,12 +17,17 @@ internal class ReloadRequests(private val scriptPath: Path, private val assetsPa
 
     val signals: Flow<Unit> = requests.receiveAsFlow()
 
+    /** Files the last successful render read, such as `codeFromFile` sources. */
+    @Volatile
+    var dependencies: Set<Path> = emptySet()
+
     fun offer(events: List<UpdatedFile>) {
         if (events.any(::isRelevant)) requests.trySend(Unit)
     }
 
     private fun isRelevant(event: UpdatedFile): Boolean {
         val changed = Path(event.path)
-        return event.type == OVERFLOW || changed == scriptPath || changed.startsWith(assetsPath)
+        return event.type == OVERFLOW || changed == scriptPath || changed.startsWith(assetsPath) ||
+            changed in dependencies
     }
 }
