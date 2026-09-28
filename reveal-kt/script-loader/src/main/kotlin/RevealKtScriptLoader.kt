@@ -21,8 +21,9 @@ class RevealKtScriptLoader {
         assetsDir: File = scriptFile.absoluteFile.normalize().parentFile.resolve("assets"),
     ): LoadResult {
         val normalizedScript = scriptFile.absoluteFile.normalize()
+        val assetLoader = AssetLoader(assetsDir.absoluteFile.normalize().path, normalizedScript.parentFile.path)
         val result = try {
-            scriptingHost.evalFile(normalizedScript, assetsDir.absoluteFile.normalize().path)
+            scriptingHost.evalFile(normalizedScript, assetLoader)
         } catch (error: Exception) {
             if (error is CancellationException) throw error
             return failure(normalizedScript, error)
@@ -41,7 +42,7 @@ class RevealKtScriptLoader {
         return if (builder == null) {
             LoadResult.Error(result.reports)
         } else {
-            LoadResult.Success(builder)
+            LoadResult.Success(builder, assetLoader.loadedFiles.map { it.toFile() }.toSet())
         }
     }
 
@@ -62,7 +63,9 @@ class RevealKtScriptLoader {
 
     sealed interface LoadResult {
         data class Success(
-            val value: RevealKtBuilder
+            val value: RevealKtBuilder,
+            /** Files the script read through `loadAsset` or `codeFromFile`. */
+            val dependencies: Set<File> = emptySet(),
         ) : LoadResult
 
         data class Error(
@@ -70,10 +73,10 @@ class RevealKtScriptLoader {
         ) : LoadResult
     }
 
-    private fun BasicJvmScriptingHost.evalFile(scriptFile: File, assetPath: String): ResultWithDiagnostics<EvaluationResult> {
+    private fun BasicJvmScriptingHost.evalFile(scriptFile: File, assetLoader: AssetLoader): ResultWithDiagnostics<EvaluationResult> {
         val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<RevealKtScript> { }
         val evaluationConfiguration = createJvmEvaluationConfigurationFromTemplate<RevealKtScript> {
-            implicitReceivers(RevealKtBuilder(), AssetLoader(assetPath))
+            implicitReceivers(RevealKtBuilder(), assetLoader)
         }
         return eval(
             script = scriptFile.toScriptSource(),

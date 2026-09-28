@@ -25,8 +25,10 @@ import java.awt.Desktop
 import java.io.Closeable
 import java.io.File
 import java.net.URI
+import java.nio.file.Path
 import java.util.concurrent.CountDownLatch
 import kotlin.io.path.Path
+import kotlin.io.path.isDirectory
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.TimeSource
 import kotlin.time.measureTimedValue
@@ -74,9 +76,13 @@ val logger = LoggerFactory.getLogger("ServerLogger")
 
 private data class RenderedPage(val revision: Long, val html: String, val error: String? = null)
 
-private fun loadPage(script: File, assets: File, loader: RevealKtScriptLoader): Result<String> = try {
+private class LoadedPage(val html: String, val dependencies: Set<Path>)
+
+private fun loadPage(script: File, assets: File, loader: RevealKtScriptLoader): Result<LoadedPage> = try {
     when (val result = loader.loadScript(script, assets)) {
-        is RevealKtScriptLoader.LoadResult.Success -> Result.success(renderLoadResult(result))
+        is RevealKtScriptLoader.LoadResult.Success -> Result.success(
+            LoadedPage(renderLoadResult(result), result.dependencies.map { it.toPath() }.toSet())
+        )
         is RevealKtScriptLoader.LoadResult.Error -> Result.failure(IllegalArgumentException(result.formatDiagnostics(script)))
     }
 } catch (error: Exception) {
@@ -109,19 +115,29 @@ fun runServer(
     val serverJob = SupervisorJob()
     val coroutineScope = CoroutineScope(serverJob + Dispatchers.IO)
     val reloadRequests = ReloadRequests(scriptPath, assetsPath)
-    val renderedTemplateStateFlow = MutableStateFlow(RenderedPage(revision = 0, html = firstLoadResult.value))
+    val renderedTemplateStateFlow = MutableStateFlow(RenderedPage(revision = 0, html = firstLoadResult.value.html))
 
-    if (liveReload) {
-        val roots = listOf(basePath, scriptPath.parent).distinct()
-        val watchRoots = roots.filter { candidate ->
-            roots.none { other -> other != candidate && candidate.startsWith(other) }
+    val watchedRoots = mutableSetOf<Path>()
+    fun watch(root: Path) {
+        synchronized(watchedRoots) {
+            if (watchedRoots.any { root.startsWith(it) }) return
+            watchedRoots.add(root)
         }
-        watchRoots.forEach { root ->
-            coroutineScope.launch {
-                watchFilesRecursive(root) { reloadRequests.offer(it) }
-            }
+        coroutineScope.launch {
+            watchFilesRecursive(root) { reloadRequests.offer(it) }
         }
     }
+
+    // Source files shown with codeFromFile may live outside the script and asset directories.
+    fun trackDependencies(dependencies: Set<Path>) {
+        reloadRequests.dependencies = dependencies
+        if (liveReload) dependencies.mapNotNull { it.parent }.filter { it.isDirectory() }.forEach(::watch)
+    }
+
+    if (liveReload) {
+        listOf(basePath, scriptPath.parent).sortedBy { it.nameCount }.forEach(::watch)
+    }
+    trackDependencies(firstLoadResult.value.dependencies)
 
     coroutineScope.launch {
         reloadRequests.signals
@@ -132,9 +148,10 @@ fun runServer(
                 }
                 logger.info { "<00596867> Render time: ${result.duration}" }
                 result.value.fold(
-                    onSuccess = { html ->
+                    onSuccess = { loaded ->
+                        trackDependencies(loaded.dependencies)
                         renderedTemplateStateFlow.update { page ->
-                            RenderedPage(revision = page.revision + 1, html = html)
+                            RenderedPage(revision = page.revision + 1, html = loaded.html)
                         }
                     },
                     onFailure = { error ->

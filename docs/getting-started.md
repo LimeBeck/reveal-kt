@@ -131,6 +131,8 @@ revealkt bundle presentation/Demo.reveal.kts --output-dir "out html"
 
 Open `out html/index.html` in a browser, or publish the entire `out html` directory to a static host. Keep `revealkt.js`, its accompanying resources and `assets/` together. Static exports do not contain a live reload connection or the development error panel.
 
+To share one file instead, for example by email, add `--single-file`. The command writes `out html/Demo.html` with the runtime and assets embedded; it opens without a server. See [export limits](presentation-reference.md#export-limits) for what still needs the network.
+
 Run the same command again to refresh HTML and assets. Removed source assets remain in an existing output directory, and unrelated files are preserved. Use a new directory when you need an export containing only current files.
 
 ## 5. Export PDF

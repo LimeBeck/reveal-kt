@@ -6,9 +6,11 @@ import com.github.ajalt.clikt.core.CliktError
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.output.MordantHelpFormatter
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.path
+import dev.limebeck.application.bundle.bundleSingleFile
 import dev.limebeck.application.debug
 import dev.limebeck.application.getResourcesList
 import dev.limebeck.application.server.renderLoadResult
@@ -35,6 +37,11 @@ class BundleToStatic : CliktCommand(name = "bundle") {
     val basePath: Path? by option("--base-path", help = "Resource directory containing assets; defaults to the script directory")
         .path(canBeFile = false)
 
+    val singleFile: Boolean by option(
+        "--single-file",
+        help = "Write one self-contained HTML file with the runtime and assets embedded, named after the script",
+    ).flag()
+
     val script: File by argument(help = "Script file")
         .file(canBeDir = false, mustBeReadable = true)
 
@@ -58,6 +65,18 @@ class BundleToStatic : CliktCommand(name = "bundle") {
             is RevealKtScriptLoader.LoadResult.Success -> {
                 val result = renderLoadResult(loadResult)
                 val outputDir = (outputDir ?: Path("out")).createDirectories()
+
+                if (singleFile) {
+                    val runtime = BundleToStatic::class.java.getResourceAsStream("/static/revealkt.js")
+                        ?.use { it.readBytes() }
+                        ?: throw CliktError("revealkt.js is missing from the CLI archive")
+                    val bundled = bundleSingleFile(result, runtime, assetsPath)
+                    val target = outputDir.resolve(script.name.removeSuffix(".reveal.kts").removeSuffix(".kts") + ".html")
+                    target.writeText(bundled.html)
+                    bundled.missing.forEach { echo("Warning: $it is referenced but not found in $assetsPath", err = true) }
+                    echo("Created $target")
+                    return
+                }
 
                 val resources = getResourcesList("static")
                 resources.forEach { resource ->

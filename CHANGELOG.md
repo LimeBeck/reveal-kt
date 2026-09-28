@@ -1,5 +1,13 @@
 # Unreleased
 
+## Features
+
+- `codeFromFile("../src/Service.kt", region = "fetch")` shows code from a real source file, selected by `// region` markers or a line range, with the language taken from the extension. `run` reloads the preview when a shown file changes, also outside the script directory.
+- Slides take a `background { }` (image, color, gradient, video or iframe), their own `transition`, `transitionSpeed` and `backgroundTransition`, and `hidden = true`.
+- Any element can be a fragment: `element.asFragment(effect, index)` or `fragment(index) { … }` for a group.
+- `bundle --single-file` writes one self-contained HTML file with the runtime and referenced assets embedded, which opens without a server.
+- `img` accepts URLs and `data:` URLs as well as asset paths.
+
 ## Build
 
 - CI publishes the documentation site to `gh-pages` after every verified push to `master`, so the site no longer waits for a manual `scripts/publish-site.sh` run.
